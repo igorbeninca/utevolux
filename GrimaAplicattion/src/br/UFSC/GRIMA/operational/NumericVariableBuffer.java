@@ -22,6 +22,7 @@ public class NumericVariableBuffer implements SeriesChangeListener, ActionListen
 	private Variable variable;
 	private NumericMonitoringUnit numericMonitoringUnit;
 	private TwoDMonitoringUnit twoDMonitoringUnit;
+	private ThreeDMonitoringUnit threeDMonitoringUnit;
 	private TimeSeries dataSerie;
 	private boolean inCalc;
 	//////////panelComponents
@@ -47,6 +48,20 @@ public class NumericVariableBuffer implements SeriesChangeListener, ActionListen
 	public NumericVariableBuffer(Variable variable, TwoDMonitoringUnit monitoringUnit) {
 		setVariable(variable);
 		setTwoDMonitoringUnit(monitoringUnit);
+		setInCalc(false);
+		monitoringUnit.getPanelMonitoringSystem().getController().getIoControl().getLoadExecution().addToVariableList(variable);
+		if (variable.getName() != null) 
+			setDataSerie(new TimeSeries(variable.getName()));
+		else
+			setDataSerie(new TimeSeries(variable.getDataItemID()));
+		dataSerie.setNotify(false);
+		for(int i = 0; i < variable.getDataSerie().getItemCount(); i++) 
+			dataSerie.addOrUpdate(variable.getDataSerie().getDataItem(i));
+		variable.getDataSerie().addChangeListener(this);
+	}
+	public NumericVariableBuffer(Variable variable, ThreeDMonitoringUnit monitoringUnit) {
+		setVariable(variable);
+		setThreeDMonitoringUnit(monitoringUnit);
 		setInCalc(false);
 		monitoringUnit.getPanelMonitoringSystem().getController().getIoControl().getLoadExecution().addToVariableList(variable);
 		if (variable.getName() != null) 
@@ -96,6 +111,12 @@ public class NumericVariableBuffer implements SeriesChangeListener, ActionListen
 						valueTextField.setText(variable.getLastValue());
 				}
 			}
+			else if(threeDMonitoringUnit != null) {
+				if (threeDMonitoringUnit.getPlayPause() != null) {
+					if(threeDMonitoringUnit.getPlayPause().isSelected())
+						valueTextField.setText(variable.getLastValue());
+				}
+			}
 		}
 	}
 	public void addToSerie(TimeSeriesDataItem item) {
@@ -126,10 +147,15 @@ public class NumericVariableBuffer implements SeriesChangeListener, ActionListen
 				minute = iniTime.getMinute() - numericMonitoringUnit.getTimeRange()[1];
 				hour = iniTime.getHour() - numericMonitoringUnit.getTimeRange()[0];
 			}
-			else {
+			else if(twoDMonitoringUnit != null) {
 				second = iniTime.getSecond() - twoDMonitoringUnit.getTimeRange()[2];
 				minute = iniTime.getMinute() - twoDMonitoringUnit.getTimeRange()[1];
 				hour = iniTime.getHour() - twoDMonitoringUnit.getTimeRange()[0];
+			}
+			else {
+				second = iniTime.getSecond() - threeDMonitoringUnit.getTimeRange()[2];
+				minute = iniTime.getMinute() - threeDMonitoringUnit.getTimeRange()[1];
+				hour = iniTime.getHour() - threeDMonitoringUnit.getTimeRange()[0];
 			}
 			int day = iniTime.getDay();
 			int month = iniTime.getMonth();
@@ -357,5 +383,11 @@ public class NumericVariableBuffer implements SeriesChangeListener, ActionListen
 	}
 	public void setDisplayLabel(JLabel displayLabel) {
 		this.displayLabel = displayLabel;
+	}
+	public ThreeDMonitoringUnit getThreeDMonitoringUnit() {
+		return threeDMonitoringUnit;
+	}
+	public void setThreeDMonitoringUnit(ThreeDMonitoringUnit threeDMonitoringUnit) {
+		this.threeDMonitoringUnit = threeDMonitoringUnit;
 	}
 }

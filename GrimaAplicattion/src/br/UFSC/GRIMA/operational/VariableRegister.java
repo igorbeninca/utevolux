@@ -13,6 +13,7 @@ import br.UFSC.GRIMA.dataStructure.Variable;
 public class VariableRegister implements SeriesChangeListener {
 	private Variable variable;
 	private TwoDMonitoringUnit twoDMonitoringUnit;
+	private ThreeDMonitoringUnit threeDMonitoringUnit;
 	private char varType;
 	//////////panelComponents
 	private JLabel typeLabel;
@@ -30,6 +31,18 @@ public class VariableRegister implements SeriesChangeListener {
 		setVarType(variable.getType());
 		variable.getDataSerie().addChangeListener(this);
 	}
+	public VariableRegister(Variable variable, ThreeDMonitoringUnit monitoringUnit, JLabel typeLabel, JTextField valueTextField, JLabel displayLabel) {
+		// TODO Auto-generated constructor stub
+		setVariable(variable);
+		monitoringUnit.getPanelMonitoringSystem().getController().getIoControl().getLoadExecution().addToVariableList(variable);
+		setThreeDMonitoringUnit(monitoringUnit);
+		setTypeLabel(typeLabel);
+		setDisplayLabel(displayLabel);
+		setValueTextField(valueTextField);
+		setVarType(variable.getType());
+		variable.getDataSerie().addChangeListener(this);
+	}
+	
 ////////////////////////////////////////Methods////////////////////////////////////////////////////////
 	@Override
 	public void seriesChanged(SeriesChangeEvent e) {
@@ -42,6 +55,12 @@ public class VariableRegister implements SeriesChangeListener {
 		else if(twoDMonitoringUnit != null) {
 			if (twoDMonitoringUnit.getPlayPause() != null) {
 				if(twoDMonitoringUnit.getPlayPause().isSelected())
+					valueTextField.setText(variable.getLastValue());
+			}
+		}
+		else if(threeDMonitoringUnit != null) {
+			if (threeDMonitoringUnit.getPlayPause() != null) {
+				if(threeDMonitoringUnit.getPlayPause().isSelected())
 					valueTextField.setText(variable.getLastValue());
 			}
 		}
@@ -82,6 +101,12 @@ public class VariableRegister implements SeriesChangeListener {
 	}
 	public void setDisplayLabel(JLabel displayLabel) {
 		this.displayLabel = displayLabel;
+	}
+	public ThreeDMonitoringUnit getThreeDMonitoringUnit() {
+		return threeDMonitoringUnit;
+	}
+	public void setThreeDMonitoringUnit(ThreeDMonitoringUnit threeDMonitoringUnit) {
+		this.threeDMonitoringUnit = threeDMonitoringUnit;
 	}
 	
 }

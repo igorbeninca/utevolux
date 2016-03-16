@@ -188,6 +188,12 @@ public class Variable implements ActionListener, SeriesChangeListener {
 		categoryStrings.clear();
 		categoryStrings.add(last);
 	}
+	public String getValidName() {
+		if(name != null) 
+			return name;
+		else
+			return dataItemID;
+	}
 ///////////////////////////////////////////////////////Getters and Setters/////////////////////////////////////////////////////////////////////////
 	public String getDataItemID() {
 		return dataItemID;

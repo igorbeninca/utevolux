@@ -290,17 +290,7 @@ public class TwoDMonitoringUnit extends MonitoringUnit implements SeriesChangeLi
 	@Override
 	public void refreshChart2() {
 		// TODO Auto-generated method stub
-		String nameX = null;
-		if(xSelected.getName() != null) 
-			nameX = xSelected.getName();
-		else
-			xSelected.getDataItemID();
-		String nameY = null;
-		if(ySelected.getName() != null) 
-			nameY = ySelected.getName();
-		else
-			ySelected.getDataItemID();
-		setChart(ChartFactory.createXYLineChart("", nameX, nameY, chartDataset));
+		setChart(ChartFactory.createXYLineChart("", xSelected.getValidName(), ySelected.getValidName(), chartDataset));
 		((GridBagLayout)getMonitoringPanel().getLayout()).rowHeights[2] = getMinimumHeight();
 		getMonitoringPanel().setPreferredSize(new Dimension(getMinimumWhidth(),  (int) Math.round(getMonitoringPanel().getPreferredSize().getHeight())));
 		setVisible(isVisible());
