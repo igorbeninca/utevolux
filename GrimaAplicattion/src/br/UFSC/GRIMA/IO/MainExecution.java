@@ -19,7 +19,7 @@ public class MainExecution extends JApplet{
 	private int[] defaultTimeRange;
 	private ArrayList<Variable> newMonitoringPanelList;
 	private int addProgress;
-	
+	private boolean automaticSaveVariables = true; //ainda nao foi configurada para o usuario mudar essa variavel, com essa opcao ativada, todas as variaveis adicionadas ao monitoramento sao automaticamente selecionadas para serem salvas no banco de dados
 	
 ///////////////////////////Constructor//////////////////////////////////////////////////////////	
 	public MainExecution() {
@@ -115,6 +115,12 @@ public class MainExecution extends JApplet{
 	}
 	public void setAddProgress(int addProgress) {
 		this.addProgress = addProgress;
+	}
+	public boolean isAutomaticSaveVariables() {
+		return automaticSaveVariables;
+	}
+	public void setAutomaticSaveVariables(boolean automaticSaveVariables) {
+		this.automaticSaveVariables = automaticSaveVariables;
 	}
 	
 }

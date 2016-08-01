@@ -16,6 +16,7 @@ import org.jfree.data.general.SeriesChangeListener;
 import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.TimeSeries;
 
+import br.UFSC.GRIMA.IO.SaveExecution;
 import br.UFSC.GRIMA.application.entities.devices.ComponentType;
 import br.UFSC.GRIMA.application.entities.streams.ConditionListType;
 import br.UFSC.GRIMA.application.entities.streams.EventType;
@@ -35,6 +36,7 @@ public class Variable implements ActionListener, SeriesChangeListener {
 	private int[] timeRange;
 	private int agentPosition;
 	private Component component;
+	private String XMLValue = "";
 	/////////////ViewDevicesComponents/////
 	private JCheckBox startMonitoringPanel;
 	private JToggleButton varMonitored;
@@ -134,8 +136,10 @@ public class Variable implements ActionListener, SeriesChangeListener {
 		}
 		if (varSaving != null) {
 			if(e.getSource().equals(varSaving)) {
-				if(varSaving.isSelected()) 
-					varSaving.setSelected(component.getDevice().getAgent().getIoControl().getLoadExecution().addToSaveList(this, true));
+				if(varSaving.isSelected()) {
+					component.getDevice().getAgent().getIoControl().getLoadExecution().addToSaveList(this);
+					varSaving.setSelected(true);
+				}
 				else
 					component.getDevice().getAgent().getIoControl().getLoadExecution().removeFromSaveList(this);
 			}
@@ -314,6 +318,10 @@ public class Variable implements ActionListener, SeriesChangeListener {
 	public void setCloseButton(JButton closeButton) {
 		this.closeButton = closeButton;
 	}
-	
-	
+	public String getXMLValue() {
+		return XMLValue;
+	}
+	public void setXMLValue(String xMLValue) {
+		XMLValue = xMLValue;
+	}
 }

@@ -27,21 +27,23 @@ public class LoadExecution implements Runnable {
 	private SaveExecution saveExecution;
 	private Thread thread;
 	private long loopTime;
+	private long currentTime;
 	private String lastError;
 	private boolean connected;
 ////////////////////////////////////Constructor/////////////////////////////////////////////////////////////
 	public LoadExecution(IOControl ioControl) {
 		setIoControl(ioControl);
+		setSaveExecution(ioControl.getSaveExecution());
 		setVariableList(new ArrayList<Variable>());
 		setDataSaveList(new ArrayList<Variable>());
 		setAgentList(new ArrayList<Agent>());
 		setThread(new Thread(this, "Load Execution"));
-		setLoopTime(System.currentTimeMillis());
-		thread.start();
-		
-		setSaveExecution(new SaveExecution(this));	
+		setCurrentTime(System.currentTimeMillis());
 	}
 /////////////////////////Methods//////////////////////////////////////////////////////////////////////////
+	public void start() {
+		thread.start();
+	}
 	private JAXBElement<MTConnectDevicesType> extracted(Unmarshaller u, URL url) throws JAXBException 
 	{
 		return (JAXBElement<MTConnectDevicesType>)u.unmarshal(url);
@@ -86,6 +88,9 @@ public class LoadExecution implements Runnable {
 			variable.getDataSerie().setNotify(false);
 			variableList.add(variable);
 		}
+		if(!saveExecution.getSaveList().contains(variable) && ioControl.getController().isAutomaticSaveVariables()) {
+			saveExecution.getSaveList().add(variable);
+		}
 	}
 	public boolean removeFromVariableList(Variable variable, boolean notify) { ///////////////////////////lembrar de adicionar o valor nulo no final da lista
 		if (ioControl.getController().getPanelMonitoringSystem().isVariableMonitored(variable)) {
@@ -116,16 +121,8 @@ public class LoadExecution implements Runnable {
 			return true;
 		}
 	}
-	public boolean addToSaveList(Variable variable, boolean notify) {
-		if(saveExecution.getDataBaseService() != null) {
-			dataSaveList.add(variable);
-			return true;
-		}
-		else {
-			if(notify) 
-				JOptionPane.showMessageDialog(ioControl.getController().getMainInterface(), "The system has no DataBase repository logged to save the data.", "Error", JOptionPane.ERROR_MESSAGE);
-			return false;
-		}
+	public void addToSaveList(Variable variable) {
+		saveExecution.getSaveList().add(variable);
 	}
 	public void removeFromSaveList(Variable variable) {
 		dataSaveList.remove(variable);
@@ -214,13 +211,13 @@ public class LoadExecution implements Runnable {
 							break;
 						}
 					}
-					///////criar mecanismo que informa erro de comunicacao, cuidar para fazer isso para o agente e nao para cada agente da variavel na lista
+					///////falta criar mecanismo que informa erro de comunicacao, cuidar para fazer isso para o agente e nao para cada agente da variavel na lista
 					if (currentObject != null) {
-						String value = null;
-						XMLGregorianCalendar time = null;
 						int devPosition = variableList.get(i).getComponent().getDevice().getAgentPosition();
 						int comPosition = variableList.get(i).getComponent().getAgentPosition();
 						int varPosition = variableList.get(i).getAgentPosition();
+						String value = null;
+						XMLGregorianCalendar time = null;
 						if (variableList.get(i).getDivision() == 'S') {
 							value = currentObject.getStreams().getDeviceStream().get(devPosition).getComponentStream().get(comPosition).getSamples().getSample().get(varPosition).getValue().getValue();
 							time  = currentObject.getStreams().getDeviceStream().get(devPosition).getComponentStream().get(comPosition).getSamples().getSample().get(varPosition).getValue().getTimestamp();
@@ -233,6 +230,19 @@ public class LoadExecution implements Runnable {
 							value = currentObject.getStreams().getDeviceStream().get(devPosition).getComponentStream().get(comPosition).getCondition().getCondition().get(varPosition).getName().getLocalPart();
 							time = currentObject.getStreams().getDeviceStream().get(devPosition).getComponentStream().get(comPosition).getCondition().getCondition().get(varPosition).getValue().getTimestamp();
 						}
+						//escrevendo no buffer do banco de dados
+						if(!variableList.get(i).getXMLValue().equals(value) && saveExecution.getSaveList().contains(variableList.get(i))) {
+							ArrayList<String> register = new ArrayList<String>();
+							variableList.get(i).setXMLValue(value);
+							register.add(currentObject.getHeader().getSender());
+							register.add(currentObject.getStreams().getDeviceStream().get(devPosition).getName());
+							register.add(variableList.get(i).getComponent().getName());
+							register.add(variableList.get(i).getValidName());
+							register.add(value);
+							register.add(time.toXMLFormat());
+							ioControl.getSaveExecution().getBuffer().add(register);
+						}
+						//carregando informacoes no cliente
 						time.setTimezone(currentObject.getHeader().getCreationTime().getTimezone());
 						XMLGregorianCalendar iniTime = (XMLGregorianCalendar) currentObject.getHeader().getCreationTime().clone();
 						int second = iniTime.getSecond() - variableList.get(i).getTimeRange()[2];
@@ -424,17 +434,18 @@ public class LoadExecution implements Runnable {
 					variableList.get(i).getDataSerie().setNotify(false);
 				}
 			}
-			long loop = System.currentTimeMillis() - getLoopTime();
+			long loop = System.currentTimeMillis() - getCurrentTime();
 			ioControl.getController().getMainInterface().setLoopTime(loop);
+			setLoopTime(loop);
 			if (loop < 200) {
 				try {
-					Thread.sleep(200);
+					Thread.sleep(200 - loop);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-			setLoopTime(System.currentTimeMillis());
+			setCurrentTime(System.currentTimeMillis());
 		}
 	}
 	public boolean isConnected() {
@@ -442,6 +453,12 @@ public class LoadExecution implements Runnable {
 	}
 	public void setConnected(boolean connected) {
 		this.connected = connected;
+	}
+	public long getCurrentTime() {
+		return currentTime;
+	}
+	public void setCurrentTime(long currentTime) {
+		this.currentTime = currentTime;
 	}
 	
 	

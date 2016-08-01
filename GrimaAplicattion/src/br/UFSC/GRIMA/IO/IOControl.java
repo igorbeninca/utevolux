@@ -12,13 +12,17 @@ public class IOControl {
 	private ArrayList<Agent> agents;
 	private ArrayList<ClientCamera> clientCameras;
 	private LoadExecution loadExecution;
-	private DataBaseService dataBaseService;
+	private SaveExecution saveExecution;
 	
 	public IOControl(MainExecution mainExecution) {
 		setController(mainExecution);
 		setAgents(new ArrayList<Agent>());
 		setClientCameras(new ArrayList<ClientCamera>());
+		setSaveExecution(new SaveExecution(this));
 		setLoadExecution(new LoadExecution(this));
+		loadExecution.start();
+		saveExecution.start();
+		saveExecution.getBufControl().start();
 	}
 ///////////////////////////Methods/////////////////////////////////////////////////////////////
 	public Agent getAgentByName(String name) {
@@ -95,16 +99,16 @@ public class IOControl {
 	public void setLoadExecution(LoadExecution loadExecution) {
 		this.loadExecution = loadExecution;
 	}
-	public DataBaseService getDataBaseService() {
-		return dataBaseService;
-	}
-	public void setDataBaseService(DataBaseService dataBaseService) {
-		this.dataBaseService = dataBaseService;
-	}
 	public ArrayList<ClientCamera> getClientCameras() {
 		return clientCameras;
 	}
 	public void setClientCameras(ArrayList<ClientCamera> clientCameras) {
 		this.clientCameras = clientCameras;
+	}
+	public SaveExecution getSaveExecution() {
+		return saveExecution;
+	}
+	public void setSaveExecution(SaveExecution saveExecution) {
+		this.saveExecution = saveExecution;
 	}
 }
