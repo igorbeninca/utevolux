@@ -45,10 +45,10 @@ public class SaveExecution implements Runnable {
 	}
 ///////////////////////////////Methods///////////////////////////////////////////////////////////////////////////////
 	public void start() {
-//		if(connected)
-//		//	thread.start();
-//		else
-//			JOptionPane.showMessageDialog(null, "Cannot connect to the DataBase service.", "Erro", JOptionPane.ERROR_MESSAGE);
+		if(connected)
+			thread.start();
+		else
+			JOptionPane.showMessageDialog(null, "Cannot connect to the DataBase service.", "Erro", JOptionPane.ERROR_MESSAGE);
 	}
 	public boolean connectToDB() {
 		setConnection(new Conexao());
@@ -78,6 +78,7 @@ public class SaveExecution implements Runnable {
 			//cria tabela de monitoramento
 			statement.executeUpdate("CREATE TABLE " + tableSerieNumber +"(agent varchar(255), deviceStream varchar(255), componentStream varchar(255), variable varchar(255), value varchar(255), timestamp varchar(255));");
 		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null,"Cannot comunicate with the DataBase.","Erro", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 			return false;
 		}
@@ -112,9 +113,7 @@ public class SaveExecution implements Runnable {
 					for (int i = registersToSave.size() - 1; i <= 0; i--)
 						buffer.add(0, registersToSave.remove(i));
 					if (connected) {
-						JOptionPane.showMessageDialog(null,
-								"Connection with DataBase was interrupted.",
-								"Erro", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null,"Cannot comunicate with DataBase.","Erro", JOptionPane.ERROR_MESSAGE);
 						setConnected(false);
 					}
 				}

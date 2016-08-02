@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Random;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -21,13 +22,14 @@ public class BufControl implements Runnable {
 	private ArrayList<Long>loopEstim;
 	private long currentTime;
 	private Random randomSource;
+	private boolean sent;
 	// parametros do controlador
 	public static double T5Est = 1.5;
 	private double kc = 0;
 	private double z0 = 0;
 	private long Td = 0;
-	private static int minFaixa = 15;
-	private static int memSetPoint = 20;
+	private static int minFaixa = 60000;
+	private static int memSetPoint = 75000;
 	
 	//variaveis do controle
 	private double yk = 0;
@@ -36,23 +38,23 @@ public class BufControl implements Runnable {
 	private double uk = 0;
 	private double uk1 = 0;
 	//mostra valores para analise
-	TimeSeriesCollection timeSeriesCollection = new TimeSeriesCollection();
-	TimeSeries y = new TimeSeries("Y");
-	TimeSeries u = new TimeSeries("U");
-	TimeSeries er = new TimeSeries("E");
+//	TimeSeriesCollection timeSeriesCollection = new TimeSeriesCollection();
+//	TimeSeries y = new TimeSeries("Y");
+//	TimeSeries u = new TimeSeries("U");
+//	TimeSeries er = new TimeSeries("E");
 	
 ///////////////////////////////Constructor/////////////////////////////////////////////////////////
 	public BufControl(SaveExecution saveExecution) {
-		timeSeriesCollection.addSeries(y);
-		timeSeriesCollection.addSeries(u);
-		timeSeriesCollection.addSeries(er);
-		JFreeChart chart = ChartFactory.createTimeSeriesChart("Buffer Control", "time", "", timeSeriesCollection);
-		ChartPanel panel = new ChartPanel(chart);
-		JFrame frame = new JFrame("Buffer Control");
+//		timeSeriesCollection.addSeries(y);
+//		timeSeriesCollection.addSeries(u);
+//		timeSeriesCollection.addSeries(er);
+//		JFreeChart chart = ChartFactory.createTimeSeriesChart("Buffer Control", "time", "", timeSeriesCollection);
+//		ChartPanel panel = new ChartPanel(chart);
+//		JFrame frame = new JFrame("Buffer Control");
 		loopEstim = new ArrayList<Long>();
-		frame.add(panel);
-		frame.pack();
-		frame.setVisible(true);
+//		frame.add(panel);
+//		frame.pack();
+//		frame.setVisible(true);
 		setSaveExecution(saveExecution);
 		randomSource = new Random();
 		setThread(new Thread(this));
@@ -108,12 +110,16 @@ public class BufControl implements Runnable {
 					SaveExecution.getBuffer().remove(index);
 				}
 				//add valores para monitoramento
-				y.add(new TimeSeriesDataItem(new Millisecond(), yk));
-				u.add(new TimeSeriesDataItem(new Millisecond(), uk));
-				er.add(new TimeSeriesDataItem(new Millisecond(), ek));
+//				y.add(new TimeSeriesDataItem(new Millisecond(), yk));
+//				u.add(new TimeSeriesDataItem(new Millisecond(), uk));
+//				er.add(new TimeSeriesDataItem(new Millisecond(), ek));
 				//atualiza variaveis
 				ek1 = ek;
 				uk1 = uk;
+				if((yk > minFaixa) && !sent) {
+					JOptionPane.showMessageDialog(null,"Bad communication with the database. The system is overloaded and will begin to discard values.",	"Erro", JOptionPane.ERROR_MESSAGE);
+					sent = true;
+				}
 				long loop = System.currentTimeMillis() - currentTime;
 				if (loop < Td) { // espera Td milisegundos
 					try {
