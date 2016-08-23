@@ -28,8 +28,8 @@ public class BufControl implements Runnable {
 	private double kc = 0;
 	private double z0 = 0;
 	private long Td = 0;
-	private static int minFaixa = 60000;
-	private static int memSetPoint = 75000;
+	private int minFaixa = 15000;
+	private int memSetPoint = 20000;
 	
 	//variaveis do controle
 	private double yk = 0;
@@ -117,6 +117,8 @@ public class BufControl implements Runnable {
 				ek1 = ek;
 				uk1 = uk;
 				if((yk > minFaixa) && !sent) {
+					String msg = "Warning: The Array of values to save in database is currently overloaded.";
+					SaveExecution.getIoControl().getController().getMainInterface().updateHistory("Database", msg);
 					JOptionPane.showMessageDialog(null,"Bad communication with the database. The system is overloaded and will begin to discard values.",	"Erro", JOptionPane.ERROR_MESSAGE);
 					sent = true;
 				}
@@ -157,5 +159,35 @@ public class BufControl implements Runnable {
 	}
 	public void setCurrentTime(long currentTime) {
 		this.currentTime = currentTime;
+	}
+	public double getKc() {
+		return kc;
+	}
+	public void setKc(double kc) {
+		this.kc = kc;
+	}
+	public double getZ0() {
+		return z0;
+	}
+	public void setZ0(double z0) {
+		this.z0 = z0;
+	}
+	public long getTd() {
+		return Td;
+	}
+	public void setTd(long td) {
+		Td = td;
+	}
+	public int getMinFaixa() {
+		return minFaixa;
+	}
+	public void setMinFaixa(int minFaixa) {
+		this.minFaixa = minFaixa;
+	}
+	public int getMemSetPoint() {
+		return memSetPoint;
+	}
+	public void setMemSetPoint(int memSetPoint) {
+		this.memSetPoint = memSetPoint;
 	}
 }

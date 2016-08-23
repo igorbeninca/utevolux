@@ -26,7 +26,6 @@ public class MainWindow extends JFrame {
 		menuDeviceConfigure = new JMenuItem();
 		menuDatabase = new JMenuItem();
 		menu3 = new JMenu();
-		menuAgents = new JMenuItem();
 		menuAddAgent = new JMenuItem();
 		menu4 = new JMenu();
 		menuDeviceInfo = new JMenuItem();
@@ -64,7 +63,7 @@ public class MainWindow extends JFrame {
 		scrollPane2 = new JScrollPane();
 		workSpace = new JPanel();
 		scrollPane1 = new JScrollPane();
-		textPane1 = new JTextPane();
+		historyTextPane = new JTextPane();
 
 		//======== this ========
 		setIconImage(new ImageIcon(getClass().getResource("/br/UFSC/GRIMA/images/iconeLogo.png")).getImage());
@@ -110,9 +109,10 @@ public class MainWindow extends JFrame {
 				menu2.add(menuDeviceConfigure);
 
 				//---- menuDatabase ----
-				menuDatabase.setText("Configure Database");
+				menuDatabase.setText("Database Info");
 				menuDatabase.setIcon(new ImageIcon(getClass().getResource("/br/UFSC/GRIMA/images/downloadIcon.png")));
 				menuDatabase.setFont(new Font("Dialog", Font.PLAIN, 12));
+				menuDatabase.setActionCommand("Database Info");
 				menu2.add(menuDatabase);
 			}
 			menuBar1.add(menu2);
@@ -121,12 +121,6 @@ public class MainWindow extends JFrame {
 			{
 				menu3.setText("Agent");
 				menu3.setFont(new Font("Dialog", Font.PLAIN, 12));
-
-				//---- menuAgents ----
-				menuAgents.setText("Agents info");
-				menuAgents.setIcon(new ImageIcon(getClass().getResource("/br/UFSC/GRIMA/images/agentIcon.png")));
-				menuAgents.setFont(new Font("Dialog", Font.PLAIN, 12));
-				menu3.add(menuAgents);
 
 				//---- menuAddAgent ----
 				menuAddAgent.setText("Add Agent");
@@ -414,10 +408,10 @@ public class MainWindow extends JFrame {
 			//======== scrollPane1 ========
 			{
 
-				//---- textPane1 ----
-				textPane1.setEditable(false);
-				textPane1.setFont(new Font("Verdana", Font.PLAIN, 12));
-				scrollPane1.setViewportView(textPane1);
+				//---- historyTextPane ----
+				historyTextPane.setEditable(false);
+				historyTextPane.setFont(new Font("Verdana", Font.PLAIN, 12));
+				scrollPane1.setViewportView(historyTextPane);
 			}
 			splitPane1.setBottomComponent(scrollPane1);
 		}
@@ -438,7 +432,6 @@ public class MainWindow extends JFrame {
 	protected JMenuItem menuDeviceConfigure;
 	protected JMenuItem menuDatabase;
 	private JMenu menu3;
-	protected JMenuItem menuAgents;
 	protected JMenuItem menuAddAgent;
 	private JMenu menu4;
 	protected JMenuItem menuDeviceInfo;
@@ -476,6 +469,6 @@ public class MainWindow extends JFrame {
 	private JScrollPane scrollPane2;
 	protected JPanel workSpace;
 	private JScrollPane scrollPane1;
-	protected JTextPane textPane1;
+	protected JTextPane historyTextPane;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

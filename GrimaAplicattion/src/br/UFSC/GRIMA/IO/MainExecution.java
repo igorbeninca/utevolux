@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import br.UFSC.GRIMA.dataStructure.Device;
 import br.UFSC.GRIMA.dataStructure.Variable;
 import br.UFSC.GRIMA.operational.DeviceMonitoringSystem;
+import br.UFSC.GRIMA.operational.MonitoringUnit;
 import br.UFSC.GRIMA.operational.PanelMonitoringSystem;
 import br.UFSC.GRIMA.visual.MainInterface;
 
@@ -17,14 +18,21 @@ public class MainExecution extends JApplet{
 	private PanelMonitoringSystem panelMonitoringSystem;
 	private IOControl ioControl;
 	private int[] defaultTimeRange;
+	private int[] numericDefaultTimeRange;
+	private int[] categoryDefaultTimeRange;
+	private boolean defaultTimeOption; //se o time range esta generico (false) ou separado (true)
+	public static boolean SPLITTED = false;
+	public static boolean GENERAL = true;
 	private ArrayList<Variable> newMonitoringPanelList;
-	private int addProgress;
-	private boolean automaticSaveVariables = true; //ainda nao foi configurada para o usuario mudar essa variavel, com essa opcao ativada, todas as variaveis adicionadas ao monitoramento sao automaticamente selecionadas para serem salvas no banco de dados
-	
+	private boolean autoSaveVariables = true; // com essa opcao ativada, todas as variaveis adicionadas ao monitoramento sao automaticamente selecionadas para serem salvas no banco de dados
+	private boolean monitorAllVariables = true; //com essa opcao ativada, ao adicionar um agente todas as variaveis das maquinas contidas nele entram na lista de monitoramento automaticamente
 ///////////////////////////Constructor//////////////////////////////////////////////////////////	
 	public MainExecution() {
-		int[] range = {1, 0, 0}; 
-		setDefaultTimeRange(range);;
+		int[] range = {1, 0, 0};
+		setDefaultTimeOption(GENERAL);
+		setDefaultTimeRange(range);
+		setNumericDefaultTimeRange(range);
+		setCategoryDefaultTimeRange(range);
 		setDeviceMonitoringSystem(new DeviceMonitoringSystem(this));
 		setPanelMonitoringSystem(new PanelMonitoringSystem(this));
 		setMainInterface(new MainInterface(this));
@@ -33,10 +41,11 @@ public class MainExecution extends JApplet{
 	}
 ////////////////////////////////////Methods/////////////////////////////////////////////////////////////
 	public String addAgent (String ip) {
-		setAddProgress(5);
-		if (ioControl.getAgentByIP(ip) != null)
+		if (ioControl.getAgentByIP(ip) != null) {
+			String msg = "Cannot connect to the Agent " + ip + "The ip given is already in use in another Agent in the Application.";
+			getMainInterface().updateHistory("Agent", msg);
 			return (new String("The ip given is already in use in another Agent in the Application."));
-		setAddProgress(10);
+		}
 		String  str =  ioControl.addAgent(ip);
 		mainInterface.setMenuDeviceMonitor();
 		return str;
@@ -64,7 +73,42 @@ public class MainExecution extends JApplet{
 	public boolean addClientCamera(String ip) {
 		return ioControl.addClientCamera(ip);
 	}
-	
+	public void setAllVariablesMonitored() {
+		if(!isMonitorAllVariables()) {
+			setMonitorAllVariables(true);
+			ioControl.getLoadExecution().setVariableList(new ArrayList<Variable>());
+			ArrayList<Device>devices = getAllDevices();
+			for(int i = 0; i < devices.size(); i++) {
+				for(int j = 0; j < devices.get(i).getComponents().size(); j++) {
+					for(int k = 0; k < devices.get(i).getComponents().get(j).getVariables().size(); k++)
+						ioControl.getLoadExecution().addToVariableList(devices.get(i).getComponents().get(j).getVariables().get(k));
+				}
+			}
+		}
+	}
+	public void resetVariablesRange() {
+		ArrayList<Variable>variables = ioControl.getLoadExecution().getVariableList();
+		for(int i = 0; i < variables.size(); i++) {
+			variables.get(i).setTimeRange(getTimeRange(variables.get(i).getType()));
+		}
+	}
+	public int[] getTimeRange(char type) {
+		if(getDefaultTimeOption() == GENERAL) {
+			return defaultTimeRange;
+		}
+		else {
+			if(type == '1') 
+				return numericDefaultTimeRange;
+			else
+				return categoryDefaultTimeRange;
+		}
+	}
+	public void resetPanelsRange() {
+		ArrayList<MonitoringUnit>units = getPanelMonitoringSystem().getMonitoringUnits();
+		for(int i = 0; i < units.size(); i++) {
+			units.get(i).setTimeRange(getTimeRange(units.get(i).getPanelType()));
+		}
+	}
 ////////////////////Getters and Setters/////////////////////////////////////////////////////
 	public IOControl getIoControl() {
 		return ioControl;
@@ -110,17 +154,35 @@ public class MainExecution extends JApplet{
 	public void setDefaultTimeRange(int[] defaultTimeRange) {
 		this.defaultTimeRange = defaultTimeRange;
 	}
-	public int getAddProgress() {
-		return addProgress;
+	public int[] getNumericDefaultTimeRange() {
+		return numericDefaultTimeRange;
 	}
-	public void setAddProgress(int addProgress) {
-		this.addProgress = addProgress;
+	public void setNumericDefaultTimeRange(int[] numericDefaultTimeRange) {
+		this.numericDefaultTimeRange = numericDefaultTimeRange;
 	}
-	public boolean isAutomaticSaveVariables() {
-		return automaticSaveVariables;
+	public int[] getCategoryDefaultTimeRange() {
+		return categoryDefaultTimeRange;
 	}
-	public void setAutomaticSaveVariables(boolean automaticSaveVariables) {
-		this.automaticSaveVariables = automaticSaveVariables;
+	public void setCategoryDefaultTimeRange(int[] categoryDefaultTimeRange) {
+		this.categoryDefaultTimeRange = categoryDefaultTimeRange;
+	}
+	public boolean getDefaultTimeOption() {
+		return defaultTimeOption;
+	}
+	public void setDefaultTimeOption(boolean defaultTimeOption) {
+		this.defaultTimeOption = defaultTimeOption;
+	}
+	public boolean isAutoSaveVariables() {
+		return autoSaveVariables;
+	}
+	public void setAutoSaveVariables(boolean autoSaveVariables) {
+		this.autoSaveVariables = autoSaveVariables;
+	}
+	public boolean isMonitorAllVariables() {
+		return monitorAllVariables;
+	}
+	public void setMonitorAllVariables(boolean monitorAllVariables) {
+		this.monitorAllVariables = monitorAllVariables;
 	}
 	
 }

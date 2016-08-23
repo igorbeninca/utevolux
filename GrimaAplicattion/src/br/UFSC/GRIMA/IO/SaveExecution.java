@@ -23,12 +23,15 @@ public class SaveExecution implements Runnable {
 	private Long loopTime = System.currentTimeMillis();
 	private int minSize = 1;
 	private int maxSize = 10000;
-	private int overloadRegion = 60000;
 	// Dados de conexao com o Banco de dados
 	private Conexao connection;
 	private java.sql.Statement statement;
 	private int userId = 1;
 	private String tableSerieNumber;
+	private String dataBaseIP = "150.162.105.1";
+	private String dataBase = "mtcTest";
+	private String user = "webcad";
+	private String senha = "julio123";
 
 ////////////////////////////////////Constructor/////////////////////////////////////////////////////////////
 	public SaveExecution (IOControl ioControl) {
@@ -54,17 +57,21 @@ public class SaveExecution implements Runnable {
 		setConnection(new Conexao());
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			connection.setConn("150.162.105.1", "mtcTest", "webcad", "julio123");
+			connection.setConn(dataBaseIP, dataBase, user, senha);
+			statement = getConnection().getConn().createStatement();
 		} catch (Exception e) {
 			e.printStackTrace();
+			String msg = "Error at connect to the server " + dataBaseIP + "\n" + e.toString();
+			ioControl.getController().getMainInterface().updateHistory("Database", msg);
 			return false;
 		}
+		String msg = "Successfully connected to the server " + dataBaseIP;
+		ioControl.getController().getMainInterface().updateHistory("Database", msg);
 		return true;
 	}
 	public boolean createMonitoringTable() {
 		try {
 			// encontrar ip de usuario
-			statement = getConnection().getConn().createStatement();
 			ResultSet rs = statement.executeQuery("select id from usuarios where usuario='Marcio' AND senha = '36250243';");
 			rs.next();
 			String id1 = rs.getString("id");
@@ -79,6 +86,8 @@ public class SaveExecution implements Runnable {
 			statement.executeUpdate("CREATE TABLE " + tableSerieNumber +"(agent varchar(255), deviceStream varchar(255), componentStream varchar(255), variable varchar(255), value varchar(255), timestamp varchar(255));");
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null,"Cannot comunicate with the DataBase.","Erro", JOptionPane.ERROR_MESSAGE);
+			String msg = "Communication lost with the DataBase " + dataBaseIP + "\n" + e.toString();
+			ioControl.getController().getMainInterface().updateHistory("Database", msg);
 			e.printStackTrace();
 			return false;
 		}
@@ -110,6 +119,11 @@ public class SaveExecution implements Runnable {
 					setConnected(true);
 				} catch (Exception e) {
 					e.printStackTrace();
+					if(connected) {
+						String msg = "Communication lost with the DataBase " + dataBaseIP + "\n" + e.toString();
+						ioControl.getController().getMainInterface().updateHistory("Database", msg);
+					}
+					connectToDB();
 					for (int i = registersToSave.size() - 1; i <= 0; i--)
 						buffer.add(0, registersToSave.remove(i));
 					if (connected) {
@@ -214,6 +228,30 @@ public class SaveExecution implements Runnable {
 	}
 	public void setBufControl(BufControl bufControl) {
 		this.bufControl = bufControl;
+	}
+	public String getDataBaseIP() {
+		return dataBaseIP;
+	}
+	public void setDataBaseIP(String dataBaseIP) {
+		this.dataBaseIP = dataBaseIP;
+	}
+	public String getDataBase() {
+		return dataBase;
+	}
+	public void setDataBase(String dataBase) {
+		this.dataBase = dataBase;
+	}
+	public String getUser() {
+		return user;
+	}
+	public void setUser(String user) {
+		this.user = user;
+	}
+	public String getSenha() {
+		return senha;
+	}
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 
 }

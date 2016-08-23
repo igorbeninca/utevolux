@@ -28,9 +28,16 @@ public class ClientCamera {
 			cameras.remove(cameras.size() - 1);
 			scanner.close();
 			socket.close();
+			String msg = "Sucessfully connected with Server  " + ip + "/n Cameras: ";
+			for(int i = 0; i < cameras.size(); i++) {
+				msg = msg + "\n      " + cameras.get(i).getName();
+			}
+			ioControl.getController().getMainInterface().updateHistory("Camera Server", msg);
 		} 
 		catch (IOException e) {
 			e.printStackTrace();
+			String msg = "Was not possible the connection with the WEBCAM server " + ip;
+			ioControl.getController().getMainInterface().updateHistory("Camera Server", msg);
 			JOptionPane.showMessageDialog(null,"Was not possible the connection with the WEBCAM server!", "Error", JOptionPane.ERROR_MESSAGE);
 			setCameras(null);
 		}

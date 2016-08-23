@@ -5,13 +5,17 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
@@ -29,6 +33,7 @@ public class MainInterface extends MainWindow implements ActionListener {
 	private DeviceMonitoringPanelEvents deviceMonitoringPanelEvents;
 	private PanelMonitoringPanel panelMonitoringPanel;
 	private ViewDevicesEvents viewDevicesEvents;
+	private PreferencesEvents preferenceEvents;
 //////////////////////////Constructor///////////////////////////////////////////////////////////////////
 	public MainInterface(MainExecution mainExecution)	{
 		setMainExecution(mainExecution);
@@ -36,7 +41,6 @@ public class MainInterface extends MainWindow implements ActionListener {
 		menuPreferences.addActionListener(this);
 		menuDeviceConfigure.addActionListener(this);
 		menuDatabase.addActionListener(this);
-		menuAgents.addActionListener(this);
 		menuAddAgent.addActionListener(this);
 		menuDeviceInfo.addActionListener(this);
 		menuCameraInfo.addActionListener(this);
@@ -49,28 +53,33 @@ public class MainInterface extends MainWindow implements ActionListener {
 		panelMonitoringButton.addActionListener(this);
 		currentTimeField.setEditable(false);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		historyTextPane.setText("History: ");
 		this.setVisible(true);
 	}
 //////////////////////////Methods///////////////////////////////////////////////////////////////////////
+	public void updateHistory(String tittle, String msg) {
+		String time = currentTimeField.getText();
+		if(time.equals("")) {
+			time = (new Date()).toString();
+		}
+		String history = historyTextPane.getText() + "\n" + tittle + " (" +time + "):\n" + msg + "\n" + "-----------------------------------------------------------------------------";
+		historyTextPane.setText(history);
+	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource().equals(menuExit)) 
 			this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 		else if (e.getSource().equals(menuPreferences)) {
-//			this.setEnabled(false);
-			///////////fazer Preferences Window
-			new PreferencesEvents();
+			this.setEnabled(false);
+			setPreferenceEvents(new PreferencesEvents(this));
 		}
 		else if (e.getSource().equals(menuDeviceConfigure) || e.getSource().equals(menuDeviceInfo) || e.getSource().equals(menuCameraInfo)) {
 			this.setEnabled(false);
 			setViewDevicesEvents(new ViewDevicesEvents(this));
 		}
 		else if (e.getSource().equals(menuDatabase)) {
-			/////////////fazer configure Database
-		}
-		else if (e.getSource().equals(menuAgents)) {
-			/////////////fazer janela view Agents
+			new DataBaseInfoEvents(this);
 		}
 		else if (e.getSource().equals(menuAddAgent)) {
 			this.setEnabled(false);
@@ -115,7 +124,6 @@ public class MainInterface extends MainWindow implements ActionListener {
 				}
 			});
 			aboutWindow.setVisible(true);
-//			System.out.println("cheogu");
 		}
 		if (e.getSource().equals(deviceInfoButton) || e.getSource().equals(deviceMonitoringButton) || e.getSource().equals(panelMonitoringButton)) {
 			if(!((JToggleButton) e.getSource()).isSelected()) {
@@ -380,6 +388,9 @@ public class MainInterface extends MainWindow implements ActionListener {
 	}
 	public void setLoopTime(Long millis) {
 		loopTimeField.setText(millis + " milliseconds");
+		if(preferenceEvents != null) {
+			preferenceEvents.loopTime.setText(millis + "");
+		}
 	}
 /////////////////////supportMethods///////////////////////////////////
 	
@@ -451,6 +462,9 @@ public class MainInterface extends MainWindow implements ActionListener {
 	}
 	public void setCurrentTime(String s) {
 		currentTimeField.setText(s);
+		if(preferenceEvents != null) {
+			preferenceEvents.timeRegister.setText(s);
+		}
 	}
 	
 ////////////////////////////////Getters and Setters////////////////////////////////////////////////////////
@@ -478,5 +492,11 @@ public class MainInterface extends MainWindow implements ActionListener {
 	}
 	public void setViewDevicesEvents(ViewDevicesEvents viewDevicesEvents) {
 		this.viewDevicesEvents = viewDevicesEvents;
+	}
+	public PreferencesEvents getPreferenceEvents() {
+		return preferenceEvents;
+	}
+	public void setPreferenceEvents(PreferencesEvents preferenceEvents) {
+		this.preferenceEvents = preferenceEvents;
 	}
 }

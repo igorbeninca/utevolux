@@ -72,7 +72,7 @@ public class Variable implements ActionListener, SeriesChangeListener {
 /////////////////////////Methods/////////////////////////////////////////////////////////////////
 	public void commonStrartup(Component component, int agentPosition, JAXBElement<? extends ComponentType> probeObject) {
 		setCategoryStrings(new ArrayList<String>());
-		setTimeRange(component.getDevice().getAgent().getIoControl().getController().getDefaultTimeRange());
+		setTimeRange(component.getDevice().getAgent().getIoControl().getController().getTimeRange(getType()));
 		setAgentPosition(agentPosition);
 		setComponent(component);
 		if (probeObject != null) {
@@ -90,6 +90,9 @@ public class Variable implements ActionListener, SeriesChangeListener {
 		else {
 			setUnit("Adimensional");
 			setAssignment("Unknown");
+		}
+		if(component.getDevice().getAgent().getIoControl().getController().isMonitorAllVariables()) {
+			component.getDevice().getAgent().getIoControl().getLoadExecution().addToVariableList(this);
 		}
 	}
 	public char typeIdentification(String value) {
@@ -288,7 +291,7 @@ public class Variable implements ActionListener, SeriesChangeListener {
 		this.varSaving = varSaving;
 		if(varSaving != null) {
 			varSaving.addActionListener(this);
-			varSaving.setSelected(component.getDevice().getAgent().getIoControl().getLoadExecution().getDataSaveList().contains(this));
+			varSaving.setSelected(component.getDevice().getAgent().getIoControl().getLoadExecution().getSaveExecution().getSaveList().contains(this));
 		}
 	}
 	public int[] getTimeRange() {

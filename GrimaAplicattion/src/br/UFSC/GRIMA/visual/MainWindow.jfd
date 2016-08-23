@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "5.2.0.3.124" Java: "1.8.0_51" encoding: "UTF-8"
+JFDML JFormDesigner: "5.2.0.3.124" Java: "1.8.0_73" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
@@ -205,7 +205,7 @@ new FormModel {
 				add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 					name: "scrollPane1"
 					add( new FormComponent( "javax.swing.JTextPane" ) {
-						name: "textPane1"
+						name: "historyTextPane"
 						"editable": false
 						"font": new java.awt.Font( "Verdana", 0, 12 )
 						auxiliary() {
@@ -258,9 +258,10 @@ new FormModel {
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuDatabase"
-						"text": "Configure Database"
+						"text": "Database Info"
 						"icon": new com.jformdesigner.model.SwingIcon( 0, "/br/UFSC/GRIMA/images/downloadIcon.png" )
 						"font": #Font2
+						"actionCommand": "Database Info"
 						auxiliary() {
 							"JavaCodeGenerator.variableModifiers": 4
 						}
@@ -271,19 +272,10 @@ new FormModel {
 					"text": "Agent"
 					"font": #Font1
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
-						name: "menuAgents"
-						"text": "Agents info"
-						"icon": new com.jformdesigner.model.SwingIcon( 0, "/br/UFSC/GRIMA/images/agentIcon.png" )
-						"font": &Font3 new java.awt.Font( "Dialog", 0, 12 )
-						auxiliary() {
-							"JavaCodeGenerator.variableModifiers": 4
-						}
-					} )
-					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuAddAgent"
 						"text": "Add Agent"
 						"icon": new com.jformdesigner.model.SwingIcon( 0, "/br/UFSC/GRIMA/images/plusIcon.png" )
-						"font": #Font3
+						"font": new java.awt.Font( "Dialog", 0, 12 )
 						auxiliary() {
 							"JavaCodeGenerator.variableModifiers": 4
 						}
@@ -297,7 +289,7 @@ new FormModel {
 						name: "menuDeviceInfo"
 						"text": "Devices info"
 						"icon": new com.jformdesigner.model.SwingIcon( 0, "/br/UFSC/GRIMA/images/machineIcon.png" )
-						"font": &Font4 new java.awt.Font( "Dialog", 0, 12 )
+						"font": &Font3 new java.awt.Font( "Dialog", 0, 12 )
 						auxiliary() {
 							"JavaCodeGenerator.variableModifiers": 4
 						}
@@ -306,7 +298,7 @@ new FormModel {
 						name: "menuDevices"
 						"text": "Monitor"
 						"icon": new com.jformdesigner.model.SwingIcon( 0, "/br/UFSC/GRIMA/images/viewIcon.png" )
-						"font": #Font4
+						"font": #Font3
 						auxiliary() {
 							"JavaCodeGenerator.variableModifiers": 4
 						}

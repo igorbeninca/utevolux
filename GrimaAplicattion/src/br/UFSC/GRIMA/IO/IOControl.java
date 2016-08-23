@@ -50,17 +50,26 @@ public class IOControl {
 	}
 	public String addAgent (String ip) {
 		MTConnectDevicesType probeObject = loadExecution.probeRequest(ip);
-		if (probeObject == null) 
+		if (probeObject == null) {
+			String msg = "Cannot connect to the Agent " + ip + "\n" + loadExecution.getLastError();
+			getController().getMainInterface().updateHistory("Agent", msg);
 			return loadExecution.getLastError();
+		}
 		else {
-			controller.setAddProgress(50);
 			MTConnectStreamsType currentObject = loadExecution.currentRequest(ip);
-			if (currentObject == null)
+			if (currentObject == null) {
+				String msg = "Cannot connect to the Agent " + ip + "\n" + loadExecution.getLastError();
+				getController().getMainInterface().updateHistory("Agent", msg);
 				return loadExecution.getLastError();
+			}
 			else {
-				controller.setAddProgress(90);
-				agents.add(new Agent(currentObject, probeObject, currentObject.getHeader().getSender(), ip, this));
-				
+				Agent agent =  new Agent(currentObject, probeObject, currentObject.getHeader().getSender(), ip, this);
+				agents.add(agent);
+				String msg = "Sucessfully connected with the Agent " + agent.getAgentName() + ": " + agent.getAgentIP() + "\nDevices: ";
+				for(int i = 0; i < agent.getDevices().size();i++) {
+					msg = msg + "\n     " + agent.getDevices().get(i).getName();
+				}
+				getController().getMainInterface().updateHistory("Agent", msg);
 			}
 		}
 		

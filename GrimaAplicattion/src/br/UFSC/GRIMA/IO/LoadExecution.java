@@ -22,7 +22,6 @@ import br.UFSC.GRIMA.dataStructure.*;
 public class LoadExecution implements Runnable {
 	private IOControl ioControl;
 	private ArrayList<Variable> variableList;
-	private ArrayList<Variable> dataSaveList;
 	private ArrayList<Agent> agentList;
 	private SaveExecution saveExecution;
 	private Thread thread;
@@ -35,7 +34,6 @@ public class LoadExecution implements Runnable {
 		setIoControl(ioControl);
 		setSaveExecution(ioControl.getSaveExecution());
 		setVariableList(new ArrayList<Variable>());
-		setDataSaveList(new ArrayList<Variable>());
 		setAgentList(new ArrayList<Agent>());
 		setThread(new Thread(this, "Load Execution"));
 		setCurrentTime(System.currentTimeMillis());
@@ -88,7 +86,7 @@ public class LoadExecution implements Runnable {
 			variable.getDataSerie().setNotify(false);
 			variableList.add(variable);
 		}
-		if(!saveExecution.getSaveList().contains(variable) && ioControl.getController().isAutomaticSaveVariables()) {
+		if(!saveExecution.getSaveList().contains(variable) && ioControl.getController().isAutoSaveVariables()) {
 			saveExecution.getSaveList().add(variable);
 		}
 	}
@@ -103,7 +101,7 @@ public class LoadExecution implements Runnable {
 				JOptionPane.showMessageDialog(ioControl.getController().getMainInterface(), "The variable is currently added to the Device Monitoring Segment, please remove it from this segment first.", "Remove Error", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
-		else if (dataSaveList.contains(variable)) {
+		else if (saveExecution.getSaveList().contains(variable)) {
 			if(notify) 
 				JOptionPane.showMessageDialog(ioControl.getController().getMainInterface(), "The system is saving this variable in the current DataBase, please remove the variable from that list first.", "Remove Error", JOptionPane.ERROR_MESSAGE);
 			return false;
@@ -125,7 +123,7 @@ public class LoadExecution implements Runnable {
 		saveExecution.getSaveList().add(variable);
 	}
 	public void removeFromSaveList(Variable variable) {
-		dataSaveList.remove(variable);
+		saveExecution.getSaveList().remove(variable);
 	}
 ///////////////////////Getters and Setters///////////////////////////////////////////////////////////////
 	public IOControl getIoControl() {
@@ -133,12 +131,6 @@ public class LoadExecution implements Runnable {
 	}
 	public void setIoControl(IOControl ioControl) {
 		this.ioControl = ioControl;
-	}
-	public ArrayList<Variable> getDataSaveList() {
-		return dataSaveList;
-	}
-	public void setDataSaveList(ArrayList<Variable> dataSaveList) {
-		this.dataSaveList = dataSaveList;
 	}
 	public ArrayList<Variable> getVariableList() {
 		return variableList;
