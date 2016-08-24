@@ -14,7 +14,7 @@ new FormModel {
 			name: "this"
 			"$sizePolicy": 1
 			"iconImage": new com.jformdesigner.model.SwingIcon( 0, "/br/UFSC/GRIMA/images/iconeLogo.png" )
-			"title": "Application (Main Window)"
+			"title": "Client Application"
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
 				"$columnSpecs": "0:1.0"
 				"$rowSpecs": "0"
@@ -34,7 +34,7 @@ new FormModel {
 				} ) {
 					name: "panel2"
 					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
-						"$columnSpecs": "0:1.0, 0:1.0"
+						"$columnSpecs": "0, 0:1.0"
 						"$rowSpecs": "0"
 						"$hGap": 5
 						"$vGap": 5
@@ -43,8 +43,22 @@ new FormModel {
 					} ) {
 						name: "panel4"
 						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
+							"$columnSpecs": "0"
+							"$rowSpecs": "0:1.0"
+							"$hGap": 5
+							"$vGap": 5
+							"$alignLeft": true
+							"$alignTop": true
+						} ) {
+							name: "panel11"
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "label5"
+								"icon": new com.jformdesigner.model.SwingIcon( 0, "/br/UFSC/GRIMA/images/logofinal.png" )
+							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
+						}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
+						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
 							"$columnSpecs": "0:1.0"
-							"$rowSpecs": "0, 0"
+							"$rowSpecs": "0, 0:1.0"
 							"$hGap": 5
 							"$vGap": 5
 							"$alignLeft": true
@@ -52,7 +66,7 @@ new FormModel {
 						} ) {
 							name: "panel1"
 							add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
-								"$columnSpecs": "0, 0:1.0, 0, 0, 0:1.0"
+								"$columnSpecs": "0:1.0, 0:1.0"
 								"$rowSpecs": "0"
 								"$hGap": 5
 								"$vGap": 5
@@ -60,39 +74,108 @@ new FormModel {
 								"$alignTop": true
 							} ) {
 								name: "panel3"
-								add( new FormComponent( "javax.swing.JLabel" ) {
-									name: "label2"
-									"text": "Agent Communication:"
-								}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
-								add( new FormComponent( "javax.swing.JTextField" ) {
-									name: "textField1"
-									"enabled": false
-								}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-									"gridx": 1
-								} )
+								"border": &TitledBorder0 new javax.swing.border.TitledBorder( "" )
 								add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
-									"$columnSpecs": "0, 0"
-									"$rowSpecs": "0"
-									"$hGap": 5
-									"$vGap": 5
+									"$columnSpecs": "0, 0:1.0"
+									"$rowSpecs": "0:1.0, 0:1.0, 0"
 									"$alignLeft": true
 									"$alignTop": true
+									"$hGap": 5
+									"$vGap": 5
 								} ) {
-									name: "panel8"
+									name: "panel9"
+									"border": #TitledBorder0
+									add( new FormComponent( "javax.swing.JLabel" ) {
+										name: "label2"
+										"text": "Agent Communication:"
+										"horizontalAlignment": 4
+									}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
+									add( new FormComponent( "javax.swing.JLabel" ) {
+										name: "agentStatusField"
+										"border": &EtchedBorder0 new javax.swing.border.EtchedBorder( 0, null, null )
+										auxiliary() {
+											"JavaCodeGenerator.variableModifiers": 4
+										}
+									}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+										"gridx": 1
+									} )
+									add( new FormComponent( "javax.swing.JLabel" ) {
+										name: "label1"
+										"text": "Ping:"
+										"horizontalAlignment": 4
+									}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+										"gridy": 1
+									} )
+									add( new FormComponent( "javax.swing.JTextField" ) {
+										name: "loadExPing"
+										"editable": false
+										auxiliary() {
+											"JavaCodeGenerator.variableModifiers": 4
+										}
+									}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+										"gridx": 1
+										"gridy": 1
+									} )
+									add( new FormComponent( "javax.swing.JLabel" ) {
+										name: "label4"
+										"text": "Reference Time:"
+										"horizontalAlignment": 4
+									}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+										"gridy": 2
+									} )
+									add( new FormComponent( "javax.swing.JTextField" ) {
+										name: "currentTimeField"
+										"editable": false
+										auxiliary() {
+											"JavaCodeGenerator.variableModifiers": 4
+										}
+									}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+										"gridx": 1
+										"gridy": 2
+									} )
+								}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
+								add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
+									"$columnSpecs": "0, 0:1.0"
+									"$rowSpecs": "0, 0, 0:1.0"
+									"$alignLeft": true
+									"$alignTop": true
+									"$hGap": 5
+									"$vGap": 5
+								} ) {
+									name: "panel10"
+									"border": #TitledBorder0
+									add( new FormComponent( "javax.swing.JLabel" ) {
+										name: "label3"
+										"text": "DataBase Communication:"
+									}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
+									add( new FormComponent( "javax.swing.JLabel" ) {
+										name: "dataBaseStatusField"
+										"border": #EtchedBorder0
+										auxiliary() {
+											"JavaCodeGenerator.variableModifiers": 4
+										}
+									}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+										"gridx": 1
+									} )
+									add( new FormComponent( "javax.swing.JLabel" ) {
+										name: "label6"
+										"text": "Ping:"
+										"horizontalAlignment": 4
+									}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+										"gridy": 1
+									} )
+									add( new FormComponent( "javax.swing.JTextField" ) {
+										name: "saveExPing"
+										"editable": false
+										auxiliary() {
+											"JavaCodeGenerator.variableModifiers": 4
+										}
+									}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+										"gridx": 1
+										"gridy": 1
+									} )
 								}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-									"gridx": 2
-								} )
-								add( new FormComponent( "javax.swing.JLabel" ) {
-									name: "label3"
-									"text": "DataBase Communication:"
-								}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-									"gridx": 3
-								} )
-								add( new FormComponent( "javax.swing.JTextField" ) {
-									name: "textField2"
-									"enabled": false
-								}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-									"gridx": 4
+									"gridx": 1
 								} )
 							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
 							add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
@@ -130,45 +213,6 @@ new FormModel {
 									"gridx": 2
 								} )
 							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-								"gridy": 1
-							} )
-						}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
-						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
-							"$columnSpecs": "0, 0:1.0"
-							"$rowSpecs": "0, 0"
-							"$hGap": 5
-							"$vGap": 5
-							"$alignLeft": true
-							"$alignTop": true
-						} ) {
-							name: "panel6"
-							add( new FormComponent( "javax.swing.JLabel" ) {
-								name: "label4"
-								"text": "Reference Time:"
-							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
-							add( new FormComponent( "javax.swing.JTextField" ) {
-								name: "currentTimeField"
-								"editable": false
-								auxiliary() {
-									"JavaCodeGenerator.variableModifiers": 4
-								}
-							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-								"gridx": 1
-							} )
-							add( new FormComponent( "javax.swing.JLabel" ) {
-								name: "label1"
-								"text": "Loop Time:"
-							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-								"gridy": 1
-							} )
-							add( new FormComponent( "javax.swing.JTextField" ) {
-								name: "loopTimeField"
-								"editable": false
-								auxiliary() {
-									"JavaCodeGenerator.variableModifiers": 4
-								}
-							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-								"gridx": 1
 								"gridy": 1
 							} )
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
@@ -225,6 +269,13 @@ new FormModel {
 					"text": "File"
 					"font": &Font0 new java.awt.Font( "Verdana", 0, 12 )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuPrint"
+						"text": "Print History"
+						auxiliary() {
+							"JavaCodeGenerator.variableModifiers": 4
+						}
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuExit"
 						"text": "exit"
 						"icon": new com.jformdesigner.model.SwingIcon( 0, "/br/UFSC/GRIMA/images/process-stop.png" )
@@ -271,6 +322,14 @@ new FormModel {
 					name: "menu3"
 					"text": "Agent"
 					"font": #Font1
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuAgent"
+						"text": "Agent Info"
+						"icon": new com.jformdesigner.model.SwingIcon( 0, "/br/UFSC/GRIMA/images/agentIcon.png" )
+						auxiliary() {
+							"JavaCodeGenerator.variableModifiers": 4
+						}
+					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuAddAgent"
 						"text": "Add Agent"

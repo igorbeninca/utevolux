@@ -60,14 +60,20 @@ public class CurrentThread implements Runnable {
 	public void run() {
 		// TODO Auto-generated method stub
 		try	{
+			long time = System.currentTimeMillis();
 			JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
 			Unmarshaller u = jc.createUnmarshaller();
 			URL url = new URL(target.getAgentIP() + "/current" );
 			JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url);
 			setResult(element.getValue());
+			if((System.currentTimeMillis() - time)>loadExecution.getAgentSlowLimit())
+				target.setStatus(Agent.SLOW);
+			else
+				target.setStatus(Agent.ONLINE);
 			setTerminated(true);
 		}
 		catch (Exception e) {
+			target.setStatus(Agent.OFFLINE);
 			e.printStackTrace();
 			setTerminated(true);
 		}

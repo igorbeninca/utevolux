@@ -18,6 +18,7 @@ import org.jfree.data.time.TimeSeriesDataItem;
 import br.UFSC.GRIMA.application.entities.devices.MTConnectDevicesType;
 import br.UFSC.GRIMA.application.entities.streams.MTConnectStreamsType;
 import br.UFSC.GRIMA.dataStructure.*;
+import br.UFSC.GRIMA.visual.MainInterface;
 
 public class LoadExecution implements Runnable {
 	private IOControl ioControl;
@@ -27,8 +28,9 @@ public class LoadExecution implements Runnable {
 	private Thread thread;
 	private long loopTime;
 	private long currentTime;
+	private long AgentSlowLimit = 1000;
 	private String lastError;
-	private boolean connected;
+	private boolean connected = true;
 ////////////////////////////////////Constructor/////////////////////////////////////////////////////////////
 	public LoadExecution(IOControl ioControl) {
 		setIoControl(ioControl);
@@ -184,16 +186,43 @@ public class LoadExecution implements Runnable {
 					for(int i = 0; i < threads.size(); i++) 
 						terminated = terminated && threads.get(i).isTerminated();
 					try {
-						Thread.sleep(80);
+						Thread.sleep(20);
 					} catch (InterruptedException e) {}
 				}
 				try {
 					Millisecond referenceTime = new Millisecond(threads.get(0).getResult().getHeader().getCreationTime().toGregorianCalendar().getTime());
 					ioControl.getController().getMainInterface().setCurrentTime(referenceTime.toString());
 				}catch(Exception e){}
+				//gerenciamento de status
+				int slowAgents = 0;
+				int offlineAgents = 0;
 				for(int i = 0; i < threads.size(); i++) {
 					if(threads.get(i).getResult() != null)
 						threads.get(i).getTarget().setCreationTime(threads.get(i).getResult().getHeader().getCreationTime());
+					if(threads.get(i).getTarget().getStatus()== Agent.OFFLINE)
+						offlineAgents++;
+					else if(threads.get(i).getTarget().getStatus()== Agent.SLOW)
+						slowAgents++;
+				}
+				if(offlineAgents == agentList.size()) {
+					ioControl.getController().getMainInterface().setAgentStatus("Error: Connection Lost.", MainInterface.OFFLINE);
+				}
+				else if(slowAgents == agentList.size()) {
+					ioControl.getController().getMainInterface().setAgentStatus("Warning: All agents are Slow.", MainInterface.WARNING);
+				}
+				else if((slowAgents == 0) && (offlineAgents == 0)) {
+					if(!agentList.isEmpty())
+						ioControl.getController().getMainInterface().setAgentStatus("Online", MainInterface.ONLINE);
+				}
+				else {
+					String msg = "Warning: ";
+					if(slowAgents != 0) {
+						msg = msg + slowAgents + " of " + agentList.size() + "are slow;"; 
+					}
+					if(offlineAgents != 0) {
+						msg = msg + offlineAgents + " of " + agentList.size() + "are offline"; 
+					}
+					ioControl.getController().getMainInterface().setAgentStatus(msg, MainInterface.WARNING);
 				}
 				for(int i = 0; i < variableList.size(); i++) {
 					MTConnectStreamsType currentObject = null;
@@ -203,7 +232,6 @@ public class LoadExecution implements Runnable {
 							break;
 						}
 					}
-					///////falta criar mecanismo que informa erro de comunicacao, cuidar para fazer isso para o agente e nao para cada agente da variavel na lista
 					if (currentObject != null) {
 						int devPosition = variableList.get(i).getComponent().getDevice().getAgentPosition();
 						int comPosition = variableList.get(i).getComponent().getAgentPosition();
@@ -222,8 +250,16 @@ public class LoadExecution implements Runnable {
 							value = currentObject.getStreams().getDeviceStream().get(devPosition).getComponentStream().get(comPosition).getCondition().getCondition().get(varPosition).getName().getLocalPart();
 							time = currentObject.getStreams().getDeviceStream().get(devPosition).getComponentStream().get(comPosition).getCondition().getCondition().get(varPosition).getValue().getTimestamp();
 						}
+						
 						//escrevendo no buffer do banco de dados
 						if(!variableList.get(i).getXMLValue().equals(value) && saveExecution.getSaveList().contains(variableList.get(i))) {
+							//escrevendo no history
+							if(variableList.get(i).getType() == 'c') {
+								ioControl.getController().getMainInterface().updateHistory("Device", "Value changed: " + variableList.get(i).getComponent().getDevice().getAgent().getAgentName() + "/" +
+																														 variableList.get(i).getComponent().getDevice().getName() + "/" +
+																														 variableList.get(i).getComponent().getComponent() + "-" + variableList.get(i).getComponent().getComponentID() + "/" +
+																														 variableList.get(i).getValidName() + ": " + value.toUpperCase());
+							}
 							ArrayList<String> register = new ArrayList<String>();
 							variableList.get(i).setXMLValue(value);
 							register.add(currentObject.getHeader().getSender());
@@ -427,7 +463,7 @@ public class LoadExecution implements Runnable {
 				}
 			}
 			long loop = System.currentTimeMillis() - getCurrentTime();
-			ioControl.getController().getMainInterface().setLoopTime(loop);
+			ioControl.getController().getMainInterface().setLoadExPing(loop);
 			setLoopTime(loop);
 			if (loop < 200) {
 				try {
@@ -440,17 +476,29 @@ public class LoadExecution implements Runnable {
 			setCurrentTime(System.currentTimeMillis());
 		}
 	}
-	public boolean isConnected() {
-		return connected;
-	}
-	public void setConnected(boolean connected) {
-		this.connected = connected;
-	}
 	public long getCurrentTime() {
 		return currentTime;
 	}
 	public void setCurrentTime(long currentTime) {
 		this.currentTime = currentTime;
+	}
+	public long getAgentSlowLimit() {
+		return AgentSlowLimit;
+	}
+	public void setAgentSlowLimit(long agentSlowLimit) {
+		AgentSlowLimit = agentSlowLimit;
+	}
+	public boolean isConnected() {
+		return connected;
+	}
+	public void setConnected(boolean connected) {
+		if((connected == false)&&(this.connected == true)) {
+			ioControl.getController().getMainInterface().updateHistory("Agent", "Connection lost with all Agents.");
+		}
+		if((connected == true)&&(this.connected == false)) {
+			ioControl.getController().getMainInterface().updateHistory("Agent", "Connection re-established with all Agents.");
+		}
+		this.connected = connected;
 	}
 	
 	

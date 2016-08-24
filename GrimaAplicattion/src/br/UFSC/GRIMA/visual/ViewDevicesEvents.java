@@ -46,6 +46,7 @@ public class ViewDevicesEvents extends ViewDevicesWindow implements ActionListen
 				for (int i = 0; i < devices.size(); i++) {
 					devices.get(i).setChangeNameButton(null);
 					devices.get(i).setNameTextField(null);
+					devices.get(i).setStatusAgent(null);
 				}
 				if (mainInterface.deviceInfoButton.isSelected()) {
 					mainInterface.destroyViewDevicesPanel();
@@ -92,6 +93,7 @@ public class ViewDevicesEvents extends ViewDevicesWindow implements ActionListen
 		JLabel agent = new JLabel("Agent");
 		JLabel uuid = new JLabel("UUID");
 		JLabel cameras = new JLabel("Cameras");
+		JLabel statusL= new JLabel("Status");
 		devicesPanel.add(agent, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
 			GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 			new Insets(0, 0, 0, 5), 0, 0));
@@ -104,11 +106,22 @@ public class ViewDevicesEvents extends ViewDevicesWindow implements ActionListen
 		devicesPanel.add(cameras, new GridBagConstraints(3, 0, 1, 1, 0.0, 0.0,
 			GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 			new Insets(0, 0, 0, 0), 0, 0));
+		devicesPanel.add(statusL, new GridBagConstraints(4, 0, 1, 1, 0.0, 0.0,
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+				new Insets(0, 0, 0, 0), 0, 0));
 		for(int line = 0; line < devices.size(); line++) {
 			JTextField agentName = new JTextField(devices.get(line).getAgent().getAgentName());
 			JTextField deviceName = new JTextField(devices.get(line).getName());
 			JTextField uuidName = new JTextField(devices.get(line).getUuid());
 			JTextField numCameras = new JTextField("" + devices.get(line).getCameras().size());
+			JLabel status = new JLabel();
+			if(devices.get(line).getAgent().getStatus()== Agent.ONLINE)
+				status.setText("<html><font color=\"green\">Online</font></html>");
+			else if(devices.get(line).getAgent().getStatus()== Agent.OFFLINE)
+				status.setText("<html><font color=\"red\">Offline</font></html>");
+			else if(devices.get(line).getAgent().getStatus()== Agent.SLOW)
+				status.setText("<html><font color=\"red\">Slow</font></html>");
+			devices.get(line).setStatusAgent(status);
 			agentName.setEditable(false);
 			uuidName.setEditable(false);
 			numCameras.setEditable(false);
@@ -140,6 +153,9 @@ public class ViewDevicesEvents extends ViewDevicesWindow implements ActionListen
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 5, 5), 0, 0));
 			devicesPanel.add(numCameras, new GridBagConstraints(3, line + 1, 1, 1, 0.0, 0.0,
+					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+					new Insets(0, 0, 5, 5), 0, 0));
+			devicesPanel.add(status, new GridBagConstraints(4, line + 1, 1, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 5, 5), 0, 0));
 		}

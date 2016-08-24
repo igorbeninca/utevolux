@@ -13,7 +13,8 @@ public class DataBaseInfoEvents extends dataBaseInfoWindow implements ActionList
 		label1.setText("<html><body>(O banco de dados usado por esta aplicação é fornecido pelo laboratório responsável pelo seu projeto. Todo e qualquer monitoramento realizado pelo programa irá gerar uma tabela de dados que ficará armazenada no servidor indicado abaixo com as informações do usuário coerentes ao login realizado no inicio da aplicação)<br&gtcom HTML!</body></html>");
 		okButton.addActionListener(this);
 		SaveExecution save = mainInterface.getMainExecution().getIoControl().getSaveExecution();
-		user.setText(save.getUserId() + "");
+		userPHP.setText(mainInterface.getMainExecution().getUserPHP() + "");
+		userID.setText(mainInterface.getMainExecution().getUserIdPHP() + "");
 		dataIP.setText(save.getDataBaseIP());
 		database.setText(save.getDataBase());
 		dataUser.setText(save.getUser());

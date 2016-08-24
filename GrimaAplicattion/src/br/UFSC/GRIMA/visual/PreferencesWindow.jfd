@@ -61,7 +61,7 @@ new FormModel {
 								}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
 								add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
 									"$columnSpecs": "0:1.0"
-									"$rowSpecs": "0, 0, 0, 0, 0, 0"
+									"$rowSpecs": "0, 0, 0, 0, 0, 0, 0"
 									"$hGap": 5
 									"$vGap": 5
 									"$alignLeft": true
@@ -132,6 +132,36 @@ new FormModel {
 										"$alignLeft": true
 										"$alignTop": true
 									} ) {
+										name: "panel16"
+										"toolTipText": "Limit of transfer time with Agent service that the application will consider slow transfer speed."
+										add( new FormComponent( "javax.swing.JLabel" ) {
+											name: "label13"
+											"text": "Slow agent transfer speed Limit:"
+										}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
+										add( new FormComponent( "javax.swing.JSpinner" ) {
+											name: "agentSlowField"
+											"model": new javax.swing.SpinnerNumberModel {
+												minimum: 0l
+												stepSize: 25l
+												value: 1l
+											}
+											auxiliary() {
+												"JavaCodeGenerator.variableModifiers": 4
+											}
+										}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+											"gridx": 1
+										} )
+									}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+										"gridy": 1
+									} )
+									add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
+										"$columnSpecs": "0:1.0, 0:1.0"
+										"$rowSpecs": "0"
+										"$hGap": 5
+										"$vGap": 5
+										"$alignLeft": true
+										"$alignTop": true
+									} ) {
 										name: "panel9"
 										"toolTipText": "Changing this value, the system will load and mantain registers of all variables during the given time range."
 										add( new FormComponent( "javax.swing.JRadioButton" ) {
@@ -154,7 +184,7 @@ new FormModel {
 											"gridx": 1
 										} )
 									}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-										"gridy": 1
+										"gridy": 2
 									} )
 									add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
 										"$columnSpecs": "0:1.0, 0:1.0"
@@ -238,7 +268,7 @@ new FormModel {
 											"gridx": 1
 										} )
 									}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-										"gridy": 2
+										"gridy": 3
 									} )
 									add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
 										"$columnSpecs": "0:1.0"
@@ -417,7 +447,7 @@ new FormModel {
 											"gridy": 1
 										} )
 									}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-										"gridy": 3
+										"gridy": 4
 									} )
 									add( new FormComponent( "javax.swing.JCheckBox" ) {
 										name: "resetVariablesBox"
@@ -429,7 +459,7 @@ new FormModel {
 											"JavaCodeGenerator.variableModifiers": 4
 										}
 									}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-										"gridy": 4
+										"gridy": 5
 									} )
 									add( new FormComponent( "javax.swing.JCheckBox" ) {
 										name: "resetRangeBox"
@@ -439,7 +469,7 @@ new FormModel {
 											"JavaCodeGenerator.variableModifiers": 4
 										}
 									}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-										"gridy": 5
+										"gridy": 6
 									} )
 								}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
 									"gridy": 1
@@ -481,6 +511,36 @@ new FormModel {
 										}
 									}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
 										"gridy": 1
+									} )
+									add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
+										"$columnSpecs": "0:1.0, 0:1.0"
+										"$rowSpecs": "0"
+										"$hGap": 5
+										"$vGap": 5
+										"$alignLeft": true
+										"$alignTop": true
+									} ) {
+										name: "panel17"
+										"toolTipText": "Limit of transfer time with Database service that the application will consider slow transfer speed."
+										add( new FormComponent( "javax.swing.JLabel" ) {
+											name: "label14"
+											"text": "Slow database transfer speed Limit:"
+										}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
+										add( new FormComponent( "javax.swing.JSpinner" ) {
+											name: "dataBaseSlowField"
+											"model": new javax.swing.SpinnerNumberModel {
+												minimum: 0l
+												stepSize: 25l
+												value: 1l
+											}
+											auxiliary() {
+												"JavaCodeGenerator.variableModifiers": 4
+											}
+										}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+											"gridx": 1
+										} )
+									}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+										"gridy": 2
 									} )
 								}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
 									"gridy": 2

@@ -2,6 +2,7 @@ package br.UFSC.GRIMA.IO;
 
 import java.util.ArrayList;
 
+import javax.swing.JLabel;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import br.UFSC.GRIMA.application.entities.devices.MTConnectDevicesType;
@@ -16,6 +17,13 @@ public class Agent {
 	private ArrayList<Device> devices;
 	private IOControl ioControl;
 	private ArrayList<Camera> cameras;
+	private int status = ONLINE;
+	public static int ONLINE = 0;
+	public static int OFFLINE = 1;
+	public static int SLOW = 2;
+	
+	//jcomponents
+	private JLabel statusLabel;
 ///////////////////////////Constructor///////////////////////////////////////////////////////////
 	public Agent(MTConnectStreamsType currentObject, MTConnectDevicesType probeObject, String name, String ip, IOControl ioControl) {
 		setAgentIP(ip);
@@ -79,5 +87,38 @@ public class Agent {
 	}
 	public void setCameras(ArrayList<Camera> cameras) {
 		this.cameras = cameras;
+	}
+	public int getStatus() {
+		return status;
+	}
+	public void setStatus(int status) {
+		if((status==OFFLINE)&&(this.status!=OFFLINE)) {
+			ioControl.getController().getMainInterface().updateHistory("Agent", "Connection lost with Agent " + agentName + ": " + agentIP);
+		}
+		if((status!=OFFLINE)&&(this.status==OFFLINE)) {
+			ioControl.getController().getMainInterface().updateHistory("Agent", "Connection re-established with Agent " + agentName + ": " + agentIP);
+		}
+		this.status = status;
+		if(ioControl.getController().getMainInterface().getViewDevicesEvents() != null) {
+			String text = "";
+			if(getStatus()== Agent.ONLINE)
+				text = "<html><font color=\"green\">Online</font></html>";
+			else if(getStatus()== Agent.OFFLINE)
+				text = "<html><font color=\"red\">Offline</font></html>";
+			else if(getStatus()== Agent.SLOW)
+				text = "<html><font color=\"yellow\">Slow</font></html>";
+			if(statusLabel != null) {
+				statusLabel.setText(text);
+			}
+			for(int i = 0; i < devices.size(); i++) {
+				devices.get(i).getStatusAgent().setText(text);
+			}
+		}
+	}
+	public JLabel getStatusLabel() {
+		return statusLabel;
+	}
+	public void setStatusLabel(JLabel statusLabel) {
+		this.statusLabel = statusLabel;
 	}
 }

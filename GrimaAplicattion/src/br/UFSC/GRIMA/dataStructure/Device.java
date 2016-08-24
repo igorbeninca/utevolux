@@ -26,6 +26,7 @@ public class Device implements ActionListener{
 	private JButton changeNameButton;
 	private JTextField nameTextField;
 	private JMenuItem monitoringMenu;
+	private JLabel statusAgent;
 ///////////////////////Construtor/////////////////////////////////////////////////////
 	public Device(DeviceStreamType currentObject,DeviceType probeObject, int agentPosition, Agent agent) {
 		setName(currentObject.getName());
@@ -118,6 +119,12 @@ public class Device implements ActionListener{
 	}
 	public void setMonitoringMenu(JMenuItem monitoringMenu) {
 		this.monitoringMenu = monitoringMenu;
+	}
+	public JLabel getStatusAgent() {
+		return statusAgent;
+	}
+	public void setStatusAgent(JLabel statusAgent) {
+		this.statusAgent = statusAgent;
 	}
 	
 }

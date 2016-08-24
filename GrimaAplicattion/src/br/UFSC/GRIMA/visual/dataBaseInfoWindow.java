@@ -24,10 +24,14 @@ public class dataBaseInfoWindow extends JDialog {
 		contentPanel = new JPanel();
 		scrollPane1 = new JScrollPane();
 		panel1 = new JPanel();
+		panel10 = new JPanel();
+		panel11 = new JPanel();
+		label7 = new JLabel();
+		userPHP = new JTextField();
 		panel2 = new JPanel();
 		panel6 = new JPanel();
 		label2 = new JLabel();
-		user = new JTextField();
+		userID = new JTextField();
 		panel3 = new JPanel();
 		panel7 = new JPanel();
 		label3 = new JLabel();
@@ -85,9 +89,48 @@ public class dataBaseInfoWindow extends JDialog {
 						panel1.setBorder(new TitledBorder(""));
 						panel1.setLayout(new GridBagLayout());
 						((GridBagLayout)panel1.getLayout()).columnWidths = new int[] {0, 0};
-						((GridBagLayout)panel1.getLayout()).rowHeights = new int[] {0, 0, 0, 0, 0};
+						((GridBagLayout)panel1.getLayout()).rowHeights = new int[] {0, 0, 0, 0, 0, 0};
 						((GridBagLayout)panel1.getLayout()).columnWeights = new double[] {1.0, 1.0E-4};
-						((GridBagLayout)panel1.getLayout()).rowWeights = new double[] {1.0, 1.0, 1.0, 1.0, 1.0E-4};
+						((GridBagLayout)panel1.getLayout()).rowWeights = new double[] {0.0, 1.0, 1.0, 1.0, 1.0, 1.0E-4};
+
+						//======== panel10 ========
+						{
+							panel10.setLayout(new GridBagLayout());
+							((GridBagLayout)panel10.getLayout()).columnWidths = new int[] {0, 0, 0};
+							((GridBagLayout)panel10.getLayout()).rowHeights = new int[] {0, 0};
+							((GridBagLayout)panel10.getLayout()).columnWeights = new double[] {0.0, 1.0, 1.0E-4};
+							((GridBagLayout)panel10.getLayout()).rowWeights = new double[] {1.0, 1.0E-4};
+
+							//======== panel11 ========
+							{
+								panel11.setLayout(new GridBagLayout());
+								((GridBagLayout)panel11.getLayout()).columnWidths = new int[] {100, 0};
+								((GridBagLayout)panel11.getLayout()).rowHeights = new int[] {0, 0};
+								((GridBagLayout)panel11.getLayout()).columnWeights = new double[] {0.0, 1.0E-4};
+								((GridBagLayout)panel11.getLayout()).rowWeights = new double[] {1.0, 1.0E-4};
+
+								//---- label7 ----
+								label7.setText("User: ");
+								label7.setHorizontalAlignment(SwingConstants.LEFT);
+								label7.setFocusTraversalPolicyProvider(true);
+								label7.setHorizontalTextPosition(SwingConstants.CENTER);
+								panel11.add(label7, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+									new Insets(0, 0, 0, 0), 0, 0));
+							}
+							panel10.add(panel11, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+								new Insets(0, 0, 0, 5), 0, 0));
+
+							//---- userPHP ----
+							userPHP.setEditable(false);
+							panel10.add(userPHP, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
+								GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+								new Insets(0, 0, 0, 0), 0, 0));
+						}
+						panel1.add(panel10, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+							new Insets(0, 0, 5, 0), 0, 0));
 
 						//======== panel2 ========
 						{
@@ -118,13 +161,13 @@ public class dataBaseInfoWindow extends JDialog {
 								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 								new Insets(0, 0, 0, 5), 0, 0));
 
-							//---- user ----
-							user.setEditable(false);
-							panel2.add(user, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
+							//---- userID ----
+							userID.setEditable(false);
+							panel2.add(userID, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
 								GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
 								new Insets(0, 0, 0, 0), 0, 0));
 						}
-						panel1.add(panel2, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+						panel1.add(panel2, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
 							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 							new Insets(0, 0, 5, 0), 0, 0));
 
@@ -161,7 +204,7 @@ public class dataBaseInfoWindow extends JDialog {
 								GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
 								new Insets(0, 0, 0, 0), 0, 0));
 						}
-						panel1.add(panel3, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+						panel1.add(panel3, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
 							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 							new Insets(0, 0, 5, 0), 0, 0));
 
@@ -198,7 +241,7 @@ public class dataBaseInfoWindow extends JDialog {
 								GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
 								new Insets(0, 0, 0, 0), 0, 0));
 						}
-						panel1.add(panel4, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
+						panel1.add(panel4, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0,
 							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 							new Insets(0, 0, 5, 0), 0, 0));
 
@@ -235,7 +278,7 @@ public class dataBaseInfoWindow extends JDialog {
 								GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
 								new Insets(0, 0, 0, 0), 0, 0));
 						}
-						panel1.add(panel5, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0,
+						panel1.add(panel5, new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0,
 							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 							new Insets(0, 0, 0, 0), 0, 0));
 					}
@@ -280,10 +323,14 @@ public class dataBaseInfoWindow extends JDialog {
 	private JPanel contentPanel;
 	private JScrollPane scrollPane1;
 	private JPanel panel1;
+	private JPanel panel10;
+	private JPanel panel11;
+	private JLabel label7;
+	protected JTextField userPHP;
 	private JPanel panel2;
 	private JPanel panel6;
 	private JLabel label2;
-	protected JTextField user;
+	protected JTextField userID;
 	private JPanel panel3;
 	private JPanel panel7;
 	private JLabel label3;

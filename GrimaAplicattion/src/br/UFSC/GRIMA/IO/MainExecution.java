@@ -26,6 +26,10 @@ public class MainExecution extends JApplet{
 	private ArrayList<Variable> newMonitoringPanelList;
 	private boolean autoSaveVariables = true; // com essa opcao ativada, todas as variaveis adicionadas ao monitoramento sao automaticamente selecionadas para serem salvas no banco de dados
 	private boolean monitorAllVariables = true; //com essa opcao ativada, ao adicionar um agente todas as variaveis das maquinas contidas nele entram na lista de monitoramento automaticamente
+	//login do usuario no php
+	private String userPHP = "Void";
+	private int userIdPHP = 1;
+	
 ///////////////////////////Constructor//////////////////////////////////////////////////////////	
 	public MainExecution() {
 		int[] range = {1, 0, 0};
@@ -109,6 +113,10 @@ public class MainExecution extends JApplet{
 			units.get(i).setTimeRange(getTimeRange(units.get(i).getPanelType()));
 		}
 	}
+	public static void main(String[] args)
+	{
+		new MainExecution();
+	}
 ////////////////////Getters and Setters/////////////////////////////////////////////////////
 	public IOControl getIoControl() {
 		return ioControl;
@@ -183,6 +191,18 @@ public class MainExecution extends JApplet{
 	}
 	public void setMonitorAllVariables(boolean monitorAllVariables) {
 		this.monitorAllVariables = monitorAllVariables;
+	}
+	public String getUserPHP() {
+		return userPHP;
+	}
+	public void setUserPHP(String userPHP) {
+		this.userPHP = userPHP;
+	}
+	public int getUserIdPHP() {
+		return userIdPHP;
+	}
+	public void setUserIdPHP(int userIdPHP) {
+		this.userIdPHP = userIdPHP;
 	}
 	
 }

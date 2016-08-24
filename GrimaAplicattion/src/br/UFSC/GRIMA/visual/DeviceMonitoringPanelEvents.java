@@ -59,7 +59,8 @@ public class DeviceMonitoringPanelEvents extends DeviceMonitoringPanel implement
 			}
 			else {
 				ArrayList<Device> devices = mainInterface.getMainExecution().getAllDevices();
-				setNewDeviceMonitored(devices.get(deviceComboBox.getSelectedIndex() - 1));
+				if(!devices.get(deviceComboBox.getSelectedIndex() - 1).equals(mainInterface.getMainExecution().getDeviceMonitoringSystem().getSelectedDevice()))
+					setNewDeviceMonitored(devices.get(deviceComboBox.getSelectedIndex() - 1));
 			}
 		}
 		else if (e.getSource().equals(cameraComboBox)) {

@@ -99,9 +99,9 @@ public class ViewDevicesWindow extends JFrame {
 					{
 						devicesPanel.setBorder(new TitledBorder("Devices"));
 						devicesPanel.setLayout(new GridBagLayout());
-						((GridBagLayout)devicesPanel.getLayout()).columnWidths = new int[] {0, 0, 0, 0, 0};
+						((GridBagLayout)devicesPanel.getLayout()).columnWidths = new int[] {0, 0, 0, 0, 0, 0};
 						((GridBagLayout)devicesPanel.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
-						((GridBagLayout)devicesPanel.getLayout()).columnWeights = new double[] {1.0, 1.0, 1.0, 1.0, 1.0E-4};
+						((GridBagLayout)devicesPanel.getLayout()).columnWeights = new double[] {1.0, 1.0, 1.0, 1.0, 1.0, 1.0E-4};
 						((GridBagLayout)devicesPanel.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
 					}
 					scrollPane1.setViewportView(devicesPanel);

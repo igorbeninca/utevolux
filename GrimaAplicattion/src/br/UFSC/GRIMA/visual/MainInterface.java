@@ -1,5 +1,7 @@
 package br.UFSC.GRIMA.visual;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -8,6 +10,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.WindowEvent;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -28,19 +33,25 @@ import br.UFSC.GRIMA.dataStructure.Device;
 import br.UFSC.GRIMA.dataStructure.Variable;
 import br.UFSC.GRIMA.operational.MonitoringUnit;
 
-public class MainInterface extends MainWindow implements ActionListener {
+public class MainInterface extends MainWindow implements ActionListener, Printable {
 	private MainExecution mainExecution;
 	private DeviceMonitoringPanelEvents deviceMonitoringPanelEvents;
 	private PanelMonitoringPanel panelMonitoringPanel;
 	private ViewDevicesEvents viewDevicesEvents;
 	private PreferencesEvents preferenceEvents;
+	private AgentInfoEvents agentInfoEvents;
+	public static int ONLINE = 0;
+	public static int WARNING = 1;
+	public static int OFFLINE = 2;
 //////////////////////////Constructor///////////////////////////////////////////////////////////////////
 	public MainInterface(MainExecution mainExecution)	{
 		setMainExecution(mainExecution);
+		menuPrint.addActionListener(this);
 		menuExit.addActionListener(this);
 		menuPreferences.addActionListener(this);
 		menuDeviceConfigure.addActionListener(this);
 		menuDatabase.addActionListener(this);
+		menuAgent.addActionListener(this);
 		menuAddAgent.addActionListener(this);
 		menuDeviceInfo.addActionListener(this);
 		menuCameraInfo.addActionListener(this);
@@ -53,22 +64,57 @@ public class MainInterface extends MainWindow implements ActionListener {
 		panelMonitoringButton.addActionListener(this);
 		currentTimeField.setEditable(false);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		historyTextPane.setText("History: ");
+		String str = "=====================================================================" + "\n"
+				   + "History							       " + "\n"
+				   + "User: " + mainExecution.getUserPHP() + "; ID: " + mainExecution.getUserIdPHP() + "\n"
+				   + "Creation Time: " + (new Date()).toString() + "\n"
+				   + "=====================================================================";
+				
+		historyTextPane.setText(str);
 		this.setVisible(true);
 	}
 //////////////////////////Methods///////////////////////////////////////////////////////////////////////
 	public void updateHistory(String tittle, String msg) {
-		String time = currentTimeField.getText();
-		if(time.equals("")) {
-			time = (new Date()).toString();
-		}
+		String time = (new Date()).toString();
 		String history = historyTextPane.getText() + "\n" + tittle + " (" +time + "):\n" + msg + "\n" + "-----------------------------------------------------------------------------";
 		historyTextPane.setText(history);
+	}
+	public void setAgentStatus(String msg, int status) {
+		String string = "<html><font color=\"";
+		if(status==ONLINE)
+			string = string + "green";
+		else if(status==OFFLINE)
+			string = string + "red";
+		else if(status == WARNING) 
+			string = string + "yellow";
+		string = string + "\">" + msg + "</font></html>";
+		agentStatusField.setText(string);
+	}
+	public void setDatabaseStatus(String msg, int status) {
+		String string = "<html><font color=\"";
+		if(status==ONLINE)
+			string = string + "green";
+		else if(status==OFFLINE)
+			string = string + "red";
+		else if(status == WARNING) 
+			string = string + "yellow";
+		string = string + "\">" + msg + "</font></html>";
+		dataBaseStatusField.setText(string);
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		if (e.getSource().equals(menuExit)) 
+		if(e.getSource().equals(menuPrint)) {
+			try {
+				historyTextPane.print();
+				JOptionPane.showMessageDialog(null, "Print done", "Successfully!", JOptionPane.INFORMATION_MESSAGE);
+			} catch (PrinterException e1) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(null, "Error", "The system couldn't print the History.", JOptionPane.ERROR_MESSAGE);
+				e1.printStackTrace();
+			}
+		}
+		else if (e.getSource().equals(menuExit)) 
 			this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 		else if (e.getSource().equals(menuPreferences)) {
 			this.setEnabled(false);
@@ -80,6 +126,9 @@ public class MainInterface extends MainWindow implements ActionListener {
 		}
 		else if (e.getSource().equals(menuDatabase)) {
 			new DataBaseInfoEvents(this);
+		}
+		else if(e.getSource().equals(menuAgent)) {
+			setAgentInfoEvents(new AgentInfoEvents(this));
 		}
 		else if (e.getSource().equals(menuAddAgent)) {
 			this.setEnabled(false);
@@ -386,11 +435,15 @@ public class MainInterface extends MainWindow implements ActionListener {
 		workSpace.removeAll();
 		panelMonitoringButton.setSelected(false);
 	}
-	public void setLoopTime(Long millis) {
-		loopTimeField.setText(millis + " milliseconds");
+	public void setLoadExPing(Long millis) {
+		loadExPing.setText(millis + "");
 		if(preferenceEvents != null) {
 			preferenceEvents.loopTime.setText(millis + "");
 		}
+	}
+	public void setSaveExPing(Long millis) {
+		if(millis != 0)
+			saveExPing.setText(millis + "");
 	}
 /////////////////////supportMethods///////////////////////////////////
 	
@@ -466,7 +519,12 @@ public class MainInterface extends MainWindow implements ActionListener {
 			preferenceEvents.timeRegister.setText(s);
 		}
 	}
-	
+	@Override
+	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex)
+			throws PrinterException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 ////////////////////////////////Getters and Setters////////////////////////////////////////////////////////
 	public MainExecution getMainExecution() {
 		return mainExecution;
@@ -498,5 +556,11 @@ public class MainInterface extends MainWindow implements ActionListener {
 	}
 	public void setPreferenceEvents(PreferencesEvents preferenceEvents) {
 		this.preferenceEvents = preferenceEvents;
+	}
+	public AgentInfoEvents getAgentInfoEvents() {
+		return agentInfoEvents;
+	}
+	public void setAgentInfoEvents(AgentInfoEvents agentInfoEvents) {
+		this.agentInfoEvents = agentInfoEvents;
 	}
 }

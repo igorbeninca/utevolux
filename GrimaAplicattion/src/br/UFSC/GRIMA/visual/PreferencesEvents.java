@@ -13,7 +13,6 @@ public class PreferencesEvents extends PreferencesWindow implements ActionListen
 //////////////////////////////Constructor///////////////////////////////////////////////////
 	public PreferencesEvents(MainInterface mainInterface) {
 		this.setMainInterface(mainInterface);
-		PreferencesEvents thisClass = this;
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
@@ -46,7 +45,7 @@ public class PreferencesEvents extends PreferencesWindow implements ActionListen
 			}
 		});
 		timeRegister.setText(mainInterface.currentTimeField.getText());
-		loopTime.setText(mainInterface.loopTimeField.getText());
+		loopTime.setText(mainInterface.loadExPing.getText());
 		monitorAll.setSelected(mainInterface.getMainExecution().isMonitorAllVariables());
 		autoSaveBox.setSelected(mainInterface.getMainExecution().isAutoSaveVariables());
 		if(mainInterface.getMainExecution().getDefaultTimeOption() == mainInterface.getMainExecution().GENERAL) {
@@ -75,6 +74,8 @@ public class PreferencesEvents extends PreferencesWindow implements ActionListen
 		kcField.setValue(bufControl.getKc());
 		samplingField.setValue(bufControl.getTd());
 		z0Field.setValue(bufControl.getZ0());
+		agentSlowField.setValue(mainInterface.getMainExecution().getIoControl().getLoadExecution().getAgentSlowLimit());
+		dataBaseSlowField.setValue(mainInterface.getMainExecution().getIoControl().getSaveExecution().getDatabaseSlowLimit());
 		calculateButton.addActionListener(this);
 		databaseInfoButton.addActionListener(this);
 		okButton.addActionListener(this);
@@ -88,8 +89,8 @@ public class PreferencesEvents extends PreferencesWindow implements ActionListen
 		if(e.getSource().equals(mainInterface.currentTimeField)) {
 			timeRegister.setText(mainInterface.currentTimeField.getText());
 		}
-		else if(e.getSource().equals(mainInterface.loopTimeField)) {
-			loopTime.setText(mainInterface.loopTimeField.getText());
+		else if(e.getSource().equals(mainInterface.loadExPing)) {
+			loopTime.setText(mainInterface.loadExPing.getText());
 		}
 		else if(e.getSource().equals(radioGeneral)||e.getSource().equals(radioSplitted)) {
 			if(radioGeneral.isSelected()) {
@@ -140,6 +141,8 @@ public class PreferencesEvents extends PreferencesWindow implements ActionListen
 			bufControl.setKc((double)kcField.getValue());
 			bufControl.setZ0((double)z0Field.getValue());
 			bufControl.setTd((long)samplingField.getValue());
+			mainInterface.getMainExecution().getIoControl().getLoadExecution().setAgentSlowLimit((long)agentSlowField.getValue());
+			mainInterface.getMainExecution().getIoControl().getSaveExecution().setDatabaseSlowLimit((long)dataBaseSlowField.getValue());
 			this.dispose();
 		}
 	}

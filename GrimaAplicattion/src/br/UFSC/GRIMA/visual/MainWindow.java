@@ -20,12 +20,14 @@ public class MainWindow extends JFrame {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		menuBar1 = new JMenuBar();
 		menu1 = new JMenu();
+		menuPrint = new JMenuItem();
 		menuExit = new JMenuItem();
 		menu2 = new JMenu();
 		menuPreferences = new JMenuItem();
 		menuDeviceConfigure = new JMenuItem();
 		menuDatabase = new JMenuItem();
 		menu3 = new JMenu();
+		menuAgent = new JMenuItem();
 		menuAddAgent = new JMenuItem();
 		menu4 = new JMenu();
 		menuDeviceInfo = new JMenuItem();
@@ -43,22 +45,26 @@ public class MainWindow extends JFrame {
 		panel7 = new JPanel();
 		panel2 = new JPanel();
 		panel4 = new JPanel();
+		panel11 = new JPanel();
+		label5 = new JLabel();
 		panel1 = new JPanel();
 		panel3 = new JPanel();
+		panel9 = new JPanel();
 		label2 = new JLabel();
-		textField1 = new JTextField();
-		panel8 = new JPanel();
+		agentStatusField = new JLabel();
+		label1 = new JLabel();
+		loadExPing = new JTextField();
+		label4 = new JLabel();
+		currentTimeField = new JTextField();
+		panel10 = new JPanel();
 		label3 = new JLabel();
-		textField2 = new JTextField();
+		dataBaseStatusField = new JLabel();
+		label6 = new JLabel();
+		saveExPing = new JTextField();
 		panel5 = new JPanel();
 		deviceInfoButton = new JToggleButton();
 		deviceMonitoringButton = new JToggleButton();
 		panelMonitoringButton = new JToggleButton();
-		panel6 = new JPanel();
-		label4 = new JLabel();
-		currentTimeField = new JTextField();
-		label1 = new JLabel();
-		loopTimeField = new JTextField();
 		splitPane1 = new JSplitPane();
 		scrollPane2 = new JScrollPane();
 		workSpace = new JPanel();
@@ -67,7 +73,7 @@ public class MainWindow extends JFrame {
 
 		//======== this ========
 		setIconImage(new ImageIcon(getClass().getResource("/br/UFSC/GRIMA/images/iconeLogo.png")).getImage());
-		setTitle("Application (Main Window)");
+		setTitle("Client Application");
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new GridBagLayout());
 		((GridBagLayout)contentPane.getLayout()).columnWidths = new int[] {0, 0};
@@ -82,6 +88,10 @@ public class MainWindow extends JFrame {
 			{
 				menu1.setText("File");
 				menu1.setFont(new Font("Verdana", Font.PLAIN, 12));
+
+				//---- menuPrint ----
+				menuPrint.setText("Print History");
+				menu1.add(menuPrint);
 
 				//---- menuExit ----
 				menuExit.setText("exit");
@@ -121,6 +131,11 @@ public class MainWindow extends JFrame {
 			{
 				menu3.setText("Agent");
 				menu3.setFont(new Font("Dialog", Font.PLAIN, 12));
+
+				//---- menuAgent ----
+				menuAgent.setText("Agent Info");
+				menuAgent.setIcon(new ImageIcon(getClass().getResource("/br/UFSC/GRIMA/images/agentIcon.png")));
+				menu3.add(menuAgent);
 
 				//---- menuAddAgent ----
 				menuAddAgent.setText("Add Agent");
@@ -241,8 +256,26 @@ public class MainWindow extends JFrame {
 					panel4.setLayout(new GridBagLayout());
 					((GridBagLayout)panel4.getLayout()).columnWidths = new int[] {0, 0, 0};
 					((GridBagLayout)panel4.getLayout()).rowHeights = new int[] {0, 0};
-					((GridBagLayout)panel4.getLayout()).columnWeights = new double[] {1.0, 1.0, 1.0E-4};
+					((GridBagLayout)panel4.getLayout()).columnWeights = new double[] {0.0, 1.0, 1.0E-4};
 					((GridBagLayout)panel4.getLayout()).rowWeights = new double[] {0.0, 1.0E-4};
+
+					//======== panel11 ========
+					{
+						panel11.setLayout(new GridBagLayout());
+						((GridBagLayout)panel11.getLayout()).columnWidths = new int[] {0, 0};
+						((GridBagLayout)panel11.getLayout()).rowHeights = new int[] {0, 0};
+						((GridBagLayout)panel11.getLayout()).columnWeights = new double[] {0.0, 1.0E-4};
+						((GridBagLayout)panel11.getLayout()).rowWeights = new double[] {1.0, 1.0E-4};
+
+						//---- label5 ----
+						label5.setIcon(new ImageIcon(getClass().getResource("/br/UFSC/GRIMA/images/logofinal.png")));
+						panel11.add(label5, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+							new Insets(0, 0, 0, 0), 0, 0));
+					}
+					panel4.add(panel11, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+						new Insets(0, 0, 0, 5), 0, 0));
 
 					//======== panel1 ========
 					{
@@ -250,49 +283,104 @@ public class MainWindow extends JFrame {
 						((GridBagLayout)panel1.getLayout()).columnWidths = new int[] {0, 0};
 						((GridBagLayout)panel1.getLayout()).rowHeights = new int[] {0, 0, 0};
 						((GridBagLayout)panel1.getLayout()).columnWeights = new double[] {1.0, 1.0E-4};
-						((GridBagLayout)panel1.getLayout()).rowWeights = new double[] {0.0, 0.0, 1.0E-4};
+						((GridBagLayout)panel1.getLayout()).rowWeights = new double[] {0.0, 1.0, 1.0E-4};
 
 						//======== panel3 ========
 						{
+							panel3.setBorder(new TitledBorder(""));
 							panel3.setLayout(new GridBagLayout());
-							((GridBagLayout)panel3.getLayout()).columnWidths = new int[] {0, 0, 0, 0, 0, 0};
+							((GridBagLayout)panel3.getLayout()).columnWidths = new int[] {0, 0, 0};
 							((GridBagLayout)panel3.getLayout()).rowHeights = new int[] {0, 0};
-							((GridBagLayout)panel3.getLayout()).columnWeights = new double[] {0.0, 1.0, 0.0, 0.0, 1.0, 1.0E-4};
+							((GridBagLayout)panel3.getLayout()).columnWeights = new double[] {1.0, 1.0, 1.0E-4};
 							((GridBagLayout)panel3.getLayout()).rowWeights = new double[] {0.0, 1.0E-4};
 
-							//---- label2 ----
-							label2.setText("Agent Communication:");
-							panel3.add(label2, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
-								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-								new Insets(0, 0, 0, 5), 0, 0));
-
-							//---- textField1 ----
-							textField1.setEnabled(false);
-							panel3.add(textField1, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
-								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-								new Insets(0, 0, 0, 5), 0, 0));
-
-							//======== panel8 ========
+							//======== panel9 ========
 							{
-								panel8.setLayout(new GridBagLayout());
-								((GridBagLayout)panel8.getLayout()).columnWidths = new int[] {0, 0, 0};
-								((GridBagLayout)panel8.getLayout()).rowHeights = new int[] {0, 0};
-								((GridBagLayout)panel8.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
-								((GridBagLayout)panel8.getLayout()).rowWeights = new double[] {0.0, 1.0E-4};
+								panel9.setBorder(new TitledBorder(""));
+								panel9.setLayout(new GridBagLayout());
+								((GridBagLayout)panel9.getLayout()).columnWidths = new int[] {0, 0, 0};
+								((GridBagLayout)panel9.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
+								((GridBagLayout)panel9.getLayout()).columnWeights = new double[] {0.0, 1.0, 1.0E-4};
+								((GridBagLayout)panel9.getLayout()).rowWeights = new double[] {1.0, 1.0, 0.0, 1.0E-4};
+
+								//---- label2 ----
+								label2.setText("Agent Communication:");
+								label2.setHorizontalAlignment(SwingConstants.RIGHT);
+								panel9.add(label2, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+									new Insets(0, 0, 5, 5), 0, 0));
+
+								//---- agentStatusField ----
+								agentStatusField.setBorder(new EtchedBorder(EtchedBorder.RAISED));
+								panel9.add(agentStatusField, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
+									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+									new Insets(0, 0, 5, 0), 0, 0));
+
+								//---- label1 ----
+								label1.setText("Ping:");
+								label1.setHorizontalAlignment(SwingConstants.RIGHT);
+								panel9.add(label1, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+									new Insets(0, 0, 5, 5), 0, 0));
+
+								//---- loadExPing ----
+								loadExPing.setEditable(false);
+								panel9.add(loadExPing, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
+									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+									new Insets(0, 0, 5, 0), 0, 0));
+
+								//---- label4 ----
+								label4.setText("Reference Time:");
+								label4.setHorizontalAlignment(SwingConstants.RIGHT);
+								panel9.add(label4, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
+									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+									new Insets(0, 0, 0, 5), 0, 0));
+
+								//---- currentTimeField ----
+								currentTimeField.setEditable(false);
+								panel9.add(currentTimeField, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0,
+									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+									new Insets(0, 0, 0, 0), 0, 0));
 							}
-							panel3.add(panel8, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0,
+							panel3.add(panel9, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
 								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 								new Insets(0, 0, 0, 5), 0, 0));
 
-							//---- label3 ----
-							label3.setText("DataBase Communication:");
-							panel3.add(label3, new GridBagConstraints(3, 0, 1, 1, 0.0, 0.0,
-								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-								new Insets(0, 0, 0, 5), 0, 0));
+							//======== panel10 ========
+							{
+								panel10.setBorder(new TitledBorder(""));
+								panel10.setLayout(new GridBagLayout());
+								((GridBagLayout)panel10.getLayout()).columnWidths = new int[] {0, 0, 0};
+								((GridBagLayout)panel10.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
+								((GridBagLayout)panel10.getLayout()).columnWeights = new double[] {0.0, 1.0, 1.0E-4};
+								((GridBagLayout)panel10.getLayout()).rowWeights = new double[] {0.0, 0.0, 1.0, 1.0E-4};
 
-							//---- textField2 ----
-							textField2.setEnabled(false);
-							panel3.add(textField2, new GridBagConstraints(4, 0, 1, 1, 0.0, 0.0,
+								//---- label3 ----
+								label3.setText("DataBase Communication:");
+								panel10.add(label3, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+									new Insets(0, 0, 5, 5), 0, 0));
+
+								//---- dataBaseStatusField ----
+								dataBaseStatusField.setBorder(new EtchedBorder(EtchedBorder.RAISED));
+								panel10.add(dataBaseStatusField, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
+									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+									new Insets(0, 0, 5, 0), 0, 0));
+
+								//---- label6 ----
+								label6.setText("Ping:");
+								label6.setHorizontalAlignment(SwingConstants.RIGHT);
+								panel10.add(label6, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+									new Insets(0, 0, 5, 5), 0, 0));
+
+								//---- saveExPing ----
+								saveExPing.setEditable(false);
+								panel10.add(saveExPing, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
+									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+									new Insets(0, 0, 5, 0), 0, 0));
+							}
+							panel3.add(panel10, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
 								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 								new Insets(0, 0, 0, 0), 0, 0));
 						}
@@ -330,43 +418,7 @@ public class MainWindow extends JFrame {
 							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 							new Insets(0, 0, 0, 0), 0, 0));
 					}
-					panel4.add(panel1, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
-						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-						new Insets(0, 0, 0, 5), 0, 0));
-
-					//======== panel6 ========
-					{
-						panel6.setLayout(new GridBagLayout());
-						((GridBagLayout)panel6.getLayout()).columnWidths = new int[] {0, 0, 0};
-						((GridBagLayout)panel6.getLayout()).rowHeights = new int[] {0, 0, 0};
-						((GridBagLayout)panel6.getLayout()).columnWeights = new double[] {0.0, 1.0, 1.0E-4};
-						((GridBagLayout)panel6.getLayout()).rowWeights = new double[] {0.0, 0.0, 1.0E-4};
-
-						//---- label4 ----
-						label4.setText("Reference Time:");
-						panel6.add(label4, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
-							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-							new Insets(0, 0, 5, 5), 0, 0));
-
-						//---- currentTimeField ----
-						currentTimeField.setEditable(false);
-						panel6.add(currentTimeField, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
-							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-							new Insets(0, 0, 5, 0), 0, 0));
-
-						//---- label1 ----
-						label1.setText("Loop Time:");
-						panel6.add(label1, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
-							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-							new Insets(0, 0, 0, 5), 0, 0));
-
-						//---- loopTimeField ----
-						loopTimeField.setEditable(false);
-						panel6.add(loopTimeField, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
-							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-							new Insets(0, 0, 0, 0), 0, 0));
-					}
-					panel4.add(panel6, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
+					panel4.add(panel1, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(0, 0, 0, 0), 0, 0));
 				}
@@ -426,12 +478,14 @@ public class MainWindow extends JFrame {
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
 	private JMenuBar menuBar1;
 	private JMenu menu1;
+	protected JMenuItem menuPrint;
 	protected JMenuItem menuExit;
 	private JMenu menu2;
 	protected JMenuItem menuPreferences;
 	protected JMenuItem menuDeviceConfigure;
 	protected JMenuItem menuDatabase;
 	private JMenu menu3;
+	protected JMenuItem menuAgent;
 	protected JMenuItem menuAddAgent;
 	private JMenu menu4;
 	protected JMenuItem menuDeviceInfo;
@@ -449,22 +503,26 @@ public class MainWindow extends JFrame {
 	private JPanel panel7;
 	private JPanel panel2;
 	private JPanel panel4;
+	private JPanel panel11;
+	private JLabel label5;
 	private JPanel panel1;
 	private JPanel panel3;
+	private JPanel panel9;
 	private JLabel label2;
-	private JTextField textField1;
-	private JPanel panel8;
+	protected JLabel agentStatusField;
+	private JLabel label1;
+	protected JTextField loadExPing;
+	private JLabel label4;
+	protected JTextField currentTimeField;
+	private JPanel panel10;
 	private JLabel label3;
-	private JTextField textField2;
+	protected JLabel dataBaseStatusField;
+	private JLabel label6;
+	protected JTextField saveExPing;
 	private JPanel panel5;
 	protected JToggleButton deviceInfoButton;
 	public JToggleButton deviceMonitoringButton;
 	protected JToggleButton panelMonitoringButton;
-	private JPanel panel6;
-	private JLabel label4;
-	protected JTextField currentTimeField;
-	private JLabel label1;
-	protected JTextField loopTimeField;
 	private JSplitPane splitPane1;
 	private JScrollPane scrollPane2;
 	protected JPanel workSpace;

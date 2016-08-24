@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 
 import br.UFSC.GRIMA.application.entities.streams.WarningType;
 import br.UFSC.GRIMA.dataStructure.Variable;
+import br.UFSC.GRIMA.visual.MainInterface;
 
 
 public class SaveExecution implements Runnable {
@@ -26,12 +27,17 @@ public class SaveExecution implements Runnable {
 	// Dados de conexao com o Banco de dados
 	private Conexao connection;
 	private java.sql.Statement statement;
-	private int userId = 1;
 	private String tableSerieNumber;
 	private String dataBaseIP = "150.162.105.1";
 	private String dataBase = "mtcTest";
 	private String user = "webcad";
 	private String senha = "julio123";
+	// Status de conexao
+	private long databaseSlowLimit = 1000;
+	private int status = ONLINE;
+	public static int ONLINE = 0;
+	public static int OFFLINE = 1;
+	public static int SLOW = 2;
 
 ////////////////////////////////////Constructor/////////////////////////////////////////////////////////////
 	public SaveExecution (IOControl ioControl) {
@@ -45,6 +51,9 @@ public class SaveExecution implements Runnable {
 		if(connect)
 			connect = connect && createMonitoringTable();
 		setConnected(connect);
+		if(connected){
+			setStatus(ONLINE);
+		}
 	}
 ///////////////////////////////Methods///////////////////////////////////////////////////////////////////////////////
 	public void start() {
@@ -61,12 +70,10 @@ public class SaveExecution implements Runnable {
 			statement = getConnection().getConn().createStatement();
 		} catch (Exception e) {
 			e.printStackTrace();
-			String msg = "Error at connect to the server " + dataBaseIP + "\n" + e.toString();
+			String msg = "Error at connect to the server " + dataBaseIP;
 			ioControl.getController().getMainInterface().updateHistory("Database", msg);
 			return false;
 		}
-		String msg = "Successfully connected to the server " + dataBaseIP;
-		ioControl.getController().getMainInterface().updateHistory("Database", msg);
 		return true;
 	}
 	public boolean createMonitoringTable() {
@@ -86,11 +93,13 @@ public class SaveExecution implements Runnable {
 			statement.executeUpdate("CREATE TABLE " + tableSerieNumber +"(agent varchar(255), deviceStream varchar(255), componentStream varchar(255), variable varchar(255), value varchar(255), timestamp varchar(255));");
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null,"Cannot comunicate with the DataBase.","Erro", JOptionPane.ERROR_MESSAGE);
-			String msg = "Communication lost with the DataBase " + dataBaseIP + "\n" + e.toString();
+			String msg = "Communication lost with the DataBase " + dataBaseIP;
 			ioControl.getController().getMainInterface().updateHistory("Database", msg);
 			e.printStackTrace();
 			return false;
 		}
+		String msg = "Successfully connected to the server " + dataBaseIP + "\n Table Created: " + tableSerieNumber;
+		ioControl.getController().getMainInterface().updateHistory("Database", msg);
 		return true;
 	}
 ////////////////////////Run Tasks/////////////////////////////////////////////////////////////////////////////////
@@ -113,14 +122,19 @@ public class SaveExecution implements Runnable {
 					if (i < registersToSave.size() - 1)
 						query = query + ", ";
 				}
+				long time = System.currentTimeMillis();
 				query = query + ";";
 				try {
 					statement.executeUpdate(query);
 					setConnected(true);
+					if((System.currentTimeMillis() - time)>databaseSlowLimit)
+						setStatus(SLOW);
+					else
+						setStatus(ONLINE);
 				} catch (Exception e) {
 					e.printStackTrace();
 					if(connected) {
-						String msg = "Communication lost with the DataBase " + dataBaseIP + "\n" + e.toString();
+						String msg = "Communication lost with the DataBase " + dataBaseIP;
 						ioControl.getController().getMainInterface().updateHistory("Database", msg);
 					}
 					connectToDB();
@@ -129,10 +143,12 @@ public class SaveExecution implements Runnable {
 					if (connected) {
 						JOptionPane.showMessageDialog(null,"Cannot comunicate with DataBase.","Erro", JOptionPane.ERROR_MESSAGE);
 						setConnected(false);
+						setStatus(OFFLINE);
 					}
 				}
 			}
 			long loop = System.currentTimeMillis() - getLoopTime();
+			ioControl.getController().getMainInterface().setSaveExPing(loop);
 			if (loop < 200) {
 				try {
 					Thread.sleep(200 - loop);
@@ -168,12 +184,6 @@ public class SaveExecution implements Runnable {
 	}
 	public void setIoControl(IOControl ioControl) {
 		this.ioControl = ioControl;
-	}
-	public int getUserId() {
-		return userId;
-	}
-	public void setUserId(int userId) {
-		this.userId = userId;
 	}
 	public boolean isConnected() {
 		return connected;
@@ -252,6 +262,24 @@ public class SaveExecution implements Runnable {
 	}
 	public void setSenha(String senha) {
 		this.senha = senha;
+	}
+	public int getStatus() {
+		return status;
+	}
+	public void setStatus(int status) {
+		if(status == ONLINE)
+			ioControl.getController().getMainInterface().setDatabaseStatus("Online", MainInterface.ONLINE);
+		if(status == OFFLINE)
+			ioControl.getController().getMainInterface().setDatabaseStatus("Connection Lost", MainInterface.OFFLINE);
+		if(status == SLOW)
+			ioControl.getController().getMainInterface().setDatabaseStatus("Connection Slow", MainInterface.WARNING);
+		this.status = status;
+	}
+	public long getDatabaseSlowLimit() {
+		return databaseSlowLimit;
+	}
+	public void setDatabaseSlowLimit(long databaseSlowLimit) {
+		this.databaseSlowLimit = databaseSlowLimit;
 	}
 
 }

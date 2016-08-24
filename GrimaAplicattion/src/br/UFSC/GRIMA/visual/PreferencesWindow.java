@@ -33,6 +33,9 @@ public class PreferencesWindow extends JFrame {
 		panel8 = new JPanel();
 		loopTime = new JTextField();
 		label11 = new JLabel();
+		panel16 = new JPanel();
+		label13 = new JLabel();
+		agentSlowField = new JSpinner();
 		panel9 = new JPanel();
 		radioGeneral = new JRadioButton();
 		radioSplitted = new JRadioButton();
@@ -70,6 +73,9 @@ public class PreferencesWindow extends JFrame {
 		panel2 = new JPanel();
 		databaseInfoButton = new JButton();
 		autoSaveBox = new JCheckBox();
+		panel17 = new JPanel();
+		label14 = new JLabel();
+		dataBaseSlowField = new JSpinner();
 		panel14 = new JPanel();
 		panel15 = new JPanel();
 		label1 = new JLabel();
@@ -151,9 +157,9 @@ public class PreferencesWindow extends JFrame {
 								panel5.setBorder(new TitledBorder("Time Information"));
 								panel5.setLayout(new GridBagLayout());
 								((GridBagLayout)panel5.getLayout()).columnWidths = new int[] {0, 0};
-								((GridBagLayout)panel5.getLayout()).rowHeights = new int[] {0, 0, 0, 0, 0, 0, 0};
+								((GridBagLayout)panel5.getLayout()).rowHeights = new int[] {0, 0, 0, 0, 0, 0, 0, 0};
 								((GridBagLayout)panel5.getLayout()).columnWeights = new double[] {1.0, 1.0E-4};
-								((GridBagLayout)panel5.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0E-4};
+								((GridBagLayout)panel5.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0E-4};
 
 								//======== panel6 ========
 								{
@@ -209,6 +215,31 @@ public class PreferencesWindow extends JFrame {
 									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 									new Insets(0, 0, 5, 0), 0, 0));
 
+								//======== panel16 ========
+								{
+									panel16.setToolTipText("Limit of transfer time with Agent service that the application will consider slow transfer speed.");
+									panel16.setLayout(new GridBagLayout());
+									((GridBagLayout)panel16.getLayout()).columnWidths = new int[] {0, 0, 0};
+									((GridBagLayout)panel16.getLayout()).rowHeights = new int[] {0, 0};
+									((GridBagLayout)panel16.getLayout()).columnWeights = new double[] {1.0, 1.0, 1.0E-4};
+									((GridBagLayout)panel16.getLayout()).rowWeights = new double[] {0.0, 1.0E-4};
+
+									//---- label13 ----
+									label13.setText("Slow agent transfer speed Limit:");
+									panel16.add(label13, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+										GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+										new Insets(0, 0, 0, 5), 0, 0));
+
+									//---- agentSlowField ----
+									agentSlowField.setModel(new SpinnerNumberModel(1L, 0L, null, 25L));
+									panel16.add(agentSlowField, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
+										GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+										new Insets(0, 0, 0, 0), 0, 0));
+								}
+								panel5.add(panel16, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+									new Insets(0, 0, 5, 0), 0, 0));
+
 								//======== panel9 ========
 								{
 									panel9.setToolTipText("Changing this value, the system will load and mantain registers of all variables during the given time range.");
@@ -231,7 +262,7 @@ public class PreferencesWindow extends JFrame {
 										GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 										new Insets(0, 0, 0, 0), 0, 0));
 								}
-								panel5.add(panel9, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+								panel5.add(panel9, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
 									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 									new Insets(0, 0, 5, 0), 0, 0));
 
@@ -305,7 +336,7 @@ public class PreferencesWindow extends JFrame {
 										GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 										new Insets(0, 0, 0, 0), 0, 0));
 								}
-								panel5.add(generalTimeRangePanel, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
+								panel5.add(generalTimeRangePanel, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0,
 									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 									new Insets(0, 0, 5, 0), 0, 0));
 
@@ -465,7 +496,7 @@ public class PreferencesWindow extends JFrame {
 										GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 										new Insets(0, 0, 0, 0), 0, 0));
 								}
-								panel5.add(SplittedTimeRangePanel, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0,
+								panel5.add(SplittedTimeRangePanel, new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0,
 									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 									new Insets(0, 0, 5, 0), 0, 0));
 
@@ -474,14 +505,14 @@ public class PreferencesWindow extends JFrame {
 								resetVariablesBox.setToolTipText("Set the Time Range of all variables loaded in the given Time Range.");
 								resetVariablesBox.setActionCommand("Reset Variables Time Range");
 								resetVariablesBox.setSelected(true);
-								panel5.add(resetVariablesBox, new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0,
+								panel5.add(resetVariablesBox, new GridBagConstraints(0, 5, 1, 1, 0.0, 0.0,
 									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 									new Insets(0, 0, 5, 0), 0, 0));
 
 								//---- resetRangeBox ----
 								resetRangeBox.setText("Reset Panels Time Range");
 								resetRangeBox.setToolTipText("Set the Time Range of all monitoring Panels the given Time Range.");
-								panel5.add(resetRangeBox, new GridBagConstraints(0, 5, 1, 1, 0.0, 0.0,
+								panel5.add(resetRangeBox, new GridBagConstraints(0, 6, 1, 1, 0.0, 0.0,
 									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 									new Insets(0, 0, 0, 0), 0, 0));
 							}
@@ -523,6 +554,31 @@ public class PreferencesWindow extends JFrame {
 								panel1.add(autoSaveBox, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
 									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 									new Insets(0, 0, 5, 0), 0, 0));
+
+								//======== panel17 ========
+								{
+									panel17.setToolTipText("Limit of transfer time with Database service that the application will consider slow transfer speed.");
+									panel17.setLayout(new GridBagLayout());
+									((GridBagLayout)panel17.getLayout()).columnWidths = new int[] {0, 0, 0};
+									((GridBagLayout)panel17.getLayout()).rowHeights = new int[] {0, 0};
+									((GridBagLayout)panel17.getLayout()).columnWeights = new double[] {1.0, 1.0, 1.0E-4};
+									((GridBagLayout)panel17.getLayout()).rowWeights = new double[] {0.0, 1.0E-4};
+
+									//---- label14 ----
+									label14.setText("Slow database transfer speed Limit:");
+									panel17.add(label14, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+										GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+										new Insets(0, 0, 0, 5), 0, 0));
+
+									//---- dataBaseSlowField ----
+									dataBaseSlowField.setModel(new SpinnerNumberModel(1L, 0L, null, 25L));
+									panel17.add(dataBaseSlowField, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
+										GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+										new Insets(0, 0, 0, 0), 0, 0));
+								}
+								panel1.add(panel17, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
+									GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+									new Insets(0, 0, 0, 0), 0, 0));
 							}
 							panel3.add(panel1, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
 								GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -694,6 +750,9 @@ public class PreferencesWindow extends JFrame {
 	private JPanel panel8;
 	protected JTextField loopTime;
 	private JLabel label11;
+	private JPanel panel16;
+	private JLabel label13;
+	protected JSpinner agentSlowField;
 	private JPanel panel9;
 	protected JRadioButton radioGeneral;
 	protected JRadioButton radioSplitted;
@@ -731,6 +790,9 @@ public class PreferencesWindow extends JFrame {
 	private JPanel panel2;
 	protected JButton databaseInfoButton;
 	protected JCheckBox autoSaveBox;
+	private JPanel panel17;
+	private JLabel label14;
+	protected JSpinner dataBaseSlowField;
 	private JPanel panel14;
 	private JPanel panel15;
 	private JLabel label1;
