@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "5.2.0.3.124" Java: "1.8.0_51" encoding: "UTF-8"
+JFDML JFormDesigner: "5.2.0.3.124" Java: "1.8.0_73" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
@@ -131,7 +131,7 @@ new FormModel {
 					name: "scrollPane2"
 					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
 						"$columnSpecs": "0:1.0"
-						"$rowSpecs": "0, 0, 0, 0, 0, 0:1.0"
+						"$rowSpecs": "0, 0, 0, 0, 0, 0, 0, 0:1.0"
 						"$hGap": 5
 						"$vGap": 5
 						"$alignLeft": true
@@ -141,6 +141,22 @@ new FormModel {
 						auxiliary() {
 							"JavaCodeGenerator.variableModifiers": 4
 						}
+						add( new FormComponent( "javax.swing.JCheckBox" ) {
+							name: "selectAll"
+							"text": "Select All"
+							auxiliary() {
+								"JavaCodeGenerator.variableModifiers": 4
+							}
+						}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
+						add( new FormComponent( "javax.swing.JCheckBox" ) {
+							name: "monitorAll"
+							"text": "Monitor All Selected"
+							auxiliary() {
+								"JavaCodeGenerator.variableModifiers": 4
+							}
+						}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+							"gridy": 1
+						} )
 					} )
 				}, new FormLayoutConstraints( class java.lang.String ) {
 					"value": "left"

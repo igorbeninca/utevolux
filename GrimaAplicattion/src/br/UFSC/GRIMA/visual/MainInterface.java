@@ -71,11 +71,12 @@ public class MainInterface extends MainWindow implements ActionListener, Printab
 				   + "=====================================================================";
 				
 		historyTextPane.setText(str);
-		this.setVisible(true);
 	}
 //////////////////////////Methods///////////////////////////////////////////////////////////////////////
 	public void updateHistory(String tittle, String msg) {
-		String time = (new Date()).toString();
+		updateHistory(tittle, msg, (new Date()).toString());
+	}
+	public void updateHistory(String tittle, String msg, String time) {
 		String history = historyTextPane.getText() + "\n" + tittle + " (" +time + "):\n" + msg + "\n" + "-----------------------------------------------------------------------------";
 		historyTextPane.setText(history);
 	}
@@ -435,10 +436,10 @@ public class MainInterface extends MainWindow implements ActionListener, Printab
 		workSpace.removeAll();
 		panelMonitoringButton.setSelected(false);
 	}
-	public void setLoadExPing(Long millis) {
-		loadExPing.setText(millis + "");
+	public void setLoadExPing(String millis) {
+		loadExPing.setText(millis);
 		if(preferenceEvents != null) {
-			preferenceEvents.loopTime.setText(millis + "");
+			preferenceEvents.loopTime.setText(millis);
 		}
 	}
 	public void setSaveExPing(Long millis) {

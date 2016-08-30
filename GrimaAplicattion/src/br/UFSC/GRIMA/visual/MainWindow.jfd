@@ -227,22 +227,19 @@ new FormModel {
 				"resizeWeight": 0.8
 				"oneTouchExpandable": true
 				"border": new javax.swing.border.EtchedBorder( 1, null, null )
-				add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
-					name: "scrollPane2"
-					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
-						"$columnSpecs": "0:1.0"
-						"$rowSpecs": "0:1.0"
-						"$hGap": 5
-						"$vGap": 5
-						"$alignTop": true
-						"$alignLeft": true
-					} ) {
-						name: "workSpace"
-						"componentOrientation": sfield java.awt.ComponentOrientation LEFT_TO_RIGHT
-						auxiliary() {
-							"JavaCodeGenerator.variableModifiers": 4
-						}
-					} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
+					"$columnSpecs": "0:1.0"
+					"$rowSpecs": "0:1.0"
+					"$hGap": 5
+					"$vGap": 5
+					"$alignTop": true
+					"$alignLeft": true
+				} ) {
+					name: "workSpace"
+					"componentOrientation": sfield java.awt.ComponentOrientation LEFT_TO_RIGHT
+					auxiliary() {
+						"JavaCodeGenerator.variableModifiers": 4
+					}
 				}, new FormLayoutConstraints( class java.lang.String ) {
 					"value": "left"
 				} )

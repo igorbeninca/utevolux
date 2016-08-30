@@ -17,6 +17,8 @@ public class AgentInfoEvents extends AgentInfoWindow implements ActionListener{
 		super(mainInterface);
 		setMainInterface(mainInterface);
 		ArrayList<Agent>agents = mainInterface.getMainExecution().getAllAgents();
+//		if(agents == null)
+//			agents = new ArrayList<Agent>();
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
@@ -28,6 +30,7 @@ public class AgentInfoEvents extends AgentInfoWindow implements ActionListener{
 				mainInterface.setAgentInfoEvents(null);
 				for(int i = 0; i < agents.size(); i++) {
 					agents.get(i).setStatusLabel(null);
+					agents.get(i).setPingLabel(null);
 				}
 		    }
 		});
@@ -47,7 +50,11 @@ public class AgentInfoEvents extends AgentInfoWindow implements ActionListener{
 			else if(agents.get(i).getStatus()== Agent.SLOW)
 				text = "<html><font color=\"yellow\">Slow</font></html>";
 			status.setText(text);
+			JLabel ping = new JLabel();
+			if(agents.get(i).getPing() != 0)
+				ping.setText(agents.get(i).getPing() + "");
 			agents.get(i).setStatusLabel(status);
+			agents.get(i).setPingLabel(ping);
 			workspace.add(name, new GridBagConstraints(0, i+1, 1, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 0, 0), 0, 0));
@@ -61,6 +68,9 @@ public class AgentInfoEvents extends AgentInfoWindow implements ActionListener{
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 0, 0), 0, 0));
 			workspace.add(status, new GridBagConstraints(4, i+1, 1, 1, 0.0, 0.0,
+					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+					new Insets(0, 0, 0, 0), 0, 0));
+			workspace.add(ping, new GridBagConstraints(5, i+1, 1, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 0, 0), 0, 0));
 		}

@@ -29,6 +29,7 @@ public class MainExecution extends JApplet{
 	//login do usuario no php
 	private String userPHP = "Void";
 	private int userIdPHP = 1;
+	private String tabbleText = "To com fome.";
 	
 ///////////////////////////Constructor//////////////////////////////////////////////////////////	
 	public MainExecution() {
@@ -42,6 +43,7 @@ public class MainExecution extends JApplet{
 		setMainInterface(new MainInterface(this));
 		setIoControl(new IOControl(this));
 		setNewMonitoringPanelList(new ArrayList<Variable>());
+		mainInterface.setVisible(true);
 	}
 ////////////////////////////////////Methods/////////////////////////////////////////////////////////////
 	public String addAgent (String ip) {
@@ -203,6 +205,12 @@ public class MainExecution extends JApplet{
 	}
 	public void setUserIdPHP(int userIdPHP) {
 		this.userIdPHP = userIdPHP;
+	}
+	public String getTabbleText() {
+		return tabbleText;
+	}
+	public void setTabbleText(String tabbleText) {
+		this.tabbleText = tabbleText;
 	}
 	
 }

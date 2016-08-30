@@ -66,7 +66,6 @@ public class MainWindow extends JFrame {
 		deviceMonitoringButton = new JToggleButton();
 		panelMonitoringButton = new JToggleButton();
 		splitPane1 = new JSplitPane();
-		scrollPane2 = new JScrollPane();
 		workSpace = new JPanel();
 		scrollPane1 = new JScrollPane();
 		historyTextPane = new JTextPane();
@@ -441,21 +440,16 @@ public class MainWindow extends JFrame {
 			splitPane1.setOneTouchExpandable(true);
 			splitPane1.setBorder(new EtchedBorder());
 
-			//======== scrollPane2 ========
+			//======== workSpace ========
 			{
-
-				//======== workSpace ========
-				{
-					workSpace.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-					workSpace.setLayout(new GridBagLayout());
-					((GridBagLayout)workSpace.getLayout()).columnWidths = new int[] {0, 0};
-					((GridBagLayout)workSpace.getLayout()).rowHeights = new int[] {0, 0};
-					((GridBagLayout)workSpace.getLayout()).columnWeights = new double[] {1.0, 1.0E-4};
-					((GridBagLayout)workSpace.getLayout()).rowWeights = new double[] {1.0, 1.0E-4};
-				}
-				scrollPane2.setViewportView(workSpace);
+				workSpace.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+				workSpace.setLayout(new GridBagLayout());
+				((GridBagLayout)workSpace.getLayout()).columnWidths = new int[] {0, 0};
+				((GridBagLayout)workSpace.getLayout()).rowHeights = new int[] {0, 0};
+				((GridBagLayout)workSpace.getLayout()).columnWeights = new double[] {1.0, 1.0E-4};
+				((GridBagLayout)workSpace.getLayout()).rowWeights = new double[] {1.0, 1.0E-4};
 			}
-			splitPane1.setTopComponent(scrollPane2);
+			splitPane1.setTopComponent(workSpace);
 
 			//======== scrollPane1 ========
 			{
@@ -524,7 +518,6 @@ public class MainWindow extends JFrame {
 	public JToggleButton deviceMonitoringButton;
 	protected JToggleButton panelMonitoringButton;
 	private JSplitPane splitPane1;
-	private JScrollPane scrollPane2;
 	protected JPanel workSpace;
 	private JScrollPane scrollPane1;
 	protected JTextPane historyTextPane;

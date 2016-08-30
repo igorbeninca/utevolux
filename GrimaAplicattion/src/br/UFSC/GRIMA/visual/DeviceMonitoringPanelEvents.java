@@ -29,6 +29,8 @@ public class DeviceMonitoringPanelEvents extends DeviceMonitoringPanel implement
 		DeviceMonitoringSystem deviceMonitoringSystem = mainInterface.getMainExecution().getDeviceMonitoringSystem();
 		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<String>();
 		ArrayList<Device> devices = mainInterface.getMainExecution().getAllDevices();
+		selectAll.addActionListener(this);
+		monitorAll.addActionListener(this);
 		model.addElement(" ");
 		for(int i = 0; i < devices.size(); i++)
 			model.addElement(devices.get(i).getName());
@@ -79,6 +81,32 @@ public class DeviceMonitoringPanelEvents extends DeviceMonitoringPanel implement
 			else
 				playPause.setIcon(new ImageIcon(getClass().getResource("/br/UFSC/GRIMA/images/play.png")));
 		}
+		else if(e.getSource().equals(selectAll)) {
+			if(mainInterface.getMainExecution().getDeviceMonitoringSystem().getSelectedDevice() != null) {
+				ArrayList<Component>components = mainInterface.getMainExecution().getDeviceMonitoringSystem().getSelectedDevice().getComponents();
+				for(int i = 0; i < components.size(); i++) {
+					if(selectAll.isSelected() != components.get(i).getComponentButton().isSelected()) {
+						components.get(i).getComponentButton().doClick();
+					}
+				}
+			}
+		}
+		else if(e.getSource().equals(monitorAll)) {
+			if(mainInterface.getMainExecution().getDeviceMonitoringSystem().getSelectedDevice() != null) {
+				ArrayList<Component>components = mainInterface.getMainExecution().getDeviceMonitoringSystem().getSelectedDevice().getComponents();
+				for(int i = 0; i < components.size(); i++) {
+					if(components.get(i).getComponentButton().isSelected()) {
+						if(monitorAll.isSelected() != components.get(i).getDevMonTextField().isSelected()) {
+							components.get(i).getDevMonTextField().doClick();
+						}
+						else {
+							components.get(i).getDevMonTextField().setSelected(!monitorAll.isSelected());
+							components.get(i).getDevMonTextField().doClick();
+						}
+					}
+				}
+			}
+		}
 	}
 	public void setNewDeviceMonitored(Device device) {
 		cameraComboBox.removeAllItems();
@@ -88,9 +116,25 @@ public class DeviceMonitoringPanelEvents extends DeviceMonitoringPanel implement
 		mainInterface.getMainExecution().getDeviceMonitoringSystem().setSelectedComponents(new ArrayList<Component>());
 		mainInterface.getMainExecution().getDeviceMonitoringSystem().setSelectedVariables(new ArrayList<Variable>());
 		setDeviceMonitored(device);
+		if(selectAll.isSelected()) {
+			selectAll.setSelected(false);
+			selectAll.doClick();
+		}
+		if(monitorAll.isSelected()) {
+			monitorAll.setSelected(false);
+			monitorAll.doClick();
+		}
+		if(containsAllComponents())
+			selectAll.setSelected(true);
 	}
 	public void setDeviceMonitored(Device device) {
 		buttonsPanel.removeAll();
+		buttonsPanel.add(selectAll, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+				new Insets(0, 0, 5, 5), 0, 0));
+		buttonsPanel.add(monitorAll, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+				new Insets(0, 0, 5, 5), 0, 0));
 		informationPanel.removeAll();
 		cameraPanel.removeAll();
 		if(mainInterface.getMainExecution().getDeviceMonitoringSystem().getSelectedCamera() != null) {
@@ -125,7 +169,7 @@ public class DeviceMonitoringPanelEvents extends DeviceMonitoringPanel implement
 				else
 					others.add(device.getComponents().get(i));
 			}
-			int line = 0;
+			int line = 2;
 			if(!axes.isEmpty()) {
 				JPanel axesPanel = new JPanel();
 				axesPanel.setBorder(new TitledBorder("Axes"));
@@ -250,17 +294,26 @@ public class DeviceMonitoringPanelEvents extends DeviceMonitoringPanel implement
 		componentPanel.setLayout(new GridBagLayout());
 		((GridBagLayout)componentPanel.getLayout()).columnWidths = new int[] {0, 0};
 		((GridBagLayout)componentPanel.getLayout()).rowHeights = new int[] {0, 0};
-		((GridBagLayout)componentPanel.getLayout()).columnWeights = new double[] {0.0, 1.0E-4};
+		((GridBagLayout)componentPanel.getLayout()).columnWeights = new double[] {1.0, 1.0E-4};
 		((GridBagLayout)componentPanel.getLayout()).rowWeights = new double[] {0.0, 1.0E-4};
 		int line = 0;
 		component.setComponentPanel(componentPanel);
+		JCheckBox selAll = new JCheckBox("Select All");
+		componentPanel.add(selAll, new GridBagConstraints(0, line, 1, 1, 0.0, 0.0,
+				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+				new Insets(0, 0, 5, 5), 0, 0));
+		line++;
+		if(containsAllVariables(component))
+			selAll.setSelected(true);
+		component.setDevMonTextField(selAll);
+		selAll.addActionListener(component);
 		if(!sample.isEmpty()) {
 			JPanel samplePanel = new JPanel();
 			samplePanel.setBorder(new TitledBorder("Sample"));
 			samplePanel.setLayout(new GridBagLayout());
 			((GridBagLayout)samplePanel.getLayout()).columnWidths = new int[] {0, 0, 0, 0, 0, 0, 50};
 			((GridBagLayout)samplePanel.getLayout()).rowHeights = new int[] {0, 0};
-			((GridBagLayout)samplePanel.getLayout()).columnWeights = new double[] {0.0, 1.0E-4};
+			((GridBagLayout)samplePanel.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0,1.0E-4};
 			((GridBagLayout)samplePanel.getLayout()).rowWeights = new double[] {0.0, 1.0E-4};
 			componentPanel.add(samplePanel, new GridBagConstraints(0, line, 1, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -274,7 +327,7 @@ public class DeviceMonitoringPanelEvents extends DeviceMonitoringPanel implement
 			eventPanel.setLayout(new GridBagLayout());
 			((GridBagLayout)eventPanel.getLayout()).columnWidths = new int[] {0, 0, 0, 0, 0, 0, 50};
 			((GridBagLayout)eventPanel.getLayout()).rowHeights = new int[] {0, 0};
-			((GridBagLayout)eventPanel.getLayout()).columnWeights = new double[] {0.0, 1.0E-4};
+			((GridBagLayout)eventPanel.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0,1.0E-4};
 			((GridBagLayout)eventPanel.getLayout()).rowWeights = new double[] {0.0, 1.0E-4};
 			componentPanel.add(eventPanel, new GridBagConstraints(0, line, 1, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -288,7 +341,7 @@ public class DeviceMonitoringPanelEvents extends DeviceMonitoringPanel implement
 			conditionPanel.setLayout(new GridBagLayout());
 			((GridBagLayout)conditionPanel.getLayout()).columnWidths = new int[] {0, 0, 0, 0, 0, 0, 50};
 			((GridBagLayout)conditionPanel.getLayout()).rowHeights = new int[] {0, 0};
-			((GridBagLayout)conditionPanel.getLayout()).columnWeights = new double[] {0.0, 1.0E-4};
+			((GridBagLayout)conditionPanel.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0,1.0E-4};
 			((GridBagLayout)conditionPanel.getLayout()).rowWeights = new double[] {0.0, 1.0E-4};
 			componentPanel.add(conditionPanel, new GridBagConstraints(0, line, 1, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -302,6 +355,8 @@ public class DeviceMonitoringPanelEvents extends DeviceMonitoringPanel implement
 		repaint();
 	}
 	public void destroyComponentMonitored(Component component) {
+		component.getDevMonTextField().removeActionListener(component);
+		component.setDevMonTextField(null);
 		DeviceMonitoringSystem deviceMonitoringSystem = mainInterface.getMainExecution().getDeviceMonitoringSystem();
 		if (deviceMonitoringSystem.getSelectedComponents().contains(component)) {
 			deviceMonitoringSystem.getSelectedComponents().remove(component);
@@ -314,6 +369,31 @@ public class DeviceMonitoringPanelEvents extends DeviceMonitoringPanel implement
 		component.setComponentPanel(null);
 		revalidate();
 		repaint();
+	}
+	public boolean containsAllVariables(Component component) {
+		for(int i = 0; i < component.getVariables().size(); i++) {
+			if(!mainInterface.getMainExecution().getDeviceMonitoringSystem().getSelectedVariables().contains(component.getVariables().get(i)))
+				return false;
+		}
+		return true;
+	}
+	public boolean containsAllComponents() {
+		ArrayList<Component>components = mainInterface.getMainExecution().getDeviceMonitoringSystem().getSelectedDevice().getComponents();
+		for(int i = 0; i < components.size(); i++) {
+			if(!mainInterface.getMainExecution().getDeviceMonitoringSystem().getSelectedComponents().contains(components.get(i)))
+				return false;
+		}
+		return true;
+	}
+	public boolean monitoringAllComponents() {
+		ArrayList<Component>components = mainInterface.getMainExecution().getDeviceMonitoringSystem().getSelectedDevice().getComponents();
+		for(int i = 0; i < components.size(); i++) {
+			for(int j = 0; j < components.get(i).getVariables().size(); j++) {
+				if(!mainInterface.getMainExecution().getDeviceMonitoringSystem().getSelectedVariables().contains(components.get(i).getVariables().get(j)))
+					return false;
+			}
+		}
+		return true;
 	}
 	public void addVariablestoDeviceMonitoring(ArrayList<Variable> variables, JPanel container) {
 		for(int i = 0; i < variables.size(); i++) {
@@ -381,5 +461,11 @@ public class DeviceMonitoringPanelEvents extends DeviceMonitoringPanel implement
 	}
 	public void setMainInterface(MainInterface mainInterface) {
 		this.mainInterface = mainInterface;
+	}
+	public JCheckBox getSelectAll() {
+		return selectAll;
+	}
+	public void setSelectAll(JCheckBox selectAll) {
+		this.selectAll = selectAll;
 	}
 }

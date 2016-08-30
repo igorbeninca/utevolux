@@ -14,6 +14,7 @@ public class CurrentThread implements Runnable {
 	private Agent target;
 	private LoadExecution loadExecution;
 	private Thread thread;
+	private long ping;
 	private MTConnectStreamsType result;
 //////////////////////////constructor///////////////////////////////////////////////
 	public CurrentThread (Agent target, LoadExecution loadExecution) {
@@ -22,6 +23,13 @@ public class CurrentThread implements Runnable {
 		setLoadExecution(loadExecution);
 		setThread(new Thread(this, "Current Thread"));
 		thread.start();
+	}
+/////////////////////////////Methods////////////////////////////////////////////
+	public void abort() {
+		thread.interrupt();
+		target.setStatus(Agent.OFFLINE);
+		setPing(-1);//infinito
+		setTerminated(true);
 	}
 /////////////////////////Getters and Setters////////////////////////////////////////
 	public boolean isTerminated() {
@@ -54,19 +62,25 @@ public class CurrentThread implements Runnable {
 	public void setLoadExecution(LoadExecution loadExecution) {
 		this.loadExecution = loadExecution;
 	}
-
+	public long getPing() {
+		return ping;
+	}
+	public void setPing(long ping) {
+		this.ping = ping;
+		target.setPing(ping);
+	}
 //////////////////////run Tasks//////////////////////////////////////////////////////////	
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
 		try	{
-			long time = System.currentTimeMillis();
 			JAXBContext jc = JAXBContext.newInstance(MTConnectStreamsType.class);
 			Unmarshaller u = jc.createUnmarshaller();
 			URL url = new URL(target.getAgentIP() + "/current" );
 			JAXBElement<MTConnectStreamsType> element =(JAXBElement<MTConnectStreamsType>)u.unmarshal(url);
 			setResult(element.getValue());
-			if((System.currentTimeMillis() - time)>loadExecution.getAgentSlowLimit())
+			setPing(System.currentTimeMillis() - loadExecution.getCurrentTime());
+			if(ping > loadExecution.getAgentSlowLimit())
 				target.setStatus(Agent.SLOW);
 			else
 				target.setStatus(Agent.ONLINE);
@@ -74,9 +88,9 @@ public class CurrentThread implements Runnable {
 		}
 		catch (Exception e) {
 			target.setStatus(Agent.OFFLINE);
+			setPing(-1);//infinito
 			e.printStackTrace();
 			setTerminated(true);
 		}
 	}
-	
 }

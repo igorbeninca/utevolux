@@ -84,7 +84,7 @@ public class SaveExecution implements Runnable {
 			String id1 = rs.getString("id");
 			//cria referencia da tabela de monitoramento no Header
 			String time = new Date().toString();
-			statement.executeUpdate("INSERT INTO MonitoringHeader (user, Timestamp, Observation) VALUES(" + id1 + ",'" + time + "', 'ESTOU COM FOME');");
+			statement.executeUpdate("INSERT INTO MonitoringHeader (user, Timestamp, Observation) VALUES(" + id1 + ",'" + time + "', '" + ioControl.getController().getTabbleText() + "');");
 			//encontra numero de serie da tabela criada
 			rs = statement.executeQuery("select SerieNumber from MonitoringHeader where user= " + id1 + " AND Timestamp = '" + time + "';");
 			rs.next();
@@ -133,15 +133,10 @@ public class SaveExecution implements Runnable {
 						setStatus(ONLINE);
 				} catch (Exception e) {
 					e.printStackTrace();
-					if(connected) {
-						String msg = "Communication lost with the DataBase " + dataBaseIP;
-						ioControl.getController().getMainInterface().updateHistory("Database", msg);
-					}
 					connectToDB();
 					for (int i = registersToSave.size() - 1; i <= 0; i--)
 						buffer.add(0, registersToSave.remove(i));
 					if (connected) {
-						JOptionPane.showMessageDialog(null,"Cannot comunicate with DataBase.","Erro", JOptionPane.ERROR_MESSAGE);
 						setConnected(false);
 						setStatus(OFFLINE);
 					}

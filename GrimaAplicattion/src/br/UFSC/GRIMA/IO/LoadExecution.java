@@ -29,6 +29,7 @@ public class LoadExecution implements Runnable {
 	private long loopTime;
 	private long currentTime;
 	private long AgentSlowLimit = 1000;
+	private long abortCommunication = 10000;
 	private String lastError;
 	private boolean connected = true;
 ////////////////////////////////////Constructor/////////////////////////////////////////////////////////////
@@ -175,12 +176,14 @@ public class LoadExecution implements Runnable {
 	public void run() {
 		// TODO Auto-generated method stub
 		while (true) {
+			boolean offline = false;
 			if (!variableList.isEmpty()) {
 				ArrayList<CurrentThread> threads = new ArrayList<CurrentThread>();
 				for (int i = 0; i < agentList.size(); i++) {
 					threads.add(new CurrentThread(agentList.get(i), this));
 				}
 				boolean terminated = false;
+				long timeL = System.currentTimeMillis();
 				while (!terminated) {
 					terminated = true;
 					for(int i = 0; i < threads.size(); i++) 
@@ -188,6 +191,13 @@ public class LoadExecution implements Runnable {
 					try {
 						Thread.sleep(20);
 					} catch (InterruptedException e) {}
+					if((System.currentTimeMillis() - timeL) > abortCommunication) {//abort communication procedure 
+						for(int i = 0; i < threads.size(); i++) {
+							if(!threads.get(i).isTerminated()) {
+								threads.get(i).abort();
+							}
+						}
+					}
 				}
 				try {
 					Millisecond referenceTime = new Millisecond(threads.get(0).getResult().getHeader().getCreationTime().toGregorianCalendar().getTime());
@@ -206,6 +216,7 @@ public class LoadExecution implements Runnable {
 				}
 				if(offlineAgents == agentList.size()) {
 					ioControl.getController().getMainInterface().setAgentStatus("Error: Connection Lost.", MainInterface.OFFLINE);
+					offline = true;
 				}
 				else if(slowAgents == agentList.size()) {
 					ioControl.getController().getMainInterface().setAgentStatus("Warning: All agents are Slow.", MainInterface.WARNING);
@@ -258,7 +269,7 @@ public class LoadExecution implements Runnable {
 								ioControl.getController().getMainInterface().updateHistory("Device", "Value changed: " + variableList.get(i).getComponent().getDevice().getAgent().getAgentName() + "/" +
 																														 variableList.get(i).getComponent().getDevice().getName() + "/" +
 																														 variableList.get(i).getComponent().getComponent() + "-" + variableList.get(i).getComponent().getComponentID() + "/" +
-																														 variableList.get(i).getValidName() + ": " + value.toUpperCase());
+																														 variableList.get(i).getValidName() + ": " + value.toUpperCase(), time.toXMLFormat());
 							}
 							ArrayList<String> register = new ArrayList<String>();
 							variableList.get(i).setXMLValue(value);
@@ -463,7 +474,10 @@ public class LoadExecution implements Runnable {
 				}
 			}
 			long loop = System.currentTimeMillis() - getCurrentTime();
-			ioControl.getController().getMainInterface().setLoadExPing(loop);
+			if(offline)
+				ioControl.getController().getMainInterface().setLoadExPing("inf");
+			else
+				ioControl.getController().getMainInterface().setLoadExPing(loop + "");
 			setLoopTime(loop);
 			if (loop < 200) {
 				try {

@@ -4,7 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.JCheckBox;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.xml.bind.JAXBElement;
 
@@ -23,6 +25,7 @@ public class Component implements ActionListener{
 	///DeviceMonitoringPanelComponents
 	private JToggleButton componentButton;
 	private JPanel componentPanel;
+	private JCheckBox devMonTextField;
 //////////////////////Constructor//////////////////////////////////////////////////////////////////
 	public Component(ComponentStreamType currentObject, DeviceType probeObject, int agentPosition, Device device) {
 		setComponent(currentObject.getComponent());
@@ -89,6 +92,14 @@ public class Component implements ActionListener{
 				}
 			}
 		}
+		if(devMonTextField != null) {
+			if(e.getSource().equals(devMonTextField)) {
+				for(int i = 0; i < variables.size(); i++) {
+					if(variables.get(i).getMonitoringCheckBox().isSelected() != devMonTextField.isSelected())
+						variables.get(i).getMonitoringCheckBox().doClick();
+				}
+			}
+		}
 	}
 
 /////////////////////Getters and Setters//////////////////////////////////////////////////////////	
@@ -152,6 +163,10 @@ public class Component implements ActionListener{
 	public void setComponentPanel(JPanel componentPanel) {
 		this.componentPanel = componentPanel;
 	}
-
-	
+	public JCheckBox getDevMonTextField() {
+		return devMonTextField;
+	}
+	public void setDevMonTextField(JCheckBox devMonTextField) {
+		this.devMonTextField = devMonTextField;
+	}
 }

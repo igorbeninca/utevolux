@@ -33,6 +33,8 @@ public class DeviceMonitoringPanel extends JPanel {
 		splitPane1 = new JSplitPane();
 		scrollPane2 = new JScrollPane();
 		buttonsPanel = new JPanel();
+		selectAll = new JCheckBox();
+		monitorAll = new JCheckBox();
 		splitPane2 = new JSplitPane();
 		scrollPane1 = new JScrollPane();
 		informationPanel = new JPanel();
@@ -151,9 +153,21 @@ public class DeviceMonitoringPanel extends JPanel {
 				{
 					buttonsPanel.setLayout(new GridBagLayout());
 					((GridBagLayout)buttonsPanel.getLayout()).columnWidths = new int[] {0, 0};
-					((GridBagLayout)buttonsPanel.getLayout()).rowHeights = new int[] {0, 0, 0, 0, 0, 0, 0};
+					((GridBagLayout)buttonsPanel.getLayout()).rowHeights = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0};
 					((GridBagLayout)buttonsPanel.getLayout()).columnWeights = new double[] {1.0, 1.0E-4};
-					((GridBagLayout)buttonsPanel.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0E-4};
+					((GridBagLayout)buttonsPanel.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0E-4};
+
+					//---- selectAll ----
+					selectAll.setText("Select All");
+					buttonsPanel.add(selectAll, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+						new Insets(0, 0, 5, 0), 0, 0));
+
+					//---- monitorAll ----
+					monitorAll.setText("Monitor All Selected");
+					buttonsPanel.add(monitorAll, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+						new Insets(0, 0, 5, 0), 0, 0));
 				}
 				scrollPane2.setViewportView(buttonsPanel);
 			}
@@ -218,6 +232,8 @@ public class DeviceMonitoringPanel extends JPanel {
 	private JSplitPane splitPane1;
 	private JScrollPane scrollPane2;
 	protected JPanel buttonsPanel;
+	protected JCheckBox selectAll;
+	protected JCheckBox monitorAll;
 	private JSplitPane splitPane2;
 	private JScrollPane scrollPane1;
 	protected JPanel informationPanel;

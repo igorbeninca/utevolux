@@ -30,6 +30,7 @@ public class AgentInfoWindow extends JDialog {
 		label4 = new JLabel();
 		label6 = new JLabel();
 		label7 = new JLabel();
+		label5 = new JLabel();
 		buttonBar = new JPanel();
 		okButton = new JButton();
 
@@ -56,16 +57,17 @@ public class AgentInfoWindow extends JDialog {
 				//======== panel1 ========
 				{
 					panel1.setLayout(new GridBagLayout());
-					((GridBagLayout)panel1.getLayout()).columnWidths = new int[] {0, 0, 0};
+					((GridBagLayout)panel1.getLayout()).columnWidths = new int[] {0, 0};
 					((GridBagLayout)panel1.getLayout()).rowHeights = new int[] {0, 0};
-					((GridBagLayout)panel1.getLayout()).columnWeights = new double[] {1.0, 1.0, 1.0E-4};
+					((GridBagLayout)panel1.getLayout()).columnWeights = new double[] {1.0, 1.0E-4};
 					((GridBagLayout)panel1.getLayout()).rowWeights = new double[] {1.0, 1.0E-4};
 
 					//---- label1 ----
 					label1.setIcon(new ImageIcon(getClass().getResource("/br/UFSC/GRIMA/images/logofinal.png")));
+					label1.setHorizontalAlignment(SwingConstants.CENTER);
 					panel1.add(label1, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-						new Insets(0, 0, 0, 5), 0, 0));
+						new Insets(0, 0, 0, 0), 0, 0));
 				}
 				contentPanel.add(panel1, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -78,9 +80,9 @@ public class AgentInfoWindow extends JDialog {
 					{
 						workspace.setBorder(new TitledBorder(""));
 						workspace.setLayout(new GridBagLayout());
-						((GridBagLayout)workspace.getLayout()).columnWidths = new int[] {0, 0, 0, 0, 0, 0};
+						((GridBagLayout)workspace.getLayout()).columnWidths = new int[] {0, 0, 0, 0, 0, 0, 0};
 						((GridBagLayout)workspace.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
-						((GridBagLayout)workspace.getLayout()).columnWeights = new double[] {1.0, 1.0, 1.0, 1.0, 1.0, 1.0E-4};
+						((GridBagLayout)workspace.getLayout()).columnWeights = new double[] {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0E-4};
 						((GridBagLayout)workspace.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
 
 						//---- label2 ----
@@ -111,6 +113,12 @@ public class AgentInfoWindow extends JDialog {
 						label7.setText("Status");
 						workspace.add(label7, new GridBagConstraints(4, 0, 1, 1, 0.0, 0.0,
 							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+							new Insets(0, 0, 5, 5), 0, 0));
+
+						//---- label5 ----
+						label5.setText("Ping");
+						workspace.add(label5, new GridBagConstraints(5, 0, 1, 1, 0.0, 0.0,
+							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 							new Insets(0, 0, 5, 0), 0, 0));
 					}
 					scrollPane1.setViewportView(workspace);
@@ -137,7 +145,7 @@ public class AgentInfoWindow extends JDialog {
 			dialogPane.add(buttonBar, BorderLayout.SOUTH);
 		}
 		contentPane.add(dialogPane, BorderLayout.CENTER);
-		setSize(435, 305);
+		setSize(595, 370);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
@@ -154,6 +162,7 @@ public class AgentInfoWindow extends JDialog {
 	private JLabel label4;
 	private JLabel label6;
 	private JLabel label7;
+	private JLabel label5;
 	private JPanel buttonBar;
 	protected JButton okButton;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables

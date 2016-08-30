@@ -17,6 +17,8 @@ public class Agent {
 	private ArrayList<Device> devices;
 	private IOControl ioControl;
 	private ArrayList<Camera> cameras;
+	
+	private long ping;
 	private int status = ONLINE;
 	public static int ONLINE = 0;
 	public static int OFFLINE = 1;
@@ -24,6 +26,7 @@ public class Agent {
 	
 	//jcomponents
 	private JLabel statusLabel;
+	private JLabel pingLabel;
 ///////////////////////////Constructor///////////////////////////////////////////////////////////
 	public Agent(MTConnectStreamsType currentObject, MTConnectDevicesType probeObject, String name, String ip, IOControl ioControl) {
 		setAgentIP(ip);
@@ -99,19 +102,21 @@ public class Agent {
 			ioControl.getController().getMainInterface().updateHistory("Agent", "Connection re-established with Agent " + agentName + ": " + agentIP);
 		}
 		this.status = status;
-		if(ioControl.getController().getMainInterface().getViewDevicesEvents() != null) {
+		if(statusLabel != null) {
 			String text = "";
-			if(getStatus()== Agent.ONLINE)
+			if(getStatus()== ONLINE)
 				text = "<html><font color=\"green\">Online</font></html>";
-			else if(getStatus()== Agent.OFFLINE)
+			else if(getStatus()== OFFLINE)
 				text = "<html><font color=\"red\">Offline</font></html>";
-			else if(getStatus()== Agent.SLOW)
+			else if(getStatus()== SLOW)
 				text = "<html><font color=\"yellow\">Slow</font></html>";
 			if(statusLabel != null) {
 				statusLabel.setText(text);
 			}
-			for(int i = 0; i < devices.size(); i++) {
-				devices.get(i).getStatusAgent().setText(text);
+			if(ioControl.getController().getMainInterface().getViewDevicesEvents() != null) {
+				for(int i = 0; i < devices.size(); i++) {
+					devices.get(i).getStatusAgent().setText(text);
+				}
 			}
 		}
 	}
@@ -120,5 +125,23 @@ public class Agent {
 	}
 	public void setStatusLabel(JLabel statusLabel) {
 		this.statusLabel = statusLabel;
+	}
+	public long getPing() {
+		return ping;
+	}
+	public void setPing(long ping) {
+		this.ping = ping;
+		if(pingLabel != null) {
+			if(ping == (-1))
+				pingLabel.setText("inf");
+			else
+				pingLabel.setText(ping + "");
+		}
+	}
+	public JLabel getPingLabel() {
+		return pingLabel;
+	}
+	public void setPingLabel(JLabel pingLabel) {
+		this.pingLabel = pingLabel;
 	}
 }
