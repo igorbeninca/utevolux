@@ -154,7 +154,6 @@ public class TwoDMonitoringUnit extends MonitoringUnit implements SeriesChangeLi
 				if(inicialTime.compareTo(timeRegister.get(0)) > 0) {
 					timeRegister.remove(0);
 					valueRegister.remove(0);
-					break;
 				}
 			}
 		}

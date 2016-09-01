@@ -23,7 +23,7 @@ public class ConfigurePanelWindow extends JFrame {
 		panel5 = new JPanel();
 		label1 = new JLabel();
 		nameField = new JTextField();
-		panel3 = new JPanel();
+		rangePane = new JPanel();
 		label2 = new JLabel();
 		hourField = new JSpinner();
 		label3 = new JLabel();
@@ -37,7 +37,6 @@ public class ConfigurePanelWindow extends JFrame {
 		label7 = new JLabel();
 		heightField = new JSpinner();
 		label8 = new JLabel();
-		logScaleCheckbox = new JCheckBox();
 		panel4 = new JPanel();
 		label9 = new JLabel();
 		chartTypeCombobox = new JComboBox();
@@ -66,6 +65,7 @@ public class ConfigurePanelWindow extends JFrame {
 		zAxisPanel = new JPanel();
 		label12 = new JLabel();
 		zAxisCombobox = new JComboBox();
+		logScaleCheckbox = new JCheckBox();
 		buttonBar = new JPanel();
 		okButton = new JButton();
 		cancelButton = new JButton();
@@ -87,7 +87,7 @@ public class ConfigurePanelWindow extends JFrame {
 				((GridBagLayout)contentPanel.getLayout()).columnWidths = new int[] {0, 0};
 				((GridBagLayout)contentPanel.getLayout()).rowHeights = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0};
 				((GridBagLayout)contentPanel.getLayout()).columnWeights = new double[] {1.0, 1.0E-4};
-				((GridBagLayout)contentPanel.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0E-4};
+				((GridBagLayout)contentPanel.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0E-4};
 
 				//======== panel5 ========
 				{
@@ -113,57 +113,57 @@ public class ConfigurePanelWindow extends JFrame {
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 5, 0), 0, 0));
 
-				//======== panel3 ========
+				//======== rangePane ========
 				{
-					panel3.setLayout(new GridBagLayout());
-					((GridBagLayout)panel3.getLayout()).columnWidths = new int[] {0, 45, 0, 45, 0, 45, 0, 0};
-					((GridBagLayout)panel3.getLayout()).rowHeights = new int[] {0, 0};
-					((GridBagLayout)panel3.getLayout()).columnWeights = new double[] {0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0E-4};
-					((GridBagLayout)panel3.getLayout()).rowWeights = new double[] {0.0, 1.0E-4};
+					rangePane.setLayout(new GridBagLayout());
+					((GridBagLayout)rangePane.getLayout()).columnWidths = new int[] {0, 45, 0, 45, 0, 45, 0, 0};
+					((GridBagLayout)rangePane.getLayout()).rowHeights = new int[] {0, 0};
+					((GridBagLayout)rangePane.getLayout()).columnWeights = new double[] {0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0E-4};
+					((GridBagLayout)rangePane.getLayout()).rowWeights = new double[] {0.0, 1.0E-4};
 
 					//---- label2 ----
 					label2.setText("Time Range");
-					panel3.add(label2, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+					rangePane.add(label2, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(0, 0, 0, 5), 0, 0));
 
 					//---- hourField ----
 					hourField.setModel(new SpinnerNumberModel(0, 0, 23, 1));
-					panel3.add(hourField, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
+					rangePane.add(hourField, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(0, 0, 0, 5), 0, 0));
 
 					//---- label3 ----
 					label3.setText("h");
-					panel3.add(label3, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0,
+					rangePane.add(label3, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0,
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(0, 0, 0, 5), 0, 0));
 
 					//---- minuteField ----
 					minuteField.setModel(new SpinnerNumberModel(0, 0, 59, 1));
-					panel3.add(minuteField, new GridBagConstraints(3, 0, 1, 1, 0.0, 0.0,
+					rangePane.add(minuteField, new GridBagConstraints(3, 0, 1, 1, 0.0, 0.0,
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(0, 0, 0, 5), 0, 0));
 
 					//---- label4 ----
 					label4.setText("m");
-					panel3.add(label4, new GridBagConstraints(4, 0, 1, 1, 0.0, 0.0,
+					rangePane.add(label4, new GridBagConstraints(4, 0, 1, 1, 0.0, 0.0,
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(0, 0, 0, 5), 0, 0));
 
 					//---- secondField ----
 					secondField.setModel(new SpinnerNumberModel(0, 0, 59, 1));
-					panel3.add(secondField, new GridBagConstraints(5, 0, 1, 1, 0.0, 0.0,
+					rangePane.add(secondField, new GridBagConstraints(5, 0, 1, 1, 0.0, 0.0,
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(0, 0, 0, 5), 0, 0));
 
 					//---- label5 ----
 					label5.setText("s");
-					panel3.add(label5, new GridBagConstraints(6, 0, 1, 1, 0.0, 0.0,
+					rangePane.add(label5, new GridBagConstraints(6, 0, 1, 1, 0.0, 0.0,
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(0, 0, 0, 0), 0, 0));
 				}
-				contentPanel.add(panel3, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+				contentPanel.add(rangePane, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 5, 0), 0, 0));
 
@@ -209,12 +209,6 @@ public class ConfigurePanelWindow extends JFrame {
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 5, 0), 0, 0));
 
-				//---- logScaleCheckbox ----
-				logScaleCheckbox.setText("Log Scale");
-				contentPanel.add(logScaleCheckbox, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0,
-					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-					new Insets(0, 0, 5, 0), 0, 0));
-
 				//======== panel4 ========
 				{
 					panel4.setLayout(new GridBagLayout());
@@ -232,7 +226,7 @@ public class ConfigurePanelWindow extends JFrame {
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(0, 0, 0, 0), 0, 0));
 				}
-				contentPanel.add(panel4, new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0,
+				contentPanel.add(panel4, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 5, 0), 0, 0));
 
@@ -325,7 +319,7 @@ public class ConfigurePanelWindow extends JFrame {
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(0, 0, 0, 0), 0, 0));
 				}
-				contentPanel.add(panel11, new GridBagConstraints(0, 5, 1, 1, 0.0, 0.0,
+				contentPanel.add(panel11, new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 5, 0), 0, 0));
 
@@ -362,7 +356,7 @@ public class ConfigurePanelWindow extends JFrame {
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(0, 0, 0, 5), 0, 0));
 				}
-				contentPanel.add(optionPanel, new GridBagConstraints(0, 6, 1, 1, 0.0, 0.0,
+				contentPanel.add(optionPanel, new GridBagConstraints(0, 5, 1, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 5, 0), 0, 0));
 
@@ -438,7 +432,14 @@ public class ConfigurePanelWindow extends JFrame {
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(0, 0, 0, 0), 0, 0));
 				}
-				contentPanel.add(axisSelectPanel, new GridBagConstraints(0, 7, 1, 1, 0.0, 0.0,
+				contentPanel.add(axisSelectPanel, new GridBagConstraints(0, 6, 1, 1, 0.0, 0.0,
+					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+					new Insets(0, 0, 5, 0), 0, 0));
+
+				//---- logScaleCheckbox ----
+				logScaleCheckbox.setText("Absolute Log Scale");
+				logScaleCheckbox.setToolTipText("The chart of this pane will display their values all positive and in logarithm scale");
+				contentPanel.add(logScaleCheckbox, new GridBagConstraints(0, 7, 1, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 0, 0), 0, 0));
 			}
@@ -477,7 +478,7 @@ public class ConfigurePanelWindow extends JFrame {
 	private JPanel panel5;
 	private JLabel label1;
 	protected JTextField nameField;
-	private JPanel panel3;
+	protected JPanel rangePane;
 	private JLabel label2;
 	protected JSpinner hourField;
 	private JLabel label3;
@@ -491,7 +492,6 @@ public class ConfigurePanelWindow extends JFrame {
 	private JLabel label7;
 	protected JSpinner heightField;
 	private JLabel label8;
-	protected JCheckBox logScaleCheckbox;
 	private JPanel panel4;
 	private JLabel label9;
 	protected JComboBox chartTypeCombobox;
@@ -520,6 +520,7 @@ public class ConfigurePanelWindow extends JFrame {
 	protected JPanel zAxisPanel;
 	private JLabel label12;
 	protected JComboBox zAxisCombobox;
+	protected JCheckBox logScaleCheckbox;
 	private JPanel buttonBar;
 	protected JButton okButton;
 	protected JButton cancelButton;

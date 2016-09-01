@@ -24,6 +24,7 @@ public class NumericVariableBuffer implements SeriesChangeListener, ActionListen
 	private TwoDMonitoringUnit twoDMonitoringUnit;
 	private ThreeDMonitoringUnit threeDMonitoringUnit;
 	private TimeSeries dataSerie;
+	private boolean logScale;
 	private boolean inCalc;
 	//////////panelComponents
 	private JLabel typeLabel;
@@ -31,9 +32,10 @@ public class NumericVariableBuffer implements SeriesChangeListener, ActionListen
 	private JToggleButton displayButton;
 	private JLabel displayLabel;
 /////////////////////////////////////////Constructor///////////////////////////////////////////////////////////////
-	public NumericVariableBuffer(Variable variable, NumericMonitoringUnit monitoringUnit) {
+	public NumericVariableBuffer(Variable variable, NumericMonitoringUnit monitoringUnit, boolean logScale) {
 		setVariable(variable);
 		setNumericMonitoringUnit(monitoringUnit);
+		setLogScale(logScale);
 		setInCalc(false);
 		monitoringUnit.getPanelMonitoringSystem().getController().getIoControl().getLoadExecution().addToVariableList(variable);
 		if (variable.getName() != null) 
@@ -41,8 +43,15 @@ public class NumericVariableBuffer implements SeriesChangeListener, ActionListen
 		else
 			setDataSerie(new TimeSeries(variable.getDataItemID()));
 		dataSerie.setNotify(false);
-		for(int i = 0; i < variable.getDataSerie().getItemCount(); i++) 
-			dataSerie.addOrUpdate(variable.getDataSerie().getDataItem(i));
+		for(int i = 0; i < variable.getDataSerie().getItemCount(); i++) {
+			TimeSeriesDataItem item = variable.getDataSerie().getDataItem(i);
+			if(numericMonitoringUnit != null) {
+				if(logScale) {
+					item.setValue(Math.abs(item.getValue().doubleValue()));
+				}
+			}
+			dataSerie.addOrUpdate(item);
+		}
 		variable.getDataSerie().addChangeListener(this);
 	}
 	public NumericVariableBuffer(Variable variable, TwoDMonitoringUnit monitoringUnit) {
@@ -121,7 +130,13 @@ public class NumericVariableBuffer implements SeriesChangeListener, ActionListen
 	}
 	public void addToSerie(TimeSeriesDataItem item) {
 		try {
-			dataSerie.addOrUpdate((TimeSeriesDataItem)item.clone());
+			TimeSeriesDataItem itemC = (TimeSeriesDataItem)item.clone();
+			if(numericMonitoringUnit != null) {
+				if(logScale) {
+					itemC.setValue(Math.abs(itemC.getValue().doubleValue()));
+				}
+			}
+			dataSerie.addOrUpdate(itemC);
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -389,5 +404,11 @@ public class NumericVariableBuffer implements SeriesChangeListener, ActionListen
 	}
 	public void setThreeDMonitoringUnit(ThreeDMonitoringUnit threeDMonitoringUnit) {
 		this.threeDMonitoringUnit = threeDMonitoringUnit;
+	}
+	public boolean isLogScale() {
+		return logScale;
+	}
+	public void setLogScale(boolean logScale) {
+		this.logScale = logScale;
 	}
 }

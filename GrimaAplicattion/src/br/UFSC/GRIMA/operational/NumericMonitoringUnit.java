@@ -19,6 +19,7 @@ import javax.swing.JToggleButton;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.axis.LogAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.XYPlot;
@@ -42,10 +43,12 @@ public class NumericMonitoringUnit extends MonitoringUnit {
 	private JButton reset;
 	private double result = 0;
 	private long lastMillisecond = 0;
+	private boolean logScale;
 /////////////////////////////////////////Constructor/////////////////////////////////////////////////////////////////////////
-	public NumericMonitoringUnit(String name, PanelMonitoringSystem panelMonitoringSystem, int[] timeRange,	String chartType, ArrayList<Variable> variables, char panelType) {
+	public NumericMonitoringUnit(String name, PanelMonitoringSystem panelMonitoringSystem, int[] timeRange,	String chartType, ArrayList<Variable> variables, char panelType, boolean logScale) {
 		super(name, panelMonitoringSystem, timeRange, chartType, variables, panelType);
 		// TODO Auto-generated constructor stub
+		setLogScale(logScale);
 	}
 /////////////////////////////////////////Methods///////////////////////////////////////////////////////////////////////////////
 	@Override
@@ -86,7 +89,7 @@ public class NumericMonitoringUnit extends MonitoringUnit {
 		// TODO Auto-generated method stub
 		if(numericVariableBuffers == null)
 			setNumericVariableBuffers(new ArrayList<NumericVariableBuffer>());
-		NumericVariableBuffer numericvariableBuffer = new NumericVariableBuffer(variable, this);
+		NumericVariableBuffer numericvariableBuffer = new NumericVariableBuffer(variable, this, logScale);
 		numericVariableBuffers.add(numericvariableBuffer);
 		JToggleButton display = new JToggleButton();
 		display.setSelected(true);
@@ -196,6 +199,9 @@ public class NumericMonitoringUnit extends MonitoringUnit {
 		if (chartPanel != null) 
 			getMonitoringPanel().remove(chartPanel);
 		setChartPanel(new ChartPanel(chart));
+		if(logScale) {
+			((XYPlot)chart.getPlot()).setRangeAxis(new LogAxis("Values"));;
+		}
 		getMonitoringPanel().add(chartPanel, new GridBagConstraints(0, 2, 6, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(0, 0, 5, 5), 0, 0));
@@ -281,6 +287,12 @@ public class NumericMonitoringUnit extends MonitoringUnit {
 	}
 	public void setNumericVariableBuffers(ArrayList<NumericVariableBuffer> numericVariableBuffers) {
 		this.numericVariableBuffers = numericVariableBuffers;
+	}
+	public boolean isLogScale() {
+		return logScale;
+	}
+	public void setLogScale(boolean logScale) {
+		this.logScale = logScale;
 	}
 	
 }

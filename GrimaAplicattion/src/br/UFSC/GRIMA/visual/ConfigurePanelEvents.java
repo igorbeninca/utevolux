@@ -5,6 +5,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.DefaultComboBoxModel;
@@ -14,7 +16,10 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
+import br.UFSC.GRIMA.IO.MainExecution;
 import br.UFSC.GRIMA.dataStructure.Component;
 import br.UFSC.GRIMA.dataStructure.Device;
 import br.UFSC.GRIMA.dataStructure.Variable;
@@ -24,7 +29,7 @@ import br.UFSC.GRIMA.operational.NumericMonitoringUnit;
 import br.UFSC.GRIMA.operational.ThreeDMonitoringUnit;
 import br.UFSC.GRIMA.operational.TwoDMonitoringUnit;
 
-public class ConfigurePanelEvents extends ConfigurePanelWindow implements ActionListener {
+public class ConfigurePanelEvents extends ConfigurePanelWindow implements ActionListener, ChangeListener {
 	private MainInterface mainInterface;
 	private ArrayList<Variable> variables;
 	private Device currentDevice;
@@ -34,6 +39,7 @@ public class ConfigurePanelEvents extends ConfigurePanelWindow implements Action
 	private Variable currentX;
 	private Variable currentY;
 	private Variable currentZ;
+	private boolean rangeEdited = false;
 /////////////////constructor/////////////////////////////////////////////////////////////
 	public ConfigurePanelEvents(MainInterface mainInterface, ArrayList<Variable> variables) {
 		// TODO Auto-generated constructor stub
@@ -74,9 +80,16 @@ public class ConfigurePanelEvents extends ConfigurePanelWindow implements Action
 		});
 		String defaultName = makeDefaultName("Panel");
 		nameField.setText(defaultName);
-		hourField.setValue(mainInterface.getMainExecution().getDefaultTimeRange()[0]);
-		minuteField.setValue(mainInterface.getMainExecution().getDefaultTimeRange()[1]);
-		secondField.setValue(mainInterface.getMainExecution().getDefaultTimeRange()[2]);
+		int[] defaultTimeRange;
+		if(mainInterface.getMainExecution().getDefaultTimeOption() == MainExecution.GENERAL) {
+			defaultTimeRange = mainInterface.getMainExecution().getDefaultTimeRange();
+		}
+		else {
+			defaultTimeRange = mainInterface.getMainExecution().getNumericDefaultTimeRange();
+		}
+		hourField.setValue(defaultTimeRange[0]);
+		minuteField.setValue(defaultTimeRange[1]);
+		secondField.setValue(defaultTimeRange[2]);
 		whidthField.setValue(300);
 		heightField.setValue(300);
 		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<String>();
@@ -95,6 +108,9 @@ public class ConfigurePanelEvents extends ConfigurePanelWindow implements Action
 		addVariableButton.addActionListener(this);
 		okButton.addActionListener(this);
 		cancelButton.addActionListener(this);
+		hourField.addChangeListener(this);
+		minuteField.addChangeListener(this);
+		secondField.addChangeListener(this);
 		this.setVisible(true);
 	}
 	public ConfigurePanelEvents(MonitoringUnit monitoringUnit) {
@@ -151,6 +167,13 @@ public class ConfigurePanelEvents extends ConfigurePanelWindow implements Action
 		chartTypeCombobox.setSelectedItem(monitoringUnit.getChartType());
 		setVariablesCombobox();
 		configureWorkspace();
+		if(monitoringUnit.getChartType().equals("LineChart") || monitoringUnit.getChartType().equals("AreaChart")) {
+			logScaleCheckbox.setVisible(true);
+			logScaleCheckbox.setSelected(((NumericMonitoringUnit)monitoringUnit).isLogScale());
+		}
+		else {
+			logScaleCheckbox.setVisible(false);
+		}
 		if(monitoringUnit.getChartType().equals("2DLineChart")) {
 			axisSelectPanel.setVisible(true);
 			zAxisPanel.setVisible(false);
@@ -185,6 +208,10 @@ public class ConfigurePanelEvents extends ConfigurePanelWindow implements Action
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if(e.getSource().equals(chartTypeCombobox)) {
+			if(chartTypeCombobox.getSelectedItem().equals("LineChart") || chartTypeCombobox.getSelectedItem().equals("AreaChart"))
+				logScaleCheckbox.setVisible(true);
+			else 
+				logScaleCheckbox.setVisible(false);
 			if(chartTypeCombobox.getSelectedItem().equals("2DLineChart")) {
 				axisSelectPanel.setVisible(true);
 				zAxisPanel.setVisible(false);
@@ -195,6 +222,21 @@ public class ConfigurePanelEvents extends ConfigurePanelWindow implements Action
 			}
 			else
 				axisSelectPanel.setVisible(false);
+			if(!rangeEdited) {
+				int[] range;
+				if(mainInterface.getMainExecution().getDefaultTimeOption() == MainExecution.GENERAL) {
+					range = mainInterface.getMainExecution().getDefaultTimeRange();
+				}
+				else if(chartTypeCombobox.getSelectedItem().equals("StepLineChart")) {
+					range = mainInterface.getMainExecution().getCategoryDefaultTimeRange();
+				}
+				else
+					range = mainInterface.getMainExecution().getNumericDefaultTimeRange();
+				hourField.setValue(range[0]);
+				minuteField.setValue(range[1]);
+				secondField.setValue(range[2]);
+				rangeEdited = false;
+			}
 		}
 		else if(e.getSource().equals(deviceCombobox)) {
 			Device device = mainInterface.getMainExecution().getAllDevices().get(deviceCombobox.getSelectedIndex());
@@ -307,6 +349,9 @@ public class ConfigurePanelEvents extends ConfigurePanelWindow implements Action
 							((ThreeDMonitoringUnit)monitoringUnit).setzSelected(getVariableByName((String)zAxisCombobox.getSelectedItem()));
 						}
 					}
+					if(chartTypeCombobox.getSelectedItem().equals("LineChart") || chartTypeCombobox.getSelectedItem().equals("AreaChart")) {
+						((NumericMonitoringUnit)monitoringUnit).setLogScale(logScaleCheckbox.isSelected());
+					}
 					monitoringUnit.setName(nameField.getText());
 					monitoringUnit.setTimeRange(new int[]{(int)hourField.getValue(), (int)minuteField.getValue(), (int)secondField.getValue()});
 					monitoringUnit.setMinimumWhidth((int)whidthField.getValue());
@@ -341,6 +386,9 @@ public class ConfigurePanelEvents extends ConfigurePanelWindow implements Action
 						yAxis = getVariableByName((String)yAxisCombobox.getSelectedItem());
 						zAxis = getVariableByName((String)zAxisCombobox.getSelectedItem());
 					}
+				}
+				if(chartTypeCombobox.getSelectedItem().equals("LineChart") || chartTypeCombobox.getSelectedItem().equals("AreaChart")) {
+					((NumericMonitoringUnit)monitoringUnit).setLogScale(logScaleCheckbox.isSelected());
 				}
 				monitoringUnit.destroyPanelInstance();
 				monitoringUnit.getPanelMonitoringSystem().getMonitoringUnits().remove(monitoringUnit);
@@ -444,7 +492,7 @@ public class ConfigurePanelEvents extends ConfigurePanelWindow implements Action
 	}
 	public void addPanel(String name, int[] timeRange, String chartType, ArrayList<Variable>variables, Variable xAxis, Variable yAxis, Variable zAxis) {
 		if(chartType.equals("LineChart") || chartType.equals("AreaChart"))
-			mainInterface.getMainExecution().getPanelMonitoringSystem().getMonitoringUnits().add(new NumericMonitoringUnit(name, mainInterface.getMainExecution().getPanelMonitoringSystem(), timeRange, chartType, variables, variables.get(0).getType()));
+			mainInterface.getMainExecution().getPanelMonitoringSystem().getMonitoringUnits().add(new NumericMonitoringUnit(name, mainInterface.getMainExecution().getPanelMonitoringSystem(), timeRange, chartType, variables, variables.get(0).getType(), logScaleCheckbox.isSelected()));
 		else if(chartType.equals("StepLineChart"))
 			mainInterface.getMainExecution().getPanelMonitoringSystem().getMonitoringUnits().add(new CategoryMonitoringUnit(name, mainInterface.getMainExecution().getPanelMonitoringSystem(), timeRange, chartType, variables, variables.get(0).getType()));
 		else if (chartType.equals("2DLineChart"))
@@ -690,5 +738,10 @@ public class ConfigurePanelEvents extends ConfigurePanelWindow implements Action
 	}
 	public void setCurrentY(Variable currentY) {
 		this.currentY = currentY;
+	}
+	@Override
+	public void stateChanged(ChangeEvent arg0) {
+		// TODO Auto-generated method stub
+		rangeEdited = true;
 	}
 }

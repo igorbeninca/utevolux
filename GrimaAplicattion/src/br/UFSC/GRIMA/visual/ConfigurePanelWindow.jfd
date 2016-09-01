@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "5.2.0.3.124" Java: "1.8.0_51" encoding: "UTF-8"
+JFDML JFormDesigner: "5.2.0.3.124" Java: "1.8.0_73" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
@@ -13,7 +13,7 @@ new FormModel {
 				"border": new javax.swing.border.EmptyBorder( 12, 12, 12, 12 )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
 					"$columnSpecs": "0:1.0"
-					"$rowSpecs": "0, 0, 0, 0, 0, 0:1.0, 0, 0"
+					"$rowSpecs": "0, 0, 0, 0, 0:1.0, 0, 0, 0"
 					"$hGap": 5
 					"$vGap": 5
 					"$alignLeft": true
@@ -52,7 +52,10 @@ new FormModel {
 						"$alignLeft": true
 						"$alignTop": true
 					} ) {
-						name: "panel3"
+						name: "rangePane"
+						auxiliary() {
+							"JavaCodeGenerator.variableModifiers": 4
+						}
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "label2"
 							"text": "Time Range"
@@ -157,15 +160,6 @@ new FormModel {
 					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
 						"gridy": 2
 					} )
-					add( new FormComponent( "javax.swing.JCheckBox" ) {
-						name: "logScaleCheckbox"
-						"text": "Log Scale"
-						auxiliary() {
-							"JavaCodeGenerator.variableModifiers": 4
-						}
-					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-						"gridy": 3
-					} )
 					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
 						"$columnSpecs": "0:1.0, 0:1.0"
 						"$rowSpecs": "0"
@@ -188,7 +182,7 @@ new FormModel {
 							"gridx": 1
 						} )
 					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-						"gridy": 4
+						"gridy": 3
 					} )
 					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
 						"$columnSpecs": "0:1.0"
@@ -283,7 +277,7 @@ new FormModel {
 							"gridy": 1
 						} )
 					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-						"gridy": 5
+						"gridy": 4
 					} )
 					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
 						"$columnSpecs": "0:1.0, 0:1.0, 0:1.0"
@@ -333,7 +327,7 @@ new FormModel {
 							"gridy": 1
 						} )
 					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-						"gridy": 6
+						"gridy": 5
 					} )
 					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
 						"$columnSpecs": "0:1.0, 0:1.0, 0:1.0"
@@ -421,6 +415,16 @@ new FormModel {
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
 							"gridx": 2
 						} )
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+						"gridy": 6
+					} )
+					add( new FormComponent( "javax.swing.JCheckBox" ) {
+						name: "logScaleCheckbox"
+						"text": "Absolute Log Scale"
+						"toolTipText": "The chart of this pane will display their values all positive and in logarithm scale"
+						auxiliary() {
+							"JavaCodeGenerator.variableModifiers": 4
+						}
 					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
 						"gridy": 7
 					} )

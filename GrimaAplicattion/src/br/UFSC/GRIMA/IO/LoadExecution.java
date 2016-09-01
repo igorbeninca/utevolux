@@ -29,7 +29,7 @@ public class LoadExecution implements Runnable {
 	private long loopTime;
 	private long currentTime;
 	private long AgentSlowLimit = 1000;
-	private long abortCommunication = 10000;
+	private long abortCommunication = 15000;
 	private String lastError;
 	private boolean connected = true;
 ////////////////////////////////////Constructor/////////////////////////////////////////////////////////////
