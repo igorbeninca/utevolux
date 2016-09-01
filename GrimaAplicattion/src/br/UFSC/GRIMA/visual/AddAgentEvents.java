@@ -79,7 +79,7 @@ public class AddAgentEvents extends AddAgentWindow implements ActionListener {
 			SwingWorker worker = new SwingWorker() 
 			{
 				@Override
-				protected Object doInBackground() throws Exception 
+				protected Object doInBackground()
 				{
 					String conf = mainInterface.getMainExecution().addAgent(textFieldIP.getText());
 					if (conf == null)

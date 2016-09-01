@@ -89,9 +89,10 @@ public class LoadExecution implements Runnable {
 			variable.getDataSerie().setNotify(false);
 			variableList.add(variable);
 		}
-		if(!saveExecution.getSaveList().contains(variable) && ioControl.getController().isAutoSaveVariables()) {
-			saveExecution.getSaveList().add(variable);
-		}
+		if(ioControl.getController().isAutoSaveVariables())
+			addToSaveList(variable);
+		if(variable.getVarMonitored() != null)
+			variable.getVarMonitored().setSelected(true);
 	}
 	public boolean removeFromVariableList(Variable variable, boolean notify) { ///////////////////////////lembrar de adicionar o valor nulo no final da lista
 		if (ioControl.getController().getPanelMonitoringSystem().isVariableMonitored(variable)) {
@@ -119,14 +120,23 @@ public class LoadExecution implements Runnable {
 			}
 			if(!agentUsedInOtherVariable) 
 				agentList.remove(variable.getComponent().getDevice().getAgent());
+			if(variable.getVarMonitored() != null)
+				variable.getVarMonitored().setSelected(false);
 			return true;
 		}
 	}
 	public void addToSaveList(Variable variable) {
-		saveExecution.getSaveList().add(variable);
+		if(!saveExecution.getSaveList().contains(variable))
+			saveExecution.getSaveList().add(variable);
+		if(variable.getVarSaving() != null)
+			variable.getVarSaving().setSelected(true);
+		if(!variableList.contains(variable))
+			addToVariableList(variable);
 	}
 	public void removeFromSaveList(Variable variable) {
 		saveExecution.getSaveList().remove(variable);
+		if(variable.getVarSaving() != null)
+			variable.getVarSaving().setSelected(false);
 	}
 ///////////////////////Getters and Setters///////////////////////////////////////////////////////////////
 	public IOControl getIoControl() {

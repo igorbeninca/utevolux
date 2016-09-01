@@ -10,9 +10,4 @@ public class WaitEvents extends WaitWindow {
 		this.setVisible(true);
 		// TODO Auto-generated constructor stub
 	}
-	
-//	public static void main(String args[])
-//	{
-//		WaitEvents w = new WaitEvents(null, "marcio");
-//	}
 }

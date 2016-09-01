@@ -125,12 +125,6 @@ public class Variable implements ActionListener, SeriesChangeListener {
 		if (varMonitored != null) {
 			if (e.getSource().equals(varMonitored)) {
 				if(varMonitored.isSelected()) {
-					if (dataSerie == null) {
-						if(name != null) 
-							setDataSerie(new TimeSeries(name));
-						else
-							setDataSerie(new TimeSeries(dataItemID));
-					}
 					component.getDevice().getAgent().getIoControl().getLoadExecution().addToVariableList(this);
 				}
 				else 
