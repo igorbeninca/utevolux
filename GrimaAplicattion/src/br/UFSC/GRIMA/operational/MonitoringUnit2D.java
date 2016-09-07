@@ -31,11 +31,11 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import br.UFSC.GRIMA.dataStructure.Variable;
 
-public class TwoDMonitoringUnit extends MonitoringUnit implements SeriesChangeListener {
+public class MonitoringUnit2D extends MonitoringUnit implements SeriesChangeListener {
 	private ArrayList<VariableRegister> variableRegisters;
+	private ArrayList<RegularTimePeriod> timeRegister;
 	private NumericVariableBuffer xAxis;
 	private NumericVariableBuffer yAxis;
-	private ArrayList<RegularTimePeriod> timeRegister;
 	private XYSeries valueRegister;
 	private XYSeriesCollection chartDataset;
 	private JFreeChart chart;
@@ -48,7 +48,7 @@ public class TwoDMonitoringUnit extends MonitoringUnit implements SeriesChangeLi
 	private JComboBox<String> xCombobox;
 	private JComboBox<String> yComboBox;
 //////////////////////////////////////////////////Constructor///////////////////////////////////////////////////////////////////////////////////
-	public TwoDMonitoringUnit(String name,PanelMonitoringSystem panelMonitoringSystem, int[] timeRange, String chartType, ArrayList<Variable> variables, char panelType, Variable xAxis, Variable yAxis) {
+	public MonitoringUnit2D(String name,PanelMonitoringSystem panelMonitoringSystem, int[] timeRange, String chartType, ArrayList<Variable> variables, char panelType, Variable xAxis, Variable yAxis) {
 		super(name, panelMonitoringSystem, timeRange, chartType, variables, panelType);
 		// TODO Auto-generated constructor stub
 		setxSelected(xAxis);
@@ -250,22 +250,11 @@ public class TwoDMonitoringUnit extends MonitoringUnit implements SeriesChangeLi
 		setxCombobox(new JComboBox<String>());
 		setyComboBox(new JComboBox<String>());
 		for(int i = 0; i < getVariables().size(); i++) {
-			if(getVariables().get(i).getName() != null) {
-				xCombobox.addItem(getVariables().get(i).getName());
-				yComboBox.addItem(getVariables().get(i).getName());
-			} else {
-				xCombobox.addItem(getVariables().get(i).getDataItemID());
-				yComboBox.addItem(getVariables().get(i).getDataItemID());
-			}
+			xCombobox.addItem(getVariables().get(i).getValidName());
+			yComboBox.addItem(getVariables().get(i).getValidName());
 		}
-		if(xSelected.getName() != null)
-			xCombobox.setSelectedItem(xSelected.getName());
-		else
-			xCombobox.setSelectedItem(xSelected.getDataItemID());
-		if(ySelected.getName() != null)
-			yComboBox.setSelectedItem(ySelected.getName());
-		else
-			yComboBox.setSelectedItem(ySelected.getDataItemID());
+		xCombobox.setSelectedItem(xSelected.getValidName());
+		yComboBox.setSelectedItem(ySelected.getValidName());
 		variablesPanel.add(xlab, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(0, 0, 5, 5), 0, 0));
@@ -343,39 +332,65 @@ public class TwoDMonitoringUnit extends MonitoringUnit implements SeriesChangeLi
 				xIndex = findItemClosedTo((Millisecond)ySelected.getDataSerie().getTimePeriod(yIndex), xSelected.getDataSerie());
 				timeRegister.add(ySelected.getDataSerie().getTimePeriod(yIndex));
 			}
-			valueRegister.add(xSelected.getDataSerie().getValue(xIndex), ySelected.getDataSerie().getValue(yIndex));
-			while((xIndex < xSelected.getDataSerie().getItemCount()) && (yIndex < ySelected.getDataSerie().getItemCount())) {
-				int comp = ((Millisecond)(xSelected.getDataSerie().getTimePeriod(xIndex))).compareTo(ySelected.getDataSerie().getTimePeriod(yIndex));
-				if(comp == 0) {
-					timeRegister.add(xSelected.getDataSerie().getTimePeriod(xIndex));
-					if((xSelected.getDataSerie().getValue(xIndex) == null) || (ySelected.getDataSerie().getValue(yIndex) == null)) {
-						valueRegister.add(0, null);
-					}
-					else
-						valueRegister.add(xSelected.getDataSerie().getValue(xIndex), ySelected.getDataSerie().getValue(yIndex));
-					if(xIndex < xSelected.getDataSerie().getItemCount())
-						xIndex++;
-					if(yIndex <  ySelected.getDataSerie().getItemCount())
-						yIndex++;
-					continue;
-				}
-				if (comp < 0) {
-					timeRegister.add(ySelected.getDataSerie().getTimePeriod(yIndex));
-					valueRegister.add(xSelected.getDataSerie().getValue(xIndex), ySelected.getDataSerie().getValue(yIndex - 1));
-					if(xIndex <  xSelected.getDataSerie().getItemCount())
-						xIndex++;
-					else
-						yIndex++;
-					continue;
-				}
-				//else
-				timeRegister.add(xSelected.getDataSerie().getTimePeriod(xIndex));
-				valueRegister.add(xSelected.getDataSerie().getValue(xIndex - 1), ySelected.getDataSerie().getValue(yIndex));
-				if(yIndex <  ySelected.getDataSerie().getItemCount())
-					yIndex++;
+			while(!((xIndex == xSelected.getDataSerie().getItemCount() - 1)&&(yIndex == ySelected.getDataSerie().getItemCount() - 1))) {
+				if((xSelected.getDataSerie().getValue(xIndex) == null) || (ySelected.getDataSerie().getValue(yIndex) == null)) 
+					valueRegister.add(0, null);
 				else
+					valueRegister.add(xSelected.getDataSerie().getValue(xIndex), ySelected.getDataSerie().getValue(yIndex));
+				if(xSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond() > ySelected.getDataSerie().getTimePeriod(yIndex).getFirstMillisecond())
+					timeRegister.add(xSelected.getDataSerie().getTimePeriod(xIndex));
+				else
+					timeRegister.add(ySelected.getDataSerie().getTimePeriod(yIndex));
+				if(xIndex < xSelected.getDataSerie().getItemCount() - 1)
 					xIndex++;
+				if(yIndex < ySelected.getDataSerie().getItemCount() - 1)
+					yIndex++;
+				if(xSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond() > ySelected.getDataSerie().getTimePeriod(yIndex).getFirstMillisecond()) {
+					if(yIndex < ySelected.getDataSerie().getItemCount() - 2) {
+						if(xSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond() > ySelected.getDataSerie().getTimePeriod(yIndex + 1).getFirstMillisecond())
+							xIndex--;
+					}
+				}
+				else if(xSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond() < ySelected.getDataSerie().getTimePeriod(yIndex).getFirstMillisecond()){
+					if(xIndex < xSelected.getDataSerie().getItemCount() - 2) {
+						if(ySelected.getDataSerie().getTimePeriod(yIndex).getFirstMillisecond() > xSelected.getDataSerie().getTimePeriod(xIndex + 1).getFirstMillisecond())
+							yIndex--;
+					}
+				}
 			}
+			valueRegister.add(xSelected.getDataSerie().getValue(xIndex), ySelected.getDataSerie().getValue(yIndex));
+//			while((xIndex < xSelected.getDataSerie().getItemCount()) && (yIndex < ySelected.getDataSerie().getItemCount())) {
+//				int comp = ((Millisecond)(xSelected.getDataSerie().getTimePeriod(xIndex))).compareTo(ySelected.getDataSerie().getTimePeriod(yIndex));
+//				if(comp == 0) {
+//					timeRegister.add(xSelected.getDataSerie().getTimePeriod(xIndex));
+//					if((xSelected.getDataSerie().getValue(xIndex) == null) || (ySelected.getDataSerie().getValue(yIndex) == null)) {
+//						valueRegister.add(0, null);
+//					}
+//					else
+//						valueRegister.add(xSelected.getDataSerie().getValue(xIndex), ySelected.getDataSerie().getValue(yIndex));
+//					if(xIndex < xSelected.getDataSerie().getItemCount())
+//						xIndex++;
+//					if(yIndex <  ySelected.getDataSerie().getItemCount())
+//						yIndex++;
+//					continue;
+//				}
+//				if (comp < 0) {
+//					timeRegister.add(ySelected.getDataSerie().getTimePeriod(yIndex));
+//					valueRegister.add(xSelected.getDataSerie().getValue(xIndex), ySelected.getDataSerie().getValue(yIndex - 1));
+//					if(xIndex <  xSelected.getDataSerie().getItemCount())
+//						xIndex++;
+//					else
+//						yIndex++;
+//					continue;
+//				}
+//				//else
+//				timeRegister.add(xSelected.getDataSerie().getTimePeriod(xIndex));
+//				valueRegister.add(xSelected.getDataSerie().getValue(xIndex - 1), ySelected.getDataSerie().getValue(yIndex));
+//				if(yIndex <  ySelected.getDataSerie().getItemCount())
+//					yIndex++;
+//				else
+//					xIndex++;
+//			}
 		}
 		xAxis.getDataSerie().addChangeListener(this);
 		yAxis.getDataSerie().addChangeListener(this);

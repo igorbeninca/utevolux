@@ -21,8 +21,8 @@ import br.UFSC.GRIMA.dataStructure.Variable;
 public class NumericVariableBuffer implements SeriesChangeListener, ActionListener {
 	private Variable variable;
 	private NumericMonitoringUnit numericMonitoringUnit;
-	private TwoDMonitoringUnit twoDMonitoringUnit;
-	private ThreeDMonitoringUnit threeDMonitoringUnit;
+	private MonitoringUnit2D twoDMonitoringUnit;
+	private MonitoringUnit3D monitoringUnit3D;
 	private TimeSeries dataSerie;
 	private boolean logScale;
 	private boolean inCalc;
@@ -54,7 +54,7 @@ public class NumericVariableBuffer implements SeriesChangeListener, ActionListen
 		}
 		variable.getDataSerie().addChangeListener(this);
 	}
-	public NumericVariableBuffer(Variable variable, TwoDMonitoringUnit monitoringUnit) {
+	public NumericVariableBuffer(Variable variable, MonitoringUnit2D monitoringUnit) {
 		setVariable(variable);
 		setTwoDMonitoringUnit(monitoringUnit);
 		setInCalc(false);
@@ -68,9 +68,9 @@ public class NumericVariableBuffer implements SeriesChangeListener, ActionListen
 			dataSerie.addOrUpdate(variable.getDataSerie().getDataItem(i));
 		variable.getDataSerie().addChangeListener(this);
 	}
-	public NumericVariableBuffer(Variable variable, ThreeDMonitoringUnit monitoringUnit) {
+	public NumericVariableBuffer(Variable variable, MonitoringUnit3D monitoringUnit) {
 		setVariable(variable);
-		setThreeDMonitoringUnit(monitoringUnit);
+		setMonitoringUnit3D(monitoringUnit);
 		setInCalc(false);
 		monitoringUnit.getPanelMonitoringSystem().getController().getIoControl().getLoadExecution().addToVariableList(variable);
 		if (variable.getName() != null) 
@@ -120,9 +120,9 @@ public class NumericVariableBuffer implements SeriesChangeListener, ActionListen
 						valueTextField.setText(variable.getLastValue());
 				}
 			}
-			else if(threeDMonitoringUnit != null) {
-				if (threeDMonitoringUnit.getPlayPause() != null) {
-					if(threeDMonitoringUnit.getPlayPause().isSelected())
+			else if(monitoringUnit3D != null) {
+				if (monitoringUnit3D.getPlayPause() != null) {
+					if(monitoringUnit3D.getPlayPause().isSelected())
 						valueTextField.setText(variable.getLastValue());
 				}
 			}
@@ -168,9 +168,9 @@ public class NumericVariableBuffer implements SeriesChangeListener, ActionListen
 				hour = iniTime.getHour() - twoDMonitoringUnit.getTimeRange()[0];
 			}
 			else {
-				second = iniTime.getSecond() - threeDMonitoringUnit.getTimeRange()[2];
-				minute = iniTime.getMinute() - threeDMonitoringUnit.getTimeRange()[1];
-				hour = iniTime.getHour() - threeDMonitoringUnit.getTimeRange()[0];
+				second = iniTime.getSecond() - monitoringUnit3D.getTimeRange()[2];
+				minute = iniTime.getMinute() - monitoringUnit3D.getTimeRange()[1];
+				hour = iniTime.getHour() - monitoringUnit3D.getTimeRange()[0];
 			}
 			int day = iniTime.getDay();
 			int month = iniTime.getMonth();
@@ -387,10 +387,10 @@ public class NumericVariableBuffer implements SeriesChangeListener, ActionListen
 	public void setInCalc(boolean inCalc) {
 		this.inCalc = inCalc;
 	}
-	public TwoDMonitoringUnit getTwoDMonitoringUnit() {
+	public MonitoringUnit2D getTwoDMonitoringUnit() {
 		return twoDMonitoringUnit;
 	}
-	public void setTwoDMonitoringUnit(TwoDMonitoringUnit twoDMonitoringUnit) {
+	public void setTwoDMonitoringUnit(MonitoringUnit2D twoDMonitoringUnit) {
 		this.twoDMonitoringUnit = twoDMonitoringUnit;
 	}
 	public JLabel getDisplayLabel() {
@@ -399,16 +399,16 @@ public class NumericVariableBuffer implements SeriesChangeListener, ActionListen
 	public void setDisplayLabel(JLabel displayLabel) {
 		this.displayLabel = displayLabel;
 	}
-	public ThreeDMonitoringUnit getThreeDMonitoringUnit() {
-		return threeDMonitoringUnit;
-	}
-	public void setThreeDMonitoringUnit(ThreeDMonitoringUnit threeDMonitoringUnit) {
-		this.threeDMonitoringUnit = threeDMonitoringUnit;
-	}
 	public boolean isLogScale() {
 		return logScale;
 	}
 	public void setLogScale(boolean logScale) {
 		this.logScale = logScale;
+	}
+	public MonitoringUnit3D getMonitoringUnit3D() {
+		return monitoringUnit3D;
+	}
+	public void setMonitoringUnit3D(MonitoringUnit3D monitoringUnit3D) {
+		this.monitoringUnit3D = monitoringUnit3D;
 	}
 }

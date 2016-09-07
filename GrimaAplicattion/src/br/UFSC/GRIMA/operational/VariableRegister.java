@@ -12,15 +12,15 @@ import br.UFSC.GRIMA.dataStructure.Variable;
 
 public class VariableRegister implements SeriesChangeListener {
 	private Variable variable;
-	private TwoDMonitoringUnit twoDMonitoringUnit;
-	private ThreeDMonitoringUnit threeDMonitoringUnit;
+	private MonitoringUnit2D twoDMonitoringUnit;
+	private MonitoringUnit3D monitoringUnit3D;
 	private char varType;
 	//////////panelComponents
 	private JLabel typeLabel;
 	private JTextField valueTextField;
 	private JLabel displayLabel;
 /////////////////////////////////////////Constructor////////////////////////////////////////////////////
-	public VariableRegister(Variable variable, TwoDMonitoringUnit monitoringUnit, JLabel typeLabel, JTextField valueTextField, JLabel displayLabel) {
+	public VariableRegister(Variable variable, MonitoringUnit2D monitoringUnit, JLabel typeLabel, JTextField valueTextField, JLabel displayLabel) {
 		// TODO Auto-generated constructor stub
 		setVariable(variable);
 		monitoringUnit.getPanelMonitoringSystem().getController().getIoControl().getLoadExecution().addToVariableList(variable);
@@ -31,11 +31,11 @@ public class VariableRegister implements SeriesChangeListener {
 		setVarType(variable.getType());
 		variable.getDataSerie().addChangeListener(this);
 	}
-	public VariableRegister(Variable variable, ThreeDMonitoringUnit monitoringUnit, JLabel typeLabel, JTextField valueTextField, JLabel displayLabel) {
+	public VariableRegister(Variable variable, MonitoringUnit3D monitoringUnit, JLabel typeLabel, JTextField valueTextField, JLabel displayLabel) {
 		// TODO Auto-generated constructor stub
 		setVariable(variable);
 		monitoringUnit.getPanelMonitoringSystem().getController().getIoControl().getLoadExecution().addToVariableList(variable);
-		setThreeDMonitoringUnit(monitoringUnit);
+//		setThreeDMonitoringUnit(monitoringUnit);
 		setTypeLabel(typeLabel);
 		setDisplayLabel(displayLabel);
 		setValueTextField(valueTextField);
@@ -58,9 +58,9 @@ public class VariableRegister implements SeriesChangeListener {
 					valueTextField.setText(variable.getLastValue());
 			}
 		}
-		else if(threeDMonitoringUnit != null) {
-			if (threeDMonitoringUnit.getPlayPause() != null) {
-				if(threeDMonitoringUnit.getPlayPause().isSelected())
+		else if(monitoringUnit3D != null) {
+			if (monitoringUnit3D.getPlayPause() != null) {
+				if(monitoringUnit3D.getPlayPause().isSelected())
 					valueTextField.setText(variable.getLastValue());
 			}
 		}
@@ -72,10 +72,10 @@ public class VariableRegister implements SeriesChangeListener {
 	public void setVariable(Variable variable) {
 		this.variable = variable;
 	}
-	public TwoDMonitoringUnit getTwoDMonitoringUnit() {
+	public MonitoringUnit2D getTwoDMonitoringUnit() {
 		return twoDMonitoringUnit;
 	}
-	public void setTwoDMonitoringUnit(TwoDMonitoringUnit twoDMonitoringUnit) {
+	public void setTwoDMonitoringUnit(MonitoringUnit2D twoDMonitoringUnit) {
 		this.twoDMonitoringUnit = twoDMonitoringUnit;
 	}
 	public JLabel getTypeLabel() {
@@ -102,11 +102,11 @@ public class VariableRegister implements SeriesChangeListener {
 	public void setDisplayLabel(JLabel displayLabel) {
 		this.displayLabel = displayLabel;
 	}
-	public ThreeDMonitoringUnit getThreeDMonitoringUnit() {
-		return threeDMonitoringUnit;
+	public MonitoringUnit3D getMonitoringUnit3D() {
+		return monitoringUnit3D;
 	}
-	public void setThreeDMonitoringUnit(ThreeDMonitoringUnit threeDMonitoringUnit) {
-		this.threeDMonitoringUnit = threeDMonitoringUnit;
+	public void setMonitoringUnit3D(MonitoringUnit3D monitoringUnit3D) {
+		this.monitoringUnit3D = monitoringUnit3D;
 	}
 	
 }

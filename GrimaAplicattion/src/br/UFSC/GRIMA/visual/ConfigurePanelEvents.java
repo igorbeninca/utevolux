@@ -25,9 +25,10 @@ import br.UFSC.GRIMA.dataStructure.Device;
 import br.UFSC.GRIMA.dataStructure.Variable;
 import br.UFSC.GRIMA.operational.CategoryMonitoringUnit;
 import br.UFSC.GRIMA.operational.MonitoringUnit;
+import br.UFSC.GRIMA.operational.MonitoringUnit3D;
 import br.UFSC.GRIMA.operational.NumericMonitoringUnit;
-import br.UFSC.GRIMA.operational.ThreeDMonitoringUnit;
-import br.UFSC.GRIMA.operational.TwoDMonitoringUnit;
+import br.UFSC.GRIMA.operational.MonitoringUnit2D;
+
 
 public class ConfigurePanelEvents extends ConfigurePanelWindow implements ActionListener, ChangeListener {
 	private MainInterface mainInterface;
@@ -185,13 +186,13 @@ public class ConfigurePanelEvents extends ConfigurePanelWindow implements Action
 		else
 			axisSelectPanel.setVisible(false);
 		if(monitoringUnit.getChartType().equals("2DLineChart")) {
-			xAxisCombobox.setSelectedItem(((TwoDMonitoringUnit)monitoringUnit).getxSelected().getValidName());
-			yAxisCombobox.setSelectedItem(((TwoDMonitoringUnit)monitoringUnit).getySelected().getValidName());
+			xAxisCombobox.setSelectedItem(((MonitoringUnit2D)monitoringUnit).getxSelected().getValidName());
+			yAxisCombobox.setSelectedItem(((MonitoringUnit2D)monitoringUnit).getySelected().getValidName());
 		}
 		else if(monitoringUnit.getChartType().equals("3DLineChart")) {
-			xAxisCombobox.setSelectedItem(((ThreeDMonitoringUnit)monitoringUnit).getxSelected().getValidName());
-			yAxisCombobox.setSelectedItem(((ThreeDMonitoringUnit)monitoringUnit).getySelected().getValidName());
-			zAxisCombobox.setSelectedItem(((ThreeDMonitoringUnit)monitoringUnit).getzSelected().getValidName());
+			xAxisCombobox.setSelectedItem(((MonitoringUnit3D)monitoringUnit).getxSelected().getValidName());
+			yAxisCombobox.setSelectedItem(((MonitoringUnit3D)monitoringUnit).getySelected().getValidName());
+			zAxisCombobox.setSelectedItem(((MonitoringUnit3D)monitoringUnit).getzSelected().getValidName());
 		}
 		chartTypeCombobox.addActionListener(this);
 		addVariableButton.addActionListener(this);
@@ -335,8 +336,8 @@ public class ConfigurePanelEvents extends ConfigurePanelWindow implements Action
 							JOptionPane.showMessageDialog(this, "Invalid axis variables.", "Error", JOptionPane.ERROR_MESSAGE);
 							return;
 						} else {
-							((TwoDMonitoringUnit)monitoringUnit).setxSelected(getVariableByName((String)xAxisCombobox.getSelectedItem()));
-							((TwoDMonitoringUnit)monitoringUnit).setySelected(getVariableByName((String)yAxisCombobox.getSelectedItem()));
+							((MonitoringUnit2D)monitoringUnit).setxSelected(getVariableByName((String)xAxisCombobox.getSelectedItem()));
+							((MonitoringUnit2D)monitoringUnit).setySelected(getVariableByName((String)yAxisCombobox.getSelectedItem()));
 						}
 					}
 					else if(chartTypeCombobox.getSelectedItem().equals("3DLineChart")) {
@@ -344,9 +345,9 @@ public class ConfigurePanelEvents extends ConfigurePanelWindow implements Action
 							JOptionPane.showMessageDialog(this, "Invalid axis variables.", "Error", JOptionPane.ERROR_MESSAGE);
 							return;
 						} else {
-							((ThreeDMonitoringUnit)monitoringUnit).setxSelected(getVariableByName((String)xAxisCombobox.getSelectedItem()));
-							((ThreeDMonitoringUnit)monitoringUnit).setySelected(getVariableByName((String)yAxisCombobox.getSelectedItem()));
-							((ThreeDMonitoringUnit)monitoringUnit).setzSelected(getVariableByName((String)zAxisCombobox.getSelectedItem()));
+							((MonitoringUnit3D)monitoringUnit).setxSelected(getVariableByName((String)xAxisCombobox.getSelectedItem()));
+							((MonitoringUnit3D)monitoringUnit).setySelected(getVariableByName((String)yAxisCombobox.getSelectedItem()));
+							((MonitoringUnit3D)monitoringUnit).setzSelected(getVariableByName((String)zAxisCombobox.getSelectedItem()));
 						}
 					}
 					if(chartTypeCombobox.getSelectedItem().equals("LineChart") || chartTypeCombobox.getSelectedItem().equals("AreaChart")) {
@@ -387,7 +388,7 @@ public class ConfigurePanelEvents extends ConfigurePanelWindow implements Action
 						zAxis = getVariableByName((String)zAxisCombobox.getSelectedItem());
 					}
 				}
-				if(chartTypeCombobox.getSelectedItem().equals("LineChart") || chartTypeCombobox.getSelectedItem().equals("AreaChart")) {
+				else if(chartTypeCombobox.getSelectedItem().equals("LineChart") || chartTypeCombobox.getSelectedItem().equals("AreaChart")) {
 					((NumericMonitoringUnit)monitoringUnit).setLogScale(logScaleCheckbox.isSelected());
 				}
 				monitoringUnit.destroyPanelInstance();
@@ -421,9 +422,9 @@ public class ConfigurePanelEvents extends ConfigurePanelWindow implements Action
 			}
 			else if(e.getSource().equals(clonePanelButton)) {
 				if(monitoringUnit.getChartType() == "2DLineChart")
-					addPanel(makeDefaultName("Clone"), monitoringUnit.getTimeRange(), monitoringUnit.getChartType(), monitoringUnit.getVariables(), ((TwoDMonitoringUnit)monitoringUnit).getxSelected(), ((TwoDMonitoringUnit)monitoringUnit).getySelected(), null);
+					addPanel(makeDefaultName("Clone"), monitoringUnit.getTimeRange(), monitoringUnit.getChartType(), monitoringUnit.getVariables(), ((MonitoringUnit2D)monitoringUnit).getxSelected(), ((MonitoringUnit2D)monitoringUnit).getySelected(), null);
 				else if(monitoringUnit.getChartType() == "3DLineChart")
-					addPanel(makeDefaultName("Clone"), monitoringUnit.getTimeRange(), monitoringUnit.getChartType(), monitoringUnit.getVariables(), ((ThreeDMonitoringUnit)monitoringUnit).getxSelected(), ((ThreeDMonitoringUnit)monitoringUnit).getySelected(), ((ThreeDMonitoringUnit)monitoringUnit).getzSelected());
+					addPanel(makeDefaultName("Clone"), monitoringUnit.getTimeRange(), monitoringUnit.getChartType(), monitoringUnit.getVariables(), ((MonitoringUnit3D)monitoringUnit).getxSelected(), ((MonitoringUnit3D)monitoringUnit).getySelected(), ((MonitoringUnit3D)monitoringUnit).getzSelected());
 				else
 					addPanel(makeDefaultName("Clone"), monitoringUnit.getTimeRange(), monitoringUnit.getChartType(), monitoringUnit.getVariables(), null, null, null);
 			}
@@ -496,9 +497,9 @@ public class ConfigurePanelEvents extends ConfigurePanelWindow implements Action
 		else if(chartType.equals("StepLineChart"))
 			mainInterface.getMainExecution().getPanelMonitoringSystem().getMonitoringUnits().add(new CategoryMonitoringUnit(name, mainInterface.getMainExecution().getPanelMonitoringSystem(), timeRange, chartType, variables, variables.get(0).getType()));
 		else if (chartType.equals("2DLineChart"))
-			mainInterface.getMainExecution().getPanelMonitoringSystem().getMonitoringUnits().add(new TwoDMonitoringUnit(name, mainInterface.getMainExecution().getPanelMonitoringSystem(), timeRange, chartType, variables, variables.get(0).getType(), xAxis, yAxis));
+			mainInterface.getMainExecution().getPanelMonitoringSystem().getMonitoringUnits().add(new MonitoringUnit2D(name, mainInterface.getMainExecution().getPanelMonitoringSystem(), timeRange, chartType, variables, variables.get(0).getType(), xAxis, yAxis));
 		else if (chartType.equals("3DLineChart"))
-			mainInterface.getMainExecution().getPanelMonitoringSystem().getMonitoringUnits().add(new ThreeDMonitoringUnit(name, mainInterface.getMainExecution().getPanelMonitoringSystem(), timeRange, chartType, variables, variables.get(0).getType(), xAxis, yAxis, zAxis));
+			mainInterface.getMainExecution().getPanelMonitoringSystem().getMonitoringUnits().add(new MonitoringUnit3D(name, mainInterface.getMainExecution().getPanelMonitoringSystem(), timeRange, chartType, variables, variables.get(0).getType(), xAxis, yAxis, zAxis));
 		mainInterface.setMenuConfigurePanel();
 		this.dispose();
 	}
