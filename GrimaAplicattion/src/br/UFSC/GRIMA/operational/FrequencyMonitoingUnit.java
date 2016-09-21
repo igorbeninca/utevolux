@@ -204,7 +204,7 @@ public class FrequencyMonitoingUnit extends MonitoringUnit implements Runnable {
 		// TODO Auto-generated method stub
 		while(true) {
 			long time = System.currentTimeMillis();
-			if(!freeze) {
+			if(!freeze && (getDisplaySize() != 0)) {
 				int col = 0;
 				int line = 0;
 				int limit = (int)Math.ceil((Math.sqrt(getDisplaySize()))); 
@@ -213,7 +213,7 @@ public class FrequencyMonitoingUnit extends MonitoringUnit implements Runnable {
 				double[] ColWeigths = new double[limit];
 				for(int i = 0; i < ColWeigths.length; i++)
 					ColWeigths[i] = 1.0;
-				double[] rowWeigths = new double[(int)Math.ceil((double)categoryVariableBuffers.size()/limit)];
+				double[] rowWeigths = new double[(int)Math.ceil((double)getDisplaySize()/limit)];
 				for(int i = 0; i < rowWeigths.length; i++)
 					rowWeigths[i] = 1.0;
 				
@@ -225,7 +225,7 @@ public class FrequencyMonitoingUnit extends MonitoringUnit implements Runnable {
 				for(int i = 0; i < categoryVariableBuffers.size(); i++) {
 					if(categoryVariableBuffers.get(i).getDisplayButton().isSelected() && (categoryVariableBuffers.get(i).getVariable().getType() != 'i')) {
 						DefaultPieDataset data = new DefaultPieDataset();
-						JFreeChart cht = ChartFactory.createPieChart(categoryVariableBuffers.get(i).getVariable().getValidName(), data, true, true, false);
+						JFreeChart cht = ChartFactory.createPieChart(categoryVariableBuffers.get(i).getVariable().getValidName(), data, false, true, false);
 						for(int j = 0; j < categoryVariableBuffers.get(i).getDataSerie().getItemCount() - 1; j++) {
 							if(categoryVariableBuffers.get(i).getDataSerie().getValue(j) == null)
 								continue;
@@ -257,13 +257,17 @@ public class FrequencyMonitoingUnit extends MonitoringUnit implements Runnable {
 						new Insets(0, 0, 5, 5), 0, 0));
 				setChartPanel(sub);
 			}
+			else {
+				if(chartPanel != null)
+					getMonitoringPanel().remove(chartPanel);
+			}
 			long performed = System.currentTimeMillis() - time;
 			if(performed < 1000) {
 				try {
 					thread.sleep(1000 - performed);
-				} catch (InterruptedException e) {
+				} 
+				catch (InterruptedException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
 				}
 			}
 		}
