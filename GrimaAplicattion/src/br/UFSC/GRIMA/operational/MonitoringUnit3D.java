@@ -29,6 +29,7 @@ import com.orsoncharts.Chart3DFactory;
 import com.orsoncharts.Chart3DPanel;
 import com.orsoncharts.data.xyz.XYZSeries;
 import com.orsoncharts.data.xyz.XYZSeriesCollection;
+import com.orsoncharts.graphics3d.swing.DisplayPanel3D;
 import com.orsoncharts.graphics3d.swing.Panel3D;
 
 import br.UFSC.GRIMA.dataStructure.Variable;
@@ -48,7 +49,7 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 	private ArrayList<XYZSeries>series;//para inserir descontinuidades
 	private XYZSeriesCollection dataset;
 	private Chart3D chart;
-	private Panel3D panel;
+	private DisplayPanel3D panel;
 	//////////////layout Components//////////////////
 	private JComboBox<String> xComboBox;
 	private JComboBox<String> yComboBox;
@@ -68,6 +69,9 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 			series.add(new XYZSeries(Integer.parseInt(series.get(series.size() - 1).getKey().toString()) + 1));
 			dataset.add(series.get(series.size() - 1));
 			timeRegister.add(new ArrayList<RegularTimePeriod>());
+//			series.get(series.size() - 1).
+//			dataset.
+//			chart.;
 		}
 	}
 	public int getSize() {
@@ -238,7 +242,8 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 			if(!toDiscart.isEmpty())
 				remove(toDiscart);
 		}
-		dataset.setNotify(true);
+		if(panel != null)
+			dataset.setNotify(true);
 	}
 	@Override
 	public void actionPerformed2(ActionEvent e) {
@@ -389,10 +394,11 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 		getMonitoringPanel().setVisible(isVisible());
 		if (panel != null) 
 			getMonitoringPanel().remove(panel);
-		setPanel(new Chart3DPanel(chart));
+		setPanel(new DisplayPanel3D(new Chart3DPanel(chart)));
 		getMonitoringPanel().add(panel, new GridBagConstraints(0, 2, 6, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(0, 0, 5, 5), 0, 0));
+		getMonitoringPanel().setPreferredSize(getMonitoringPanel().getPreferredSize());
 	}
 	@Override
 	public void destroyPanelInstance() {
@@ -406,7 +412,7 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 			zAxis.getDataSerie().removeChangeListener(this);
 			for(int i = 0; i < variableRegisters.size(); i++) 
 				variableRegisters.get(i).getVariable().getDataSerie().removeChangeListener(variableRegisters.get(i));
-		}catch(Exception e){e.printStackTrace();}//tirar depois, ver se esta fazendo direito
+		}catch(Exception e){}
 		setTimeRegister(null);
 		setSeries(null);
 		setVariableRegisters(null);
@@ -737,11 +743,11 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 		this.chart = chart;
 	}
 
-	public Panel3D getPanel() {
+	public DisplayPanel3D getPanel() {
 		return panel;
 	}
 
-	public void setPanel(Panel3D panel) {
+	public void setPanel(DisplayPanel3D panel) {
 		this.panel = panel;
 	}
 

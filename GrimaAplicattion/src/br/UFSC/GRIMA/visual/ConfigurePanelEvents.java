@@ -24,6 +24,7 @@ import br.UFSC.GRIMA.dataStructure.Component;
 import br.UFSC.GRIMA.dataStructure.Device;
 import br.UFSC.GRIMA.dataStructure.Variable;
 import br.UFSC.GRIMA.operational.CategoryMonitoringUnit;
+import br.UFSC.GRIMA.operational.FrequencyMonitoingUnit;
 import br.UFSC.GRIMA.operational.MonitoringUnit;
 import br.UFSC.GRIMA.operational.MonitoringUnit3D;
 import br.UFSC.GRIMA.operational.NumericMonitoringUnit;
@@ -100,6 +101,7 @@ public class ConfigurePanelEvents extends ConfigurePanelWindow implements Action
 		model.addElement("AreaChart");
 		model.addElement("2DLineChart");
 		model.addElement("3DLineChart");
+		model.addElement("FrequencyChart");
 		chartTypeCombobox.setModel(model);
 		setVariablesCombobox();
 		configureWorkspace();
@@ -164,6 +166,7 @@ public class ConfigurePanelEvents extends ConfigurePanelWindow implements Action
 		model.addElement("AreaChart");
 		model.addElement("2DLineChart");
 		model.addElement("3DLineChart");
+		model.addElement("FrequencyChart");
 		chartTypeCombobox.setModel(model);
 		chartTypeCombobox.setSelectedItem(monitoringUnit.getChartType());
 		setVariablesCombobox();
@@ -496,6 +499,8 @@ public class ConfigurePanelEvents extends ConfigurePanelWindow implements Action
 			mainInterface.getMainExecution().getPanelMonitoringSystem().getMonitoringUnits().add(new NumericMonitoringUnit(name, mainInterface.getMainExecution().getPanelMonitoringSystem(), timeRange, chartType, variables, variables.get(0).getType(), logScaleCheckbox.isSelected()));
 		else if(chartType.equals("StepLineChart"))
 			mainInterface.getMainExecution().getPanelMonitoringSystem().getMonitoringUnits().add(new CategoryMonitoringUnit(name, mainInterface.getMainExecution().getPanelMonitoringSystem(), timeRange, chartType, variables, variables.get(0).getType()));
+		else if(chartType.equals("FrequencyChart"))
+			mainInterface.getMainExecution().getPanelMonitoringSystem().getMonitoringUnits().add(new FrequencyMonitoingUnit(name, mainInterface.getMainExecution().getPanelMonitoringSystem(), timeRange, chartType, variables, variables.get(0).getType()));
 		else if (chartType.equals("2DLineChart"))
 			mainInterface.getMainExecution().getPanelMonitoringSystem().getMonitoringUnits().add(new MonitoringUnit2D(name, mainInterface.getMainExecution().getPanelMonitoringSystem(), timeRange, chartType, variables, variables.get(0).getType(), xAxis, yAxis));
 		else if (chartType.equals("3DLineChart"))
@@ -530,7 +535,7 @@ public class ConfigurePanelEvents extends ConfigurePanelWindow implements Action
 				return false;
 			}
 		}
-		else if (chartTypeCombobox.getSelectedItem().equals("StepLineChart")) {
+		else if (chartTypeCombobox.getSelectedItem().equals("StepLineChart") || chartTypeCombobox.getSelectedItem().equals("FrequencyChart")) {
 			if(variables.get(0).getType() == '1') {
 				JOptionPane.showMessageDialog(this, "You cannot use this type of chart for numeric variables, please select the LineChart or AreaChart chartType.", "Error", JOptionPane.ERROR_MESSAGE);
 				return false;

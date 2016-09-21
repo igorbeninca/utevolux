@@ -22,6 +22,7 @@ import br.UFSC.GRIMA.dataStructure.Variable;
 public class CategoryVariableBuffer implements SeriesChangeListener, ActionListener {
 	private Variable variable;
 	private CategoryMonitoringUnit categoryMonitoringUnit;
+	private FrequencyMonitoingUnit frequencyMonitoingUnit;
 	private TimeSeries dataSerie;
 	private int categoriesInVariable;
 	//////////panelComponents
@@ -46,16 +47,39 @@ public class CategoryVariableBuffer implements SeriesChangeListener, ActionListe
 		}
 		variable.getDataSerie().addChangeListener(this);
 	}
+	public CategoryVariableBuffer(Variable variable, FrequencyMonitoingUnit frequencyMonitoringUnit) {
+		setVariable(variable);
+		setFrequencyMonitoingUnit(frequencyMonitoringUnit);
+		frequencyMonitoringUnit.getPanelMonitoringSystem().getController().getIoControl().getLoadExecution().addToVariableList(variable);
+		if (variable.getName() != null) 
+			setDataSerie(new TimeSeries(variable.getName()));
+		else
+			setDataSerie(new TimeSeries(variable.getDataItemID()));
+		dataSerie.setNotify(false);
+		for(int i = 0; i < variable.getDataSerie().getItemCount(); i++) 
+			dataSerie.addOrUpdate(variable.getDataSerie().getDataItem(i));
+		for (int i = 0; i < dataSerie.getItemCount(); i++) {
+			if(dataSerie.getValue(i) != null)
+				dataSerie.update(i, (double)frequencyMonitoringUnit.getCategoryStrings().indexOf(variable.getCategoryStrings().get(dataSerie.getValue(i).intValue())));
+		}
+		variable.getDataSerie().addChangeListener(this);
+	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource().equals(displayButton)) {
-			if (variable.getType() == 'i')
-				displayButton.setSelected(false);
-			else if (displayButton.isSelected())
-				categoryMonitoringUnit.getChartDataset().addSeries(dataSerie);
-			else
-				categoryMonitoringUnit.getChartDataset().removeSeries(dataSerie);
+			if(categoryMonitoringUnit != null) {
+				if (variable.getType() == 'i')
+					displayButton.setSelected(false);
+				else if (displayButton.isSelected())
+					categoryMonitoringUnit.getChartDataset().addSeries(dataSerie);
+				else
+					categoryMonitoringUnit.getChartDataset().removeSeries(dataSerie);
+			}
+			else {
+				if (variable.getType() == 'i')
+					displayButton.setSelected(false);
+			}
 		}
 	}
 	@Override
@@ -65,9 +89,17 @@ public class CategoryVariableBuffer implements SeriesChangeListener, ActionListe
 		if (!variable.getDataSerie().isEmpty()) {
 			if (variable.getType() != 'i') 
 				addToSerie(variable.getDataSerie().getDataItem(variable.getDataSerie().getItemCount() - 1));
-			if (categoryMonitoringUnit.getPlayPause() != null) {
-				if(categoryMonitoringUnit.getPlayPause().isSelected())
-					valueTextField.setText(variable.getLastValue());
+			if(categoryMonitoringUnit != null) {
+				if (categoryMonitoringUnit.getPlayPause() != null) {
+					if(categoryMonitoringUnit.getPlayPause().isSelected())
+						valueTextField.setText(variable.getLastValue());
+				}
+			}
+			else {
+				if (frequencyMonitoingUnit.getPlayPause() != null) {
+					if(frequencyMonitoingUnit.getPlayPause().isSelected())
+						valueTextField.setText(variable.getLastValue());
+				}
 			}
 		}
 	}
@@ -95,9 +127,19 @@ public class CategoryVariableBuffer implements SeriesChangeListener, ActionListe
 		//////////////discart old values////////////////////////
 		if (((variable.getType() == 'c')) && (serie.getItemCount() > 1)) {
 			XMLGregorianCalendar iniTime =(XMLGregorianCalendar) variable.getComponent().getDevice().getAgent().getCreationTime().clone();
-			int second = iniTime.getSecond() - categoryMonitoringUnit.getTimeRange()[2];
-			int minute = iniTime.getMinute() - categoryMonitoringUnit.getTimeRange()[1];
-			int hour = iniTime.getHour() - categoryMonitoringUnit.getTimeRange()[0];
+			int second = 0;
+			int minute = 0;
+			int hour = 0;
+			if(categoryMonitoringUnit != null) {
+				second = iniTime.getSecond() - categoryMonitoringUnit.getTimeRange()[2];
+				minute = iniTime.getMinute() - categoryMonitoringUnit.getTimeRange()[1];
+				hour = iniTime.getHour() - categoryMonitoringUnit.getTimeRange()[0];
+			}
+			else {
+				second = iniTime.getSecond() - frequencyMonitoingUnit.getTimeRange()[2];
+				minute = iniTime.getMinute() - frequencyMonitoingUnit.getTimeRange()[1];
+				hour = iniTime.getHour() - frequencyMonitoingUnit.getTimeRange()[0];
+			}
 			int day = iniTime.getDay();
 			int month = iniTime.getMonth();
 			int year = iniTime.getYear();
@@ -164,16 +206,27 @@ public class CategoryVariableBuffer implements SeriesChangeListener, ActionListe
 			if(!categoriesInVariable.contains(dataSerie.getValue(i)))
 				categoriesInVariable.add(dataSerie.getValue(i));
 		}
-		if(categoriesInVariable.size() < getCategoriesInVariable())
-			categoryMonitoringUnit.categoryRemove();
+		if(categoriesInVariable.size() < getCategoriesInVariable()) {
+			if(categoryMonitoringUnit != null)
+				categoryMonitoringUnit.categoryRemove();
+			else
+				frequencyMonitoingUnit.categoryRemove();
+		}
 		setCategoriesInVariable(categoriesInVariable.size());
 		dataSerie.setNotify(true);
 		dataSerie.setNotify(false);
 	}
 	public int getCategoryPosition(String s) {
-		if (!categoryMonitoringUnit.getCategoryStrings().contains(s))
-			categoryMonitoringUnit.categoryAdd(s);
-		return categoryMonitoringUnit.getCategoryStrings().indexOf(s);
+		if(categoryMonitoringUnit != null) {
+			if (!categoryMonitoringUnit.getCategoryStrings().contains(s))
+				categoryMonitoringUnit.categoryAdd(s);
+			return categoryMonitoringUnit.getCategoryStrings().indexOf(s);
+		}
+		else {
+			if (!frequencyMonitoingUnit.getCategoryStrings().contains(s))
+				frequencyMonitoingUnit.categoryAdd(s);
+			return frequencyMonitoingUnit.getCategoryStrings().indexOf(s);
+		}
 	}
 	public void setNewCategoryData(int[] correction) {
 		if(variable.getType() != 'i') {
@@ -188,13 +241,20 @@ public class CategoryVariableBuffer implements SeriesChangeListener, ActionListe
 		}
 	}
 	public void setVariableToIrregular() {
-		categoryMonitoringUnit.getChartDataset().removeSeries(dataSerie);
+		if(categoryMonitoringUnit != null)
+			categoryMonitoringUnit.getChartDataset().removeSeries(dataSerie);
 		dataSerie = null;
 		typeLabel.setIcon(new ImageIcon(getClass().getResource("/br/UFSC/GRIMA/images/irregularTypeIcon.gif")));
 		typeLabel.setToolTipText("Irregular Variable Type: this variable show values that is neither numeric nor category variable Type.");
 		displayButton.setSelected(false);
-		if(categoryMonitoringUnit.getPanelType() == 'c')
-			categoryMonitoringUnit.categoryRemove();
+		if(categoryMonitoringUnit != null) {
+			if(categoryMonitoringUnit.getPanelType() == 'c')
+				categoryMonitoringUnit.categoryRemove();
+		}
+		else {
+			if(frequencyMonitoingUnit.getPanelType() == 'c')
+				frequencyMonitoingUnit.categoryRemove();
+		}
 	}
 //////////////////////////////////////Getters and Setters////////////////////////////////////////////////////////
 	public TimeSeries getDataSerie() {
@@ -244,5 +304,11 @@ public class CategoryVariableBuffer implements SeriesChangeListener, ActionListe
 	}
 	public void setCategoriesInVariable(int categoriesInVariable) {
 		this.categoriesInVariable = categoriesInVariable;
+	}
+	public FrequencyMonitoingUnit getFrequencyMonitoingUnit() {
+		return frequencyMonitoingUnit;
+	}
+	public void setFrequencyMonitoingUnit(FrequencyMonitoingUnit frequencyMonitoingUnit) {
+		this.frequencyMonitoingUnit = frequencyMonitoingUnit;
 	}
 }
