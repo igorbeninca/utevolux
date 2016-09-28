@@ -1,5 +1,6 @@
 package br.UFSC.GRIMA.operational;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -30,8 +31,10 @@ import com.orsoncharts.Chart3DFactory;
 import com.orsoncharts.Chart3DPanel;
 import com.orsoncharts.data.xyz.XYZSeries;
 import com.orsoncharts.data.xyz.XYZSeriesCollection;
+import com.orsoncharts.graphics3d.ViewPoint3D;
 import com.orsoncharts.graphics3d.swing.DisplayPanel3D;
 import com.orsoncharts.graphics3d.swing.Panel3D;
+import com.orsoncharts.plot.XYZPlot;
 
 import br.UFSC.GRIMA.dataStructure.Variable;
 
@@ -70,9 +73,6 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 			series.add(new XYZSeries(Integer.parseInt(series.get(series.size() - 1).getKey().toString()) + 1));
 			dataset.add(series.get(series.size() - 1));
 			timeRegister.add(new ArrayList<RegularTimePeriod>());
-//			series.get(series.size() - 1).
-//			dataset.
-//			chart.;
 		}
 	}
 	public int getSize() {
@@ -87,22 +87,35 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 		return size;
 	}
 	public void remove(ArrayList<ArrayList<Integer>>indexes) {
-		ArrayList<XYZSeries>nseries = new ArrayList<XYZSeries>();
-		ArrayList<ArrayList<RegularTimePeriod>>times = new ArrayList<ArrayList<RegularTimePeriod>>();
+		ArrayList<XYZSeries>sList = new ArrayList<XYZSeries>();
+		ArrayList<ArrayList<RegularTimePeriod>>tList = new ArrayList<ArrayList<RegularTimePeriod>>();
 		for(int i = 0; i < series.size(); i++) {
-			XYZSeries serie = new XYZSeries("");
-			ArrayList<RegularTimePeriod>periods = new ArrayList<RegularTimePeriod>();
+			XYZSeries s = new XYZSeries(series.get(i).getKey());
+			ArrayList<RegularTimePeriod>t = new ArrayList<RegularTimePeriod>();
 			for(int j = 0; j < series.get(i).getItemCount(); j++) {
 				if(!contains(indexes, i, j)) {
-					serie.add(series.get(i).getXValue(j), series.get(i).getYValue(j), series.get(i).getZValue(j));
-					periods.add(timeRegister.get(i).get(j));
+					s.add(series.get(i).getXValue(j), series.get(i).getYValue(j), series.get(i).getZValue(j));
+					t.add(timeRegister.get(i).get(j));
 				}
 			}
-			if(!periods.isEmpty()) {
-				nseries.add(serie);
-				times.add(periods);
+			if(!t.isEmpty()) {
+				sList.add(s);
+				tList.add(t);
 			}
 		}
+		if(sList.isEmpty()) {
+			sList.add(new XYZSeries(0 + ""));
+			tList.add(new ArrayList<RegularTimePeriod>());
+		}
+		setSeries(sList);
+		setTimeRegister(tList);
+		setDataset(new XYZSeriesCollection());
+		 ViewPoint3D vp = chart.getViewPoint();
+		for(int i = 0; i < series.size(); i++) {
+			dataset.add(series.get(i));
+		}
+		refreshChart();
+		chart.setViewPoint(vp);
 	}
 	public boolean contains(ArrayList<ArrayList<Integer>>indexes, int serie, int ind) {
 		for(int i = 0; i < indexes.size(); i++) {
@@ -240,10 +253,12 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 				if(noCont)
 					break;
 			}
+			System.out.println("                              discart Elements: " + toDiscart.size());
 			if(!toDiscart.isEmpty())
 				remove(toDiscart);
 		}
 		SwingUtilities.invokeLater(this);
+		System.out.println(getSize());
 	}
 	@Override
 	public void actionPerformed2(ActionEvent e) {
@@ -340,7 +355,7 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 		variablesPanel.setLayout(new GridBagLayout());
 		((GridBagLayout)variablesPanel.getLayout()).columnWidths = new int[] {0, 0};
 		((GridBagLayout)variablesPanel.getLayout()).rowHeights = new int[] {0, 0};
-		((GridBagLayout)variablesPanel.getLayout()).columnWeights = new double[] {1.0, 1.0};
+		((GridBagLayout)variablesPanel.getLayout()).columnWeights = new double[] {1.0, 1.0, 1.0};
 		((GridBagLayout)variablesPanel.getLayout()).rowWeights = new double[] {1.0, 1.0};
 		variablesPanel.setBorder(new TitledBorder("Chart Variables"));
 		JLabel xlab = new JLabel("X Axis:");
@@ -387,6 +402,7 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 		// TODO Auto-generated method stub
 		setChart(Chart3DFactory.createXYZLineChart("", "", dataset, xSelected.getValidName(), ySelected.getValidName(), zSelected.getValidName()));
 		chart.setLegendBuilder(null);
+		((XYZPlot)chart.getPlot()).getRenderer().setColors(Color.BLACK);
 		chart.setNotify(true);
 		((GridBagLayout)getMonitoringPanel().getLayout()).rowHeights[2] = getMinimumHeight();
 		getMonitoringPanel().setPreferredSize(new Dimension(getMinimumWhidth(),  (int) Math.round(getMonitoringPanel().getPreferredSize().getHeight())));
@@ -472,7 +488,6 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 						timeRegister.get(timeRegister.size() - 1).add(zSelected.getDataSerie().getTimePeriod(zIndex));
 				}
 //				System.out.println("times: " + timeRegister.get(timeRegister.size() - 1).get(timeRegister.get(timeRegister.size() - 1).size() - 1).getFirstMillisecond() + "->" + xSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond() + ", " + ySelected.getDataSerie().getTimePeriod(yIndex).getFirstMillisecond() + ", " + zSelected.getDataSerie().getTimePeriod(zIndex).getFirstMillisecond());
-//				System.out.println("values: " + timeRegister.get(timeRegister.size() - 1).get(timeRegister.get(timeRegister.size() - 1).size() - 1) + "->" + xSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond() + ", " + ySelected.getDataSerie().getTimePeriod(yIndex).getFirstMillisecond() + ", " + zSelected.getDataSerie().getTimePeriod(zIndex).getFirstMillisecond());
 				if(xIndex < xSelected.getDataSerie().getItemCount() - 1)
 					xIndex++;
 				if(yIndex < ySelected.getDataSerie().getItemCount() - 1)
