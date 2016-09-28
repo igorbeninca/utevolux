@@ -20,6 +20,7 @@ public class IOControl {
 		setClientCameras(new ArrayList<ClientCamera>());
 		setSaveExecution(new SaveExecution(this));
 		setLoadExecution(new LoadExecution(this));
+		loadExecution.getThread().setPriority(Thread.MAX_PRIORITY);
 		loadExecution.start();
 		saveExecution.start();
 		saveExecution.getBufControl().start();
