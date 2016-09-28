@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
+import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -34,7 +35,7 @@ import com.orsoncharts.graphics3d.swing.Panel3D;
 
 import br.UFSC.GRIMA.dataStructure.Variable;
 
-public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeListener {
+public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeListener, Runnable {
 	private ArrayList<VariableRegister> variableRegisters;
 	private ArrayList<ArrayList<RegularTimePeriod>> timeRegister;
 	private NumericVariableBuffer xAxis;
@@ -49,7 +50,7 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 	private ArrayList<XYZSeries>series;//para inserir descontinuidades
 	private XYZSeriesCollection dataset;
 	private Chart3D chart;
-	private DisplayPanel3D panel;
+	private Chart3DPanel panel;
 	//////////////layout Components//////////////////
 	private JComboBox<String> xComboBox;
 	private JComboBox<String> yComboBox;
@@ -242,8 +243,7 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 			if(!toDiscart.isEmpty())
 				remove(toDiscart);
 		}
-		if(panel != null)
-			dataset.setNotify(true);
+		SwingUtilities.invokeLater(this);
 	}
 	@Override
 	public void actionPerformed2(ActionEvent e) {
@@ -296,7 +296,7 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 		return null;
 	}
 	@Override
-	public void freezeChart(boolean freeze) {
+	public void doFreeze(boolean freeze) {
 		// TODO Auto-generated method stub
 		chart.setNotify(freeze);
 	}
@@ -335,7 +335,6 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 	public void initAditionalPanelElements() {
 		// TODO Auto-generated method stub
 		setDataset(new XYZSeriesCollection());
-		dataset.setNotify(true);
 		init3DSerie();
 		JPanel variablesPanel = new JPanel();
 		variablesPanel.setLayout(new GridBagLayout());
@@ -387,6 +386,7 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 	public void refreshChart2() {
 		// TODO Auto-generated method stub
 		setChart(Chart3DFactory.createXYZLineChart("", "", dataset, xSelected.getValidName(), ySelected.getValidName(), zSelected.getValidName()));
+		chart.setLegendBuilder(null);
 		chart.setNotify(true);
 		((GridBagLayout)getMonitoringPanel().getLayout()).rowHeights[2] = getMinimumHeight();
 		getMonitoringPanel().setPreferredSize(new Dimension(getMinimumWhidth(),  (int) Math.round(getMonitoringPanel().getPreferredSize().getHeight())));
@@ -394,11 +394,12 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 		getMonitoringPanel().setVisible(isVisible());
 		if (panel != null) 
 			getMonitoringPanel().remove(panel);
-		setPanel(new DisplayPanel3D(new Chart3DPanel(chart)));
+		setPanel(new Chart3DPanel(chart));
 		getMonitoringPanel().add(panel, new GridBagConstraints(0, 2, 6, 1, 0.0, 0.0,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(0, 0, 5, 5), 0, 0));
 		getMonitoringPanel().setPreferredSize(getMonitoringPanel().getPreferredSize());
+		SwingUtilities.invokeLater(this);
 	}
 	@Override
 	public void destroyPanelInstance() {
@@ -443,18 +444,18 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 			int yIndex = 0;
 			int zIndex = 0;
 			if ((xSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond() >= ySelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond()) && (xSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond() >= zSelected.getDataSerie().getTimePeriod(zIndex).getFirstMillisecond())) {
-				yIndex = findItemClosedTo((Millisecond)xSelected.getDataSerie().getTimePeriod(xIndex), ySelected.getDataSerie());
-				zIndex = findItemClosedTo((Millisecond)xSelected.getDataSerie().getTimePeriod(xIndex), zSelected.getDataSerie());
+				yIndex = findItemLeftTo((Millisecond)xSelected.getDataSerie().getTimePeriod(xIndex), ySelected.getDataSerie());
+				zIndex = findItemLeftTo((Millisecond)xSelected.getDataSerie().getTimePeriod(xIndex), zSelected.getDataSerie());
 				timeRegister.get(0).add(xSelected.getDataSerie().getTimePeriod(xIndex));
 			}
 			else if ((ySelected.getDataSerie().getTimePeriod(yIndex).getFirstMillisecond() >= xSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond()) && (ySelected.getDataSerie().getTimePeriod(yIndex).getFirstMillisecond() >= zSelected.getDataSerie().getTimePeriod(zIndex).getFirstMillisecond())) {
-				xIndex = findItemClosedTo((Millisecond)ySelected.getDataSerie().getTimePeriod(yIndex), xSelected.getDataSerie());
-				zIndex = findItemClosedTo((Millisecond)ySelected.getDataSerie().getTimePeriod(yIndex), zSelected.getDataSerie());
+				xIndex = findItemLeftTo((Millisecond)ySelected.getDataSerie().getTimePeriod(yIndex), xSelected.getDataSerie());
+				zIndex = findItemLeftTo((Millisecond)ySelected.getDataSerie().getTimePeriod(yIndex), zSelected.getDataSerie());
 				timeRegister.get(0).add(ySelected.getDataSerie().getTimePeriod(yIndex));
 			}
 			else {
-				xIndex = findItemClosedTo((Millisecond)zSelected.getDataSerie().getTimePeriod(zIndex), xSelected.getDataSerie());
-				yIndex = findItemClosedTo((Millisecond)zSelected.getDataSerie().getTimePeriod(zIndex), ySelected.getDataSerie());
+				xIndex = findItemLeftTo((Millisecond)zSelected.getDataSerie().getTimePeriod(zIndex), xSelected.getDataSerie());
+				yIndex = findItemLeftTo((Millisecond)zSelected.getDataSerie().getTimePeriod(zIndex), ySelected.getDataSerie());
 				timeRegister.get(0).add(zSelected.getDataSerie().getTimePeriod(zIndex));
 			}
 			while(!((xIndex == xSelected.getDataSerie().getItemCount() - 1)&&(yIndex == ySelected.getDataSerie().getItemCount() - 1)&&(zIndex == zSelected.getDataSerie().getItemCount() - 1))) {
@@ -470,6 +471,8 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 					else
 						timeRegister.get(timeRegister.size() - 1).add(zSelected.getDataSerie().getTimePeriod(zIndex));
 				}
+//				System.out.println("times: " + timeRegister.get(timeRegister.size() - 1).get(timeRegister.get(timeRegister.size() - 1).size() - 1).getFirstMillisecond() + "->" + xSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond() + ", " + ySelected.getDataSerie().getTimePeriod(yIndex).getFirstMillisecond() + ", " + zSelected.getDataSerie().getTimePeriod(zIndex).getFirstMillisecond());
+//				System.out.println("values: " + timeRegister.get(timeRegister.size() - 1).get(timeRegister.get(timeRegister.size() - 1).size() - 1) + "->" + xSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond() + ", " + ySelected.getDataSerie().getTimePeriod(yIndex).getFirstMillisecond() + ", " + zSelected.getDataSerie().getTimePeriod(zIndex).getFirstMillisecond());
 				if(xIndex < xSelected.getDataSerie().getItemCount() - 1)
 					xIndex++;
 				if(yIndex < ySelected.getDataSerie().getItemCount() - 1)
@@ -479,9 +482,9 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 				boolean xFirst = false;
 				boolean yFirst = false;
 				boolean zFirst = false;
-				if((xSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond() >= ySelected.getDataSerie().getTimePeriod(yIndex).getFirstMillisecond())&&(xSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond() >= zSelected.getDataSerie().getTimePeriod(zIndex).getFirstMillisecond()))
+				if((xSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond() <= ySelected.getDataSerie().getTimePeriod(yIndex).getFirstMillisecond())&&(xSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond() <= zSelected.getDataSerie().getTimePeriod(zIndex).getFirstMillisecond()))
 					xFirst = true;
-				else if((ySelected.getDataSerie().getTimePeriod(yIndex).getFirstMillisecond() >= xSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond())&&(ySelected.getDataSerie().getTimePeriod(yIndex).getFirstMillisecond() >= zSelected.getDataSerie().getTimePeriod(zIndex).getFirstMillisecond()))
+				else if((ySelected.getDataSerie().getTimePeriod(yIndex).getFirstMillisecond() <= xSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond())&&(ySelected.getDataSerie().getTimePeriod(yIndex).getFirstMillisecond() <= zSelected.getDataSerie().getTimePeriod(zIndex).getFirstMillisecond()))
 					yFirst = true;
 				else
 					zFirst = true;
@@ -536,90 +539,25 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 					timeRegister.get(timeRegister.size() - 1).add(ySelected.getDataSerie().getTimePeriod(yIndex));
 				else
 					timeRegister.get(timeRegister.size() - 1).add(zSelected.getDataSerie().getTimePeriod(zIndex));
-		}
-//			series.get(series.size() - 1).add(xSelected.getDataSerie().getValue(xIndex).doubleValue(), ySelected.getDataSerie().getValue(yIndex).doubleValue(), zSelected.getDataSerie().getValue(zIndex).doubleValue());
-//			while((xIndex < xSelected.getDataSerie().getItemCount()) && (yIndex < ySelected.getDataSerie().getItemCount()) && (zIndex < zSelected.getDataSerie().getItemCount())) {
-//				if ((xSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond() == ySelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond()) && (xSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond() == zSelected.getDataSerie().getTimePeriod(zIndex).getFirstMillisecond())) {
-//					if((xSelected.getDataSerie().getValue(xIndex) == null) || (ySelected.getDataSerie().getValue(yIndex) == null) || (zSelected.getDataSerie().getValue(zIndex) == null)) {
-//						breakSerie();
-//					}
-//					else {
-//						series.get(series.size() - 1).add(xSelected.getDataSerie().getValue(xIndex).doubleValue(), ySelected.getDataSerie().getValue(yIndex).doubleValue(), zSelected.getDataSerie().getValue(zIndex).doubleValue());
-//						timeRegister.get(timeRegister.size() - 1).add(zSelected.getDataSerie().getTimePeriod(zIndex));
-//					}
-//					if(xIndex < xSelected.getDataSerie().getItemCount())
-//						xIndex++;
-//					if(yIndex < ySelected.getDataSerie().getItemCount())
-//						yIndex++;
-//					if(zIndex < zSelected.getDataSerie().getItemCount())
-//						zIndex++;
-//				}
-//				else if ((xSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond() <= ySelected.getDataSerie().getTimePeriod(yIndex).getFirstMillisecond()) && (xSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond() <= zSelected.getDataSerie().getTimePeriod(zIndex).getFirstMillisecond())) {
-//					if((xSelected.getDataSerie().getValue(xIndex) == null) || (ySelected.getDataSerie().getValue(yIndex) == null) || (zSelected.getDataSerie().getValue(zIndex) == null)) {
-//						breakSerie();
-//					}
-//					else {
-//						timeRegister.get(timeRegister.size() - 1).add(xSelected.getDataSerie().getTimePeriod(xIndex));
-//						series.get(series.size() - 1).add(xSelected.getDataSerie().getValue(xIndex).doubleValue(), ySelected.getDataSerie().getValue(yIndex).doubleValue(), zSelected.getDataSerie().getValue(zIndex).doubleValue());
-//					}
-//					if(xIndex <  xSelected.getDataSerie().getItemCount())
-//						xIndex++;
-//					else {
-//						if((ySelected.getDataSerie().getTimePeriod(yIndex).getFirstMillisecond() <= zSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond()))
-//							yIndex++;
-//						if(ySelected.getDataSerie().getTimePeriod(yIndex).getFirstMillisecond() >= zSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond())
-//							zIndex++;
-//					}
-//				}
-//				else if ((ySelected.getDataSerie().getTimePeriod(yIndex).getFirstMillisecond() <= xSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond()) && (ySelected.getDataSerie().getTimePeriod(yIndex).getFirstMillisecond() <= zSelected.getDataSerie().getTimePeriod(zIndex).getFirstMillisecond())) {
-//					if((xSelected.getDataSerie().getValue(xIndex) == null) || (ySelected.getDataSerie().getValue(yIndex) == null) || (zSelected.getDataSerie().getValue(zIndex) == null)) {
-//						breakSerie();
-//					}
-//					else {
-//						timeRegister.get(timeRegister.size() - 1).add(ySelected.getDataSerie().getTimePeriod(yIndex));
-//						series.get(series.size() - 1).add(xSelected.getDataSerie().getValue(xIndex).doubleValue(), ySelected.getDataSerie().getValue(yIndex).doubleValue(), zSelected.getDataSerie().getValue(zIndex).doubleValue());
-//					}
-//					if(yIndex <  ySelected.getDataSerie().getItemCount())
-//						yIndex++;
-//					else {
-//						if(xSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond() <= zSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond())
-//							xIndex++;
-//						if(xSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond() >= zSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond())
-//							zIndex++;
-//					}
-//				}
-//				else {
-//					if((xSelected.getDataSerie().getValue(xIndex) == null) || (ySelected.getDataSerie().getValue(yIndex) == null) || (zSelected.getDataSerie().getValue(zIndex) == null)) {
-//						breakSerie();
-//					}
-//					else {
-//						timeRegister.get(timeRegister.size() - 1).add(zSelected.getDataSerie().getTimePeriod(zIndex));
-//						series.get(series.size() - 1).add(xSelected.getDataSerie().getValue(xIndex).doubleValue(), ySelected.getDataSerie().getValue(yIndex ).doubleValue(), zSelected.getDataSerie().getValue(zIndex).doubleValue());
-//					}
-//					if(zIndex <  zSelected.getDataSerie().getItemCount())
-//						zIndex++;
-//					else {
-//						if(xSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond() <= ySelected.getDataSerie().getTimePeriod(yIndex).getFirstMillisecond())
-//							xIndex++;
-//						if(xSelected.getDataSerie().getTimePeriod(xIndex).getFirstMillisecond() >= ySelected.getDataSerie().getTimePeriod(yIndex).getFirstMillisecond())
-//							yIndex++;
-//					}
-//				}
-//			}
+			}
 		}
 		xAxis.getDataSerie().addChangeListener(this);
 		yAxis.getDataSerie().addChangeListener(this);
 		zAxis.getDataSerie().addChangeListener(this);
 	}
-	public int findItemClosedTo(Millisecond param, TimeSeries list) {
+	public int findItemLeftTo(Millisecond param, TimeSeries list) {
 		int closer;
 		for(closer = 0; closer < list.getItemCount() - 1; closer++) {
-			long distDown = Math.abs(list.getTimePeriod(closer).getFirstMillisecond() - param.getFirstMillisecond());
-			long distUp = Math.abs(list.getTimePeriod(closer + 1).getFirstMillisecond() - param.getFirstMillisecond());
-			if(distDown <= distUp)
+			if((param.getFirstMillisecond() >= list.getTimePeriod(closer).getFirstMillisecond())&&(param.getFirstMillisecond() <= list.getTimePeriod(closer + 1).getFirstMillisecond()))
 				break;
 		}
 		return closer;
+	}
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		dataset.setNotify(true);
+		dataset.setNotify(false);
 	}
 /////////////////////////////////////////////////////Getters and Setters/////////////////////////////////////////////////////////////////////////
 	public NumericVariableBuffer getyAxis() {
@@ -743,11 +681,11 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 		this.chart = chart;
 	}
 
-	public DisplayPanel3D getPanel() {
+	public Chart3DPanel getPanel() {
 		return panel;
 	}
 
-	public void setPanel(DisplayPanel3D panel) {
+	public void setPanel(Chart3DPanel panel) {
 		this.panel = panel;
 	}
 

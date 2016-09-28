@@ -52,7 +52,7 @@ public class NumericMonitoringUnit extends MonitoringUnit {
 	}
 /////////////////////////////////////////Methods///////////////////////////////////////////////////////////////////////////////
 	@Override
-	public void freezeChart(boolean freeze) {
+	public void doFreeze(boolean freeze) {
 		// TODO Auto-generated method stub
 		chart.setNotify(freeze);
 	}

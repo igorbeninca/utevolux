@@ -8,6 +8,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
+import javax.swing.SwingUtilities;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.jfree.data.general.SeriesChangeEvent;
@@ -18,7 +19,7 @@ import org.jfree.data.time.TimeSeriesDataItem;
 
 import br.UFSC.GRIMA.dataStructure.Variable;
 
-public class NumericVariableBuffer implements SeriesChangeListener, ActionListener {
+public class NumericVariableBuffer implements SeriesChangeListener, ActionListener, Runnable {
 	private Variable variable;
 	private NumericMonitoringUnit numericMonitoringUnit;
 	private MonitoringUnit2D twoDMonitoringUnit;
@@ -233,9 +234,7 @@ public class NumericVariableBuffer implements SeriesChangeListener, ActionListen
 				}
 			}
 		}
-		dataSerie.setNotify(true);
-		dataSerie.setNotify(false);
-		
+		SwingUtilities.invokeLater(this);
 	}
 	public void updateCalculateField() {
 		Long dif = new Long(0);
@@ -337,6 +336,12 @@ public class NumericVariableBuffer implements SeriesChangeListener, ActionListen
 		typeLabel.setIcon(new ImageIcon(getClass().getResource("/br/UFSC/GRIMA/images/irregularTypeIcon.gif")));
 		typeLabel.setToolTipText("Irregular Variable Type: this variable show values that is neither numeric nor category variable Type.");
 		displayButton.setSelected(false);
+	}
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		dataSerie.setNotify(true);
+		dataSerie.setNotify(false);
 	}
 //////////////////////////////////////Getters and Setters////////////////////////////////////////////////////////
 	public TimeSeries getDataSerie() {

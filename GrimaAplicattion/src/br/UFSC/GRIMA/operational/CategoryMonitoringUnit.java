@@ -43,7 +43,7 @@ public class CategoryMonitoringUnit extends MonitoringUnit {
 	}
 
 	@Override
-	public void freezeChart(boolean freeze) {
+	public void doFreeze(boolean freeze) {
 		// TODO Auto-generated method stub
 		chart.setNotify(false);
 	}

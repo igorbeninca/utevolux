@@ -199,7 +199,7 @@ public class MonitoringUnit2D extends MonitoringUnit implements SeriesChangeList
 	}
 
 	@Override
-	public void freezeChart(boolean freeze) {
+	public void doFreeze(boolean freeze) {
 		// TODO Auto-generated method stub
 		chart.setNotify(freeze);
 	}

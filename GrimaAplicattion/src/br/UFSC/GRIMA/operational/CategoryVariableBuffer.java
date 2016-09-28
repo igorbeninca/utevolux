@@ -9,6 +9,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
+import javax.swing.SwingUtilities;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.jfree.data.general.SeriesChangeEvent;
@@ -19,7 +20,7 @@ import org.jfree.data.time.TimeSeriesDataItem;
 
 import br.UFSC.GRIMA.dataStructure.Variable;
 
-public class CategoryVariableBuffer implements SeriesChangeListener, ActionListener {
+public class CategoryVariableBuffer implements SeriesChangeListener, ActionListener, Runnable {
 	private Variable variable;
 	private CategoryMonitoringUnit categoryMonitoringUnit;
 	private FrequencyMonitoingUnit frequencyMonitoingUnit;
@@ -213,8 +214,7 @@ public class CategoryVariableBuffer implements SeriesChangeListener, ActionListe
 				frequencyMonitoingUnit.categoryRemove();
 		}
 		setCategoriesInVariable(categoriesInVariable.size());
-		dataSerie.setNotify(true);
-		dataSerie.setNotify(false);
+		SwingUtilities.invokeLater(this);
 	}
 	public int getCategoryPosition(String s) {
 		if(categoryMonitoringUnit != null) {
@@ -255,6 +255,12 @@ public class CategoryVariableBuffer implements SeriesChangeListener, ActionListe
 			if(frequencyMonitoingUnit.getPanelType() == 'c')
 				frequencyMonitoingUnit.categoryRemove();
 		}
+	}
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		dataSerie.setNotify(true);
+		dataSerie.setNotify(false);
 	}
 //////////////////////////////////////Getters and Setters////////////////////////////////////////////////////////
 	public TimeSeries getDataSerie() {

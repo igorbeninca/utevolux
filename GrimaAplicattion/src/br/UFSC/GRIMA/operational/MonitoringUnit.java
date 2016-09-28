@@ -15,6 +15,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
+import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 
 import br.UFSC.GRIMA.dataStructure.Variable;
@@ -77,8 +78,17 @@ public abstract class MonitoringUnit implements ActionListener {
 		else
 			actionPerformed2(e);
 	}
+	public void freezeChart(boolean freeze) {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				doFreeze(freeze);
+			}
+		});
+	}
 	public abstract void actionPerformed2(ActionEvent e);
-	public abstract void freezeChart(boolean freeze);
+	public abstract void doFreeze(boolean freeze);
 	public void initPanel(JPanel monitoringPanel, JToggleButton panelButton) {
 		setMonitoringPanel(monitoringPanel);
 		setPanelButton(panelButton);

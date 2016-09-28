@@ -52,7 +52,7 @@ public class FrequencyMonitoingUnit extends MonitoringUnit implements Runnable {
 	}
 
 	@Override
-	public void freezeChart(boolean freeze) {
+	public void doFreeze(boolean freeze) {
 		this.freeze = freeze;
 	}
 
@@ -260,6 +260,10 @@ public class FrequencyMonitoingUnit extends MonitoringUnit implements Runnable {
 			else {
 				if(chartPanel != null)
 					getMonitoringPanel().remove(chartPanel);
+			}
+			if(getMonitoringPanel() != null) {
+				getMonitoringPanel().revalidate();
+				getMonitoringPanel().repaint();
 			}
 			long performed = System.currentTimeMillis() - time;
 			if(performed < 1000) {
