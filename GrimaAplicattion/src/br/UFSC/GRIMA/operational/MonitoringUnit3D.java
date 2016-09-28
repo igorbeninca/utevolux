@@ -253,12 +253,10 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 				if(noCont)
 					break;
 			}
-			System.out.println("                              discart Elements: " + toDiscart.size());
 			if(!toDiscart.isEmpty())
 				remove(toDiscart);
 		}
 		SwingUtilities.invokeLater(this);
-		System.out.println(getSize());
 	}
 	@Override
 	public void actionPerformed2(ActionEvent e) {
