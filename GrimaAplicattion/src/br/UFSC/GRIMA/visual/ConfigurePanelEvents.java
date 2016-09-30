@@ -42,6 +42,7 @@ public class ConfigurePanelEvents extends ConfigurePanelWindow implements Action
 	private Variable currentY;
 	private Variable currentZ;
 	private boolean rangeEdited = false;
+	public static int INERENT = -1;
 /////////////////constructor/////////////////////////////////////////////////////////////
 	public ConfigurePanelEvents(MainInterface mainInterface, ArrayList<Variable> variables) {
 		// TODO Auto-generated constructor stub
@@ -294,111 +295,115 @@ public class ConfigurePanelEvents extends ConfigurePanelWindow implements Action
 			this.dispose();
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		else if(e.getSource().equals(okButton)) {
-			if(monitoringUnit == null) {
-				if(checkPanelInformation(true) && isNameOk(nameField.getText(), true)) {
-					if(chartTypeCombobox.getSelectedItem().equals("2DLineChart")) {
-						Variable xAxis = getVariableByName((String)xAxisCombobox.getSelectedItem());
-						Variable yAxis = getVariableByName((String)yAxisCombobox.getSelectedItem());
-						if((xAxis == null) || (yAxis == null)) {
-							JOptionPane.showMessageDialog(this, "Invalid variables, some of the variables in the axis are incorrect setted.", "Error", JOptionPane.ERROR_MESSAGE);
-						}
-						else if(xAxis.equals(yAxis)) {
-							JOptionPane.showMessageDialog(this, "Invalid variables, some of the variables in the axis are incorrect setted.", "Error", JOptionPane.ERROR_MESSAGE);
-						}
-						else {
-							addPanel(nameField.getText(), new int[]{(int)hourField.getValue(), (int)minuteField.getValue(), (int)secondField.getValue()}, (String)chartTypeCombobox.getSelectedItem(), variables, xAxis, yAxis, null);
-						}
-					}
-					else if(chartTypeCombobox.getSelectedItem().equals("3DLineChart")) {
-						Variable xAxis = getVariableByName((String)xAxisCombobox.getSelectedItem());
-						Variable yAxis = getVariableByName((String)yAxisCombobox.getSelectedItem());
-						Variable zAxis = getVariableByName((String)zAxisCombobox.getSelectedItem());
-						if((xAxis == null) || (yAxis == null) || (zAxis == null)) {
-							JOptionPane.showMessageDialog(this, "Invalid variables, some of the variables in the axis are incorrect setted.", "Error", JOptionPane.ERROR_MESSAGE);
-						}
-						else if(xAxis.equals(yAxis) || xAxis.equals(zAxis) || yAxis.equals(zAxis)) {
-							JOptionPane.showMessageDialog(this, "Invalid variables, some of the variables in the axis are incorrect setted.", "Error", JOptionPane.ERROR_MESSAGE);
-						}
-						else {
-							addPanel(nameField.getText(), new int[]{(int)hourField.getValue(), (int)minuteField.getValue(), (int)secondField.getValue()}, (String)chartTypeCombobox.getSelectedItem(), variables, xAxis, yAxis, zAxis);
-						}
-					}
-					else 
-						addPanel(nameField.getText(), new int[]{(int)hourField.getValue(), (int)minuteField.getValue(), (int)secondField.getValue()}, (String)chartTypeCombobox.getSelectedItem(), variables, null, null, null);
-				}
+			int index = INERENT;
+			if(monitoringUnit != null) {
+				index = mainInterface.getMainExecution().getPanelMonitoringSystem().getMonitoringUnits().indexOf(monitoringUnit);
+				System.out.println(index);
+				mainInterface.getMainExecution().getPanelMonitoringSystem().getMonitoringUnits().remove(monitoringUnit);
 			}
-			else if(!variableChanged() && chartTypeCombobox.getSelectedItem().equals(monitoringUnit.getChartType())) {
-				if(checkPanelInformation(false)) {
-					if(!nameField.getText().equals(monitoringUnit.getName())) {
-						if(!isNameOk(nameField.getText(), true)) {
-							return;
-						}
-					}
-					if(chartTypeCombobox.getSelectedItem().equals("2DLineChart")) {
-						if(xAxisCombobox.getSelectedItem().equals(yAxisCombobox.getSelectedItem())) {
-							JOptionPane.showMessageDialog(this, "Invalid axis variables.", "Error", JOptionPane.ERROR_MESSAGE);
-							return;
-						} else {
-							((MonitoringUnit2D)monitoringUnit).setxSelected(getVariableByName((String)xAxisCombobox.getSelectedItem()));
-							((MonitoringUnit2D)monitoringUnit).setySelected(getVariableByName((String)yAxisCombobox.getSelectedItem()));
-						}
-					}
-					else if(chartTypeCombobox.getSelectedItem().equals("3DLineChart")) {
-						if(xAxisCombobox.getSelectedItem().equals(yAxisCombobox.getSelectedItem()) || xAxisCombobox.getSelectedItem().equals(zAxisCombobox.getSelectedItem()) || yAxisCombobox.getSelectedItem().equals(zAxisCombobox.getSelectedItem())) {
-							JOptionPane.showMessageDialog(this, "Invalid axis variables.", "Error", JOptionPane.ERROR_MESSAGE);
-							return;
-						} else {
-							((MonitoringUnit3D)monitoringUnit).setxSelected(getVariableByName((String)xAxisCombobox.getSelectedItem()));
-							((MonitoringUnit3D)monitoringUnit).setySelected(getVariableByName((String)yAxisCombobox.getSelectedItem()));
-							((MonitoringUnit3D)monitoringUnit).setzSelected(getVariableByName((String)zAxisCombobox.getSelectedItem()));
-						}
-					}
-					if(chartTypeCombobox.getSelectedItem().equals("LineChart") || chartTypeCombobox.getSelectedItem().equals("AreaChart")) {
-						((NumericMonitoringUnit)monitoringUnit).setLogScale(logScaleCheckbox.isSelected());
-					}
-					monitoringUnit.setName(nameField.getText());
-					monitoringUnit.setTimeRange(new int[]{(int)hourField.getValue(), (int)minuteField.getValue(), (int)secondField.getValue()});
-					monitoringUnit.setMinimumWhidth((int)whidthField.getValue());
-					monitoringUnit.setMinimumHeight((int)heightField.getValue());
-					this.dispose();
-				}
-			}
-			else if(checkPanelInformation(true)) {
-				if(!nameField.getText().equals(monitoringUnit.getName())) {
-					if(!isNameOk(nameField.getText(), true)) {
-						return;
-					}
-				}
-				Variable xAxis = null;
-				Variable yAxis = null;
-				Variable zAxis = null;
+			if(checkPanelInformation(true) && isNameOk(nameField.getText(), true)) {
 				if(chartTypeCombobox.getSelectedItem().equals("2DLineChart")) {
-					if(xAxisCombobox.getSelectedItem().equals(yAxisCombobox.getSelectedItem())) {
-						JOptionPane.showMessageDialog(this, "Invalid axis variables.", "Error", JOptionPane.ERROR_MESSAGE);
-						return;
-					} else {
-						xAxis = getVariableByName((String)xAxisCombobox.getSelectedItem());
-						yAxis = getVariableByName((String)yAxisCombobox.getSelectedItem());
+					Variable xAxis = getVariableByName((String)xAxisCombobox.getSelectedItem());
+					Variable yAxis = getVariableByName((String)yAxisCombobox.getSelectedItem());
+					if((xAxis == null) || (yAxis == null)) {
+						JOptionPane.showMessageDialog(this, "Invalid variables, some of the variables in the axis are incorrect setted.", "Error", JOptionPane.ERROR_MESSAGE);
+					}
+					else if(xAxis.equals(yAxis)) {
+						JOptionPane.showMessageDialog(this, "Invalid variables, some of the variables in the axis are incorrect setted.", "Error", JOptionPane.ERROR_MESSAGE);
+					}
+					else {
+						addPanel(nameField.getText(), new int[]{(int)hourField.getValue(), (int)minuteField.getValue(), (int)secondField.getValue()}, (String)chartTypeCombobox.getSelectedItem(), variables, xAxis, yAxis, null, index);
 					}
 				}
 				else if(chartTypeCombobox.getSelectedItem().equals("3DLineChart")) {
-					if(xAxisCombobox.getSelectedItem().equals(yAxisCombobox.getSelectedItem()) || xAxisCombobox.getSelectedItem().equals(zAxisCombobox.getSelectedItem()) || yAxisCombobox.getSelectedItem().equals(zAxisCombobox.getSelectedItem())) {
-						JOptionPane.showMessageDialog(this, "Invalid axis variables.", "Error", JOptionPane.ERROR_MESSAGE);
-						return;
-					} else {
-						xAxis = getVariableByName((String)xAxisCombobox.getSelectedItem());
-						yAxis = getVariableByName((String)yAxisCombobox.getSelectedItem());
-						zAxis = getVariableByName((String)zAxisCombobox.getSelectedItem());
+					Variable xAxis = getVariableByName((String)xAxisCombobox.getSelectedItem());
+					Variable yAxis = getVariableByName((String)yAxisCombobox.getSelectedItem());
+					Variable zAxis = getVariableByName((String)zAxisCombobox.getSelectedItem());
+					if((xAxis == null) || (yAxis == null) || (zAxis == null)) {
+						JOptionPane.showMessageDialog(this, "Invalid variables, some of the variables in the axis are incorrect setted.", "Error", JOptionPane.ERROR_MESSAGE);
+					}
+					else if(xAxis.equals(yAxis) || xAxis.equals(zAxis) || yAxis.equals(zAxis)) {
+						JOptionPane.showMessageDialog(this, "Invalid variables, some of the variables in the axis are incorrect setted.", "Error", JOptionPane.ERROR_MESSAGE);
+					}
+					else {
+						addPanel(nameField.getText(), new int[]{(int)hourField.getValue(), (int)minuteField.getValue(), (int)secondField.getValue()}, (String)chartTypeCombobox.getSelectedItem(), variables, xAxis, yAxis, zAxis, index);
 					}
 				}
-				else if(chartTypeCombobox.getSelectedItem().equals("LineChart") || chartTypeCombobox.getSelectedItem().equals("AreaChart")) {
-					((NumericMonitoringUnit)monitoringUnit).setLogScale(logScaleCheckbox.isSelected());
-				}
-				monitoringUnit.destroyPanelInstance();
-				monitoringUnit.getPanelMonitoringSystem().getMonitoringUnits().remove(monitoringUnit);
-				addPanel(nameField.getText(), new int[]{(int)hourField.getValue(), (int)minuteField.getValue(), (int)secondField.getValue()}, (String)chartTypeCombobox.getSelectedItem(), variables, xAxis, yAxis, zAxis);
-				mainInterface.setMenuConfigurePanel();
+				else 
+					addPanel(nameField.getText(), new int[]{(int)hourField.getValue(), (int)minuteField.getValue(), (int)secondField.getValue()}, (String)chartTypeCombobox.getSelectedItem(), variables, null, null, null, index);
 			}
+//			else if(!variableChanged() && chartTypeCombobox.getSelectedItem().equals(monitoringUnit.getChartType())) {
+//				if(checkPanelInformation(false)) {
+//					if(!nameField.getText().equals(monitoringUnit.getName())) {
+//						if(!isNameOk(nameField.getText(), true)) {
+//							return;
+//						}
+//					}
+//					if(chartTypeCombobox.getSelectedItem().equals("2DLineChart")) {
+//						if(xAxisCombobox.getSelectedItem().equals(yAxisCombobox.getSelectedItem())) {
+//							JOptionPane.showMessageDialog(this, "Invalid axis variables.", "Error", JOptionPane.ERROR_MESSAGE);
+//							return;
+//						} else {
+//							((MonitoringUnit2D)monitoringUnit).setxSelected(getVariableByName((String)xAxisCombobox.getSelectedItem()));
+//							((MonitoringUnit2D)monitoringUnit).setySelected(getVariableByName((String)yAxisCombobox.getSelectedItem()));
+//						}
+//					}
+//					else if(chartTypeCombobox.getSelectedItem().equals("3DLineChart")) {
+//						if(xAxisCombobox.getSelectedItem().equals(yAxisCombobox.getSelectedItem()) || xAxisCombobox.getSelectedItem().equals(zAxisCombobox.getSelectedItem()) || yAxisCombobox.getSelectedItem().equals(zAxisCombobox.getSelectedItem())) {
+//							JOptionPane.showMessageDialog(this, "Invalid axis variables.", "Error", JOptionPane.ERROR_MESSAGE);
+//							return;
+//						} else {
+//							((MonitoringUnit3D)monitoringUnit).setxSelected(getVariableByName((String)xAxisCombobox.getSelectedItem()));
+//							((MonitoringUnit3D)monitoringUnit).setySelected(getVariableByName((String)yAxisCombobox.getSelectedItem()));
+//							((MonitoringUnit3D)monitoringUnit).setzSelected(getVariableByName((String)zAxisCombobox.getSelectedItem()));
+//						}
+//					}
+//					if(chartTypeCombobox.getSelectedItem().equals("LineChart") || chartTypeCombobox.getSelectedItem().equals("AreaChart")) {
+//						((NumericMonitoringUnit)monitoringUnit).setLogScale(logScaleCheckbox.isSelected());
+//					}
+//					monitoringUnit.setName(nameField.getText());
+//					monitoringUnit.setTimeRange(new int[]{(int)hourField.getValue(), (int)minuteField.getValue(), (int)secondField.getValue()});
+//					monitoringUnit.setMinimumWhidth((int)whidthField.getValue());
+//					monitoringUnit.setMinimumHeight((int)heightField.getValue());
+//					this.dispose();
+//				}
+//			}
+//			else if(checkPanelInformation(true)) {
+//				if(!nameField.getText().equals(monitoringUnit.getName())) {
+//					if(!isNameOk(nameField.getText(), true)) {
+//						return;
+//					}
+//				}
+//				Variable xAxis = null;
+//				Variable yAxis = null;
+//				Variable zAxis = null;
+//				if(chartTypeCombobox.getSelectedItem().equals("2DLineChart")) {
+//					if(xAxisCombobox.getSelectedItem().equals(yAxisCombobox.getSelectedItem())) {
+//						JOptionPane.showMessageDialog(this, "Invalid axis variables.", "Error", JOptionPane.ERROR_MESSAGE);
+//						return;
+//					} else {
+//						xAxis = getVariableByName((String)xAxisCombobox.getSelectedItem());
+//						yAxis = getVariableByName((String)yAxisCombobox.getSelectedItem());
+//					}
+//				}
+//				else if(chartTypeCombobox.getSelectedItem().equals("3DLineChart")) {
+//					if(xAxisCombobox.getSelectedItem().equals(yAxisCombobox.getSelectedItem()) || xAxisCombobox.getSelectedItem().equals(zAxisCombobox.getSelectedItem()) || yAxisCombobox.getSelectedItem().equals(zAxisCombobox.getSelectedItem())) {
+//						JOptionPane.showMessageDialog(this, "Invalid axis variables.", "Error", JOptionPane.ERROR_MESSAGE);
+//						return;
+//					} else {
+//						xAxis = getVariableByName((String)xAxisCombobox.getSelectedItem());
+//						yAxis = getVariableByName((String)yAxisCombobox.getSelectedItem());
+//						zAxis = getVariableByName((String)zAxisCombobox.getSelectedItem());
+//					}
+//				}
+//				else if(chartTypeCombobox.getSelectedItem().equals("LineChart") || chartTypeCombobox.getSelectedItem().equals("AreaChart")) {
+//					((NumericMonitoringUnit)monitoringUnit).setLogScale(logScaleCheckbox.isSelected());
+//				}
+//				monitoringUnit.destroyPanelInstance();
+//				monitoringUnit.getPanelMonitoringSystem().getMonitoringUnits().remove(monitoringUnit);
+//				addPanel(nameField.getText(), new int[]{(int)hourField.getValue(), (int)minuteField.getValue(), (int)secondField.getValue()}, (String)chartTypeCombobox.getSelectedItem(), variables, xAxis, yAxis, zAxis);
+//				mainInterface.setMenuConfigurePanel();
+//			}
 		}
 		if(minimizeButton != null) {
 			if (e.getSource().equals(minimizeButton)) {
@@ -425,11 +430,11 @@ public class ConfigurePanelEvents extends ConfigurePanelWindow implements Action
 			}
 			else if(e.getSource().equals(clonePanelButton)) {
 				if(monitoringUnit.getChartType() == "2DLineChart")
-					addPanel(makeDefaultName("Clone"), monitoringUnit.getTimeRange(), monitoringUnit.getChartType(), monitoringUnit.getVariables(), ((MonitoringUnit2D)monitoringUnit).getxSelected(), ((MonitoringUnit2D)monitoringUnit).getySelected(), null);
+					addPanel(makeDefaultName("Clone"), monitoringUnit.getTimeRange(), monitoringUnit.getChartType(), monitoringUnit.getVariables(), ((MonitoringUnit2D)monitoringUnit).getxSelected(), ((MonitoringUnit2D)monitoringUnit).getySelected(), null, INERENT);
 				else if(monitoringUnit.getChartType() == "3DLineChart")
-					addPanel(makeDefaultName("Clone"), monitoringUnit.getTimeRange(), monitoringUnit.getChartType(), monitoringUnit.getVariables(), ((MonitoringUnit3D)monitoringUnit).getxSelected(), ((MonitoringUnit3D)monitoringUnit).getySelected(), ((MonitoringUnit3D)monitoringUnit).getzSelected());
+					addPanel(makeDefaultName("Clone"), monitoringUnit.getTimeRange(), monitoringUnit.getChartType(), monitoringUnit.getVariables(), ((MonitoringUnit3D)monitoringUnit).getxSelected(), ((MonitoringUnit3D)monitoringUnit).getySelected(), ((MonitoringUnit3D)monitoringUnit).getzSelected(), INERENT);
 				else
-					addPanel(makeDefaultName("Clone"), monitoringUnit.getTimeRange(), monitoringUnit.getChartType(), monitoringUnit.getVariables(), null, null, null);
+					addPanel(makeDefaultName("Clone"), monitoringUnit.getTimeRange(), monitoringUnit.getChartType(), monitoringUnit.getVariables(), null, null, null, INERENT);
 			}
 		}
 		for (int i = 0; i < variables.size(); i++) {
@@ -494,17 +499,21 @@ public class ConfigurePanelEvents extends ConfigurePanelWindow implements Action
 		}
 		return defaultName;
 	}
-	public void addPanel(String name, int[] timeRange, String chartType, ArrayList<Variable>variables, Variable xAxis, Variable yAxis, Variable zAxis) {
+	public void addPanel(String name, int[] timeRange, String chartType, ArrayList<Variable>variables, Variable xAxis, Variable yAxis, Variable zAxis, int index) {
+		System.out.println(index);
+		if(index == INERENT) {
+			index = mainInterface.getMainExecution().getPanelMonitoringSystem().getMonitoringUnits().size();
+		}
 		if(chartType.equals("LineChart") || chartType.equals("AreaChart"))
-			mainInterface.getMainExecution().getPanelMonitoringSystem().getMonitoringUnits().add(new NumericMonitoringUnit(name, mainInterface.getMainExecution().getPanelMonitoringSystem(), timeRange, chartType, variables, variables.get(0).getType(), logScaleCheckbox.isSelected()));
+			mainInterface.getMainExecution().getPanelMonitoringSystem().getMonitoringUnits().add(index, new NumericMonitoringUnit(name, mainInterface.getMainExecution().getPanelMonitoringSystem(), timeRange, chartType, variables, variables.get(0).getType(), logScaleCheckbox.isSelected()));
 		else if(chartType.equals("StepLineChart"))
-			mainInterface.getMainExecution().getPanelMonitoringSystem().getMonitoringUnits().add(new CategoryMonitoringUnit(name, mainInterface.getMainExecution().getPanelMonitoringSystem(), timeRange, chartType, variables, variables.get(0).getType()));
+			mainInterface.getMainExecution().getPanelMonitoringSystem().getMonitoringUnits().add(index, new CategoryMonitoringUnit(name, mainInterface.getMainExecution().getPanelMonitoringSystem(), timeRange, chartType, variables, variables.get(0).getType()));
 		else if(chartType.equals("FrequencyChart"))
-			mainInterface.getMainExecution().getPanelMonitoringSystem().getMonitoringUnits().add(new FrequencyMonitoingUnit(name, mainInterface.getMainExecution().getPanelMonitoringSystem(), timeRange, chartType, variables, variables.get(0).getType()));
+			mainInterface.getMainExecution().getPanelMonitoringSystem().getMonitoringUnits().add(index, new FrequencyMonitoingUnit(name, mainInterface.getMainExecution().getPanelMonitoringSystem(), timeRange, chartType, variables, variables.get(0).getType()));
 		else if (chartType.equals("2DLineChart"))
-			mainInterface.getMainExecution().getPanelMonitoringSystem().getMonitoringUnits().add(new MonitoringUnit2D(name, mainInterface.getMainExecution().getPanelMonitoringSystem(), timeRange, chartType, variables, variables.get(0).getType(), xAxis, yAxis));
+			mainInterface.getMainExecution().getPanelMonitoringSystem().getMonitoringUnits().add(index, new MonitoringUnit2D(name, mainInterface.getMainExecution().getPanelMonitoringSystem(), timeRange, chartType, variables, variables.get(0).getType(), xAxis, yAxis));
 		else if (chartType.equals("3DLineChart"))
-			mainInterface.getMainExecution().getPanelMonitoringSystem().getMonitoringUnits().add(new MonitoringUnit3D(name, mainInterface.getMainExecution().getPanelMonitoringSystem(), timeRange, chartType, variables, variables.get(0).getType(), xAxis, yAxis, zAxis));
+			mainInterface.getMainExecution().getPanelMonitoringSystem().getMonitoringUnits().add(index,new MonitoringUnit3D(name, mainInterface.getMainExecution().getPanelMonitoringSystem(), timeRange, chartType, variables, variables.get(0).getType(), xAxis, yAxis, zAxis));
 		mainInterface.setMenuConfigurePanel();
 		this.dispose();
 	}

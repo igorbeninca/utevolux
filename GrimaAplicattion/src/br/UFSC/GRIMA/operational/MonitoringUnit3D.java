@@ -127,6 +127,9 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 	@Override
 	public void seriesChanged(SeriesChangeEvent e) {
 		// TODO Auto-generated method stub
+//		if(getMonitoringPanel() != null) {
+//			System.out.println(getMonitoringPanel().getComponentCount() + ", " + getSize());
+//		}
 		if(e.getSource().equals(xAxis.getDataSerie())) {
 			if(xAxis.getDataSerie().getValue(xAxis.getDataSerie().getItemCount() - 1) == null) {
 				breakSerie();
