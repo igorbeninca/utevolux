@@ -7,10 +7,7 @@
 	<classpathentry kind="lib" path="lib/jcommon-1.0.23.jar"/>
 	<classpathentry kind="lib" path="lib/jfreechart-1.0.19-experimental.jar"/>
 	<classpathentry kind="lib" path="lib/jfreechart-1.0.19-swt.jar"/>
-	<classpathentry kind="lib" path="lib/jfreesvg-2.0.jar"/>
 	<classpathentry kind="lib" path="lib/junit-4.11.jar"/>
-	<classpathentry kind="lib" path="lib/orsoncharts-1.4-eval-nofx.jar"/>
-	<classpathentry kind="lib" path="lib/orsonpdf-1.6-eval.jar"/>
 	<classpathentry kind="lib" path="lib/servlet.jar"/>
 	<classpathentry kind="lib" path="lib/swtgraphics2d.jar"/>
 	<classpathentry kind="lib" path="lib/mtConnectStructure.jar"/>
@@ -25,5 +22,9 @@
 	<classpathentry kind="lib" path="lib/webcam-capture-driver-gstreamer-0.3.10-RC7.jar"/>
 	<classpathentry kind="lib" path="lib/webcam-capture-driver-ipcam-0.3.10-RC7.jar"/>
 	<classpathentry kind="lib" path="lib/xuggle-xuggler-5.4.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.15-bin.jar"/>
+	<classpathentry kind="lib" path="lib/jfreesvg-3.0.jar"/>
+	<classpathentry kind="lib" path="lib/orsoncharts-1.5-nofx.jar"/>
+	<classpathentry kind="lib" path="lib/orsonpdf-1.7.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
