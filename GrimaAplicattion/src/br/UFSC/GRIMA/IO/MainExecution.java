@@ -33,7 +33,7 @@ public class MainExecution extends JApplet{
 	
 ///////////////////////////Constructor//////////////////////////////////////////////////////////	
 	public MainExecution() {
-		int[] range = {1, 0, 0};
+		int[] range = {0, 2, 0};
 		setDefaultTimeOption(GENERAL);
 		setDefaultTimeRange(range);
 		setNumericDefaultTimeRange(range);

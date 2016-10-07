@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "5.2.0.3.124" Java: "1.8.0_51" encoding: "UTF-8"
+JFDML JFormDesigner: "5.2.0.3.124" Java: "1.8.0_73" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
@@ -44,7 +44,7 @@ new FormModel {
 						} )
 						add( new FormComponent( "javax.swing.JTextField" ) {
 							name: "textFieldIP"
-							"text": "http://agent.mtconnect.org/"
+							"text": "http://localhost:5000"
 							"font": #Font0
 							auxiliary() {
 								"JavaCodeGenerator.variableModifiers": 4

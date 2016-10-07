@@ -20,6 +20,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.jfree.chart.axis.NumberAxis3D;
 import org.jfree.data.general.SeriesChangeEvent;
 import org.jfree.data.general.SeriesChangeListener;
 import org.jfree.data.time.Millisecond;
@@ -29,12 +30,23 @@ import org.jfree.data.time.TimeSeries;
 import com.orsoncharts.Chart3D;
 import com.orsoncharts.Chart3DFactory;
 import com.orsoncharts.Chart3DPanel;
+import com.orsoncharts.ChartElementVisitor;
+import com.orsoncharts.Range;
+import com.orsoncharts.data.xyz.XYZDataset;
 import com.orsoncharts.data.xyz.XYZSeries;
 import com.orsoncharts.data.xyz.XYZSeriesCollection;
+import com.orsoncharts.graphics3d.Dimension3D;
 import com.orsoncharts.graphics3d.ViewPoint3D;
+import com.orsoncharts.graphics3d.World;
 import com.orsoncharts.graphics3d.swing.DisplayPanel3D;
 import com.orsoncharts.graphics3d.swing.Panel3D;
+import com.orsoncharts.plot.Plot3D;
 import com.orsoncharts.plot.XYZPlot;
+import com.orsoncharts.renderer.ComposeType;
+import com.orsoncharts.renderer.Renderer3DChangeListener;
+import com.orsoncharts.renderer.xyz.LineXYZRenderer;
+import com.orsoncharts.renderer.xyz.XYZColorSource;
+import com.orsoncharts.renderer.xyz.XYZRenderer;
 
 import br.UFSC.GRIMA.dataStructure.Variable;
 
@@ -87,35 +99,20 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 		return size;
 	}
 	public void remove(ArrayList<ArrayList<Integer>>indexes) {
-		ArrayList<XYZSeries>sList = new ArrayList<XYZSeries>();
-		ArrayList<ArrayList<RegularTimePeriod>>tList = new ArrayList<ArrayList<RegularTimePeriod>>();
-		for(int i = 0; i < series.size(); i++) {
-			XYZSeries s = new XYZSeries(series.get(i).getKey());
-			ArrayList<RegularTimePeriod>t = new ArrayList<RegularTimePeriod>();
-			for(int j = 0; j < series.get(i).getItemCount(); j++) {
-				if(!contains(indexes, i, j)) {
-					s.add(series.get(i).getXValue(j), series.get(i).getYValue(j), series.get(i).getZValue(j));
-					t.add(timeRegister.get(i).get(j));
-				}
+		int sDec = 0;
+		for(int i = 0; i < indexes.size(); i++) {
+			for(int j = 0; j < indexes.get(i).size();j++) {
+				series.get(i).remove(indexes.get(i).get(j) - j);
 			}
-			if(!t.isEmpty()) {
-				sList.add(s);
-				tList.add(t);
+			if(series.get(i).getItemCount() == 0) {
+				series.remove(i);
 			}
 		}
-		if(sList.isEmpty()) {
-			sList.add(new XYZSeries(0 + ""));
-			tList.add(new ArrayList<RegularTimePeriod>());
-		}
-		setSeries(sList);
-		setTimeRegister(tList);
 		setDataset(new XYZSeriesCollection());
-		 ViewPoint3D vp = chart.getViewPoint();
+		ViewPoint3D vp = chart.getViewPoint();
 		for(int i = 0; i < series.size(); i++) {
 			dataset.add(series.get(i));
 		}
-		refreshChart();
-		chart.setViewPoint(vp);
 	}
 	public boolean contains(ArrayList<ArrayList<Integer>>indexes, int serie, int ind) {
 		for(int i = 0; i < indexes.size(); i++) {
@@ -190,9 +187,11 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 			double z2 = serie.getZValue(serie.getItemCount() - 2);
 			if ((x1 == x2)&&(y1 == y2)&&(z1 == z2)) {
 				ArrayList<Integer>target = new ArrayList<Integer>();
-				target.add(series.size() - 1);
-				target.add(serie.getItemCount() - 2);
-				toDiscart.add(target);
+				series.get(series.size()- 1).remove(series.get(series.size()- 1).getItemCount() - 2);
+				timeRegister.get(timeRegister.size() - 1).remove(timeRegister.get(timeRegister.size() - 1).size() - 2);
+//				target.add(series.size() - 1);
+//				target.add(serie.getItemCount() - 2);
+//				toDiscart.add(target);
 			}
 		}
 		/////////////////////////discart old values//////////////////////////////////////////////////////////////////
@@ -248,16 +247,23 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 						break;
 					}
 					else {
-						ArrayList<Integer> index = new ArrayList<Integer>();
-						index.add(i);index.add(j);
-						toDiscart.add(index);
+						series.get(i).remove(j);
+						timeRegister.get(i).remove(j);
+//						ArrayList<Integer> index = new ArrayList<Integer>();
+//						index.add(i);index.add(j);
+//						toDiscart.add(index);
+						j--;
 					}
+				}
+				if(series.get(i).getItemCount() == 0) {
+					dataset.removeSerie(series.indexOf(series.get(i)));
+					i--;
 				}
 				if(noCont)
 					break;
 			}
-			if(!toDiscart.isEmpty())
-				remove(toDiscart);
+//			if(!toDiscart.isEmpty())
+//				remove(toDiscart);
 		}
 		SwingUtilities.invokeLater(this);
 	}
@@ -293,7 +299,6 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 		
 		destroyPanelInstance();
 		initPanel(monitoringPanel, panelButton);
-		refreshChart();
 		getPanelMonitoringSystem().getController().getMainInterface().revalidate();
 		getPanelMonitoringSystem().getController().getMainInterface().repaint();
 	}
@@ -401,6 +406,7 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 	@Override
 	public void refreshChart2() {
 		// TODO Auto-generated method stub
+		
 		setChart(Chart3DFactory.createXYZLineChart("", "", dataset, xSelected.getValidName(), ySelected.getValidName(), zSelected.getValidName()));
 		chart.setLegendBuilder(null);
 		((XYZPlot)chart.getPlot()).getRenderer().setColors(Color.BLACK);
@@ -416,7 +422,6 @@ public class MonitoringUnit3D extends MonitoringUnit implements SeriesChangeList
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				new Insets(0, 0, 5, 5), 0, 0));
 		getMonitoringPanel().setPreferredSize(getMonitoringPanel().getPreferredSize());
-		SwingUtilities.invokeLater(this);
 	}
 	@Override
 	public void destroyPanelInstance() {

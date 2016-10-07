@@ -80,7 +80,7 @@ public class AddAgentWindow extends JFrame {
 						new Insets(0, 0, 5, 5), 0, 0));
 
 					//---- textFieldIP ----
-					textFieldIP.setText("http://agent.mtconnect.org/");
+					textFieldIP.setText("http://localhost:5000");
 					textFieldIP.setFont(new Font("Verdana", Font.PLAIN, 12));
 					panel1.add(textFieldIP, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,

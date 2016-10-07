@@ -298,7 +298,6 @@ public class ConfigurePanelEvents extends ConfigurePanelWindow implements Action
 			int index = INERENT;
 			if(monitoringUnit != null) {
 				index = mainInterface.getMainExecution().getPanelMonitoringSystem().getMonitoringUnits().indexOf(monitoringUnit);
-				System.out.println(index);
 				mainInterface.getMainExecution().getPanelMonitoringSystem().getMonitoringUnits().remove(monitoringUnit);
 			}
 			if(checkPanelInformation(true) && isNameOk(nameField.getText(), true)) {
@@ -428,7 +427,6 @@ public class ConfigurePanelEvents extends ConfigurePanelWindow implements Action
 		return defaultName;
 	}
 	public void addPanel(String name, int[] timeRange, String chartType, ArrayList<Variable>variables, Variable xAxis, Variable yAxis, Variable zAxis, int index) {
-		System.out.println(index);
 		if(index == INERENT) {
 			index = mainInterface.getMainExecution().getPanelMonitoringSystem().getMonitoringUnits().size();
 		}
