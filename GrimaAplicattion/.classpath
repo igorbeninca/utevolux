@@ -24,7 +24,7 @@
 	<classpathentry kind="lib" path="lib/xuggle-xuggler-5.4.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.15-bin.jar"/>
 	<classpathentry kind="lib" path="lib/jfreesvg-3.0.jar"/>
-	<classpathentry kind="lib" path="lib/orsoncharts-1.5-nofx.jar"/>
 	<classpathentry kind="lib" path="lib/orsonpdf-1.7.jar"/>
+	<classpathentry kind="lib" path="lib/orsonJc.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
