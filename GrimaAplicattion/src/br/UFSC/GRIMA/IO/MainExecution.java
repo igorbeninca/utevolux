@@ -11,6 +11,7 @@ import br.UFSC.GRIMA.operational.PanelMonitoringSystem;
 import br.UFSC.GRIMA.visual.MainInterface;
 
 import javax.swing.JApplet;
+import javax.swing.SwingUtilities;
 
 public class MainExecution extends JApplet{
 	private MainInterface mainInterface;
@@ -118,6 +119,18 @@ public class MainExecution extends JApplet{
 	public static void main(String[] args)
 	{
 		new MainExecution();
+	}
+	public void init() {
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+	            public void run() {
+	                MainExecution main = new MainExecution();
+	                main.setVisible(true);
+	            }
+	        });
+	    } catch (Exception e) {
+	        System.err.println("createGUI didn't complete successfully");
+	    }
 	}
 ////////////////////Getters and Setters/////////////////////////////////////////////////////
 	public IOControl getIoControl() {

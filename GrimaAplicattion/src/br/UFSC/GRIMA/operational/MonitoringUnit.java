@@ -154,11 +154,7 @@ public abstract class MonitoringUnit implements ActionListener {
 				type = new JLabel(new ImageIcon(getClass().getResource("/br/UFSC/GRIMA/images/nullTypeIcon.png")));
 				type.setToolTipText("Null Variable Type: this variable didn't show any register yet, so the application cannot identify its type.");
 			}
-			JLabel var;
-			if (getVariables().get(j).getName() != null) 
-				var = new JLabel(getVariables().get(j).getName());
-			else
-				var = new JLabel(getVariables().get(j).getDataItemID());
+			JLabel var = new JLabel(getVariables().get(j).getValidName());
 			JLabel twoPoints = new JLabel(":");
 			JTextField value = new JTextField();
 			value.setEditable(false);

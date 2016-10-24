@@ -4,11 +4,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.RepaintManager;
+import javax.swing.SwingUtilities;
 import javax.xml.bind.JAXBElement;
 
 import org.jfree.data.general.SeriesChangeEvent;
@@ -24,7 +27,7 @@ import br.UFSC.GRIMA.application.entities.streams.EventsType;
 import br.UFSC.GRIMA.application.entities.streams.SampleType;
 import br.UFSC.GRIMA.application.entities.streams.SamplesType;
 
-public class Variable implements ActionListener, SeriesChangeListener {
+public class Variable implements ActionListener, SeriesChangeListener, Runnable {
 	private String name;
 	private String dataItemID;
 	private char division;
@@ -38,6 +41,7 @@ public class Variable implements ActionListener, SeriesChangeListener {
 	private Component component;
 	private String XMLValue = "";
 	/////////////ViewDevicesComponents/////
+	private JLabel typeLabel;
 	private JCheckBox startMonitoringPanel;
 	private JToggleButton varMonitored;
 	private JToggleButton varSaving;
@@ -96,20 +100,17 @@ public class Variable implements ActionListener, SeriesChangeListener {
 		}
 	}
 	public char typeIdentification(String value) {
-		if(type != 'i') {
-			if(value.toUpperCase().equals("UNAVAILABLE"))
-				return 'n';
-			else {
-				try	{
-					((Double)(Double.parseDouble(value.replace(',', '.')))).doubleValue();
-					return '1';
-				}
-				catch (Exception e) {
-					return 'c';
-				}
+		if (value.toUpperCase().equals("UNAVAILABLE")) {
+			return 'n';
+		}
+		else {
+			try {
+				((Double) (Double.parseDouble(value.replace(',', '.')))).doubleValue();
+				return '1';
+			} catch (Exception e) {
+				return 'c';
 			}
 		}
-		else return 'i';
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -195,6 +196,15 @@ public class Variable implements ActionListener, SeriesChangeListener {
 		else
 			return dataItemID;
 	}
+	public void notifyListeners() {
+		SwingUtilities.invokeLater(this);
+	}
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		dataSerie.setNotify(true);
+		dataSerie.setNotify(false);
+	}
 ///////////////////////////////////////////////////////Getters and Setters/////////////////////////////////////////////////////////////////////////
 	public String getDataItemID() {
 		return dataItemID;
@@ -219,6 +229,24 @@ public class Variable implements ActionListener, SeriesChangeListener {
 	}
 	public void setType(char type) {
 		this.type = type;
+		if(typeLabel != null) {
+			if(getType() == '1') {
+				typeLabel.setIcon(new ImageIcon(getClass().getResource("/br/UFSC/GRIMA/images/numberTypeIcon.png")));
+				typeLabel.setToolTipText("Numeric Variable Type: this variable shows its information through number values.");
+			}
+			else if(getType() == 'c') {
+				typeLabel.setIcon(new ImageIcon(getClass().getResource("/br/UFSC/GRIMA/images/categoryTypeIcon.png")));
+				typeLabel.setToolTipText("Category Variable Type: this variable shows its information through categories that describe some kind of information.");
+			}
+			else if(getType() == 'i') {
+				typeLabel.setIcon(new ImageIcon(getClass().getResource("/br/UFSC/GRIMA/images/irregularTypeIcon.gif")));
+				typeLabel.setToolTipText("Irregular Variable Type: this variable shows values that is neither numeric nor category variable Type.");
+			}
+			else { 
+				typeLabel.setIcon(new ImageIcon(getClass().getResource("/br/UFSC/GRIMA/images/nullTypeIcon.png")));
+				typeLabel.setToolTipText("Null Variable Type: this variable didn't show any register yet, so the application cannot identify its type.");
+			}
+		}
 	}
 	public String getUnit() {
 		return unit;
@@ -320,5 +348,11 @@ public class Variable implements ActionListener, SeriesChangeListener {
 	}
 	public void setXMLValue(String xMLValue) {
 		XMLValue = xMLValue;
+	}
+	public JLabel getTypeLabel() {
+		return typeLabel;
+	}
+	public void setTypeLabel(JLabel typeLabel) {
+		this.typeLabel = typeLabel;
 	}
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -338,7 +339,7 @@ public class LoadExecution implements Runnable {
 						boolean tolerable = (Math.abs(timestamp.getFirstMillisecond() - creationTime.getFirstMillisecond()) <= 1000);
 						if(variableList.get(i).getType() == 'n') {
 							if(!value.toUpperCase().equals("UNAVAILABLE")) {
-								variableList.get(i).typeIdentification(value);
+								variableList.get(i).setType(variableList.get(i).typeIdentification(value));
 							}
 						}
 						if(variableList.get(i).getType() == '1') {
@@ -354,8 +355,7 @@ public class LoadExecution implements Runnable {
 										else if(timestamp.compareTo(inicialTime) < 0) {
 											variableList.get(i).getDataSerie().addOrUpdate(inicialTime, numValue);
 										}
-										variableList.get(i).getDataSerie().setNotify(true);
-										variableList.get(i).getDataSerie().setNotify(false);
+										variableList.get(i).notifyListeners();
 									}
 									if(tolerable) 
 										variableList.get(i).getDataSerie().addOrUpdate(timestamp, numValue);
@@ -364,7 +364,6 @@ public class LoadExecution implements Runnable {
 								}
 								catch (Exception e) {
 									variableList.get(i).setVariableToIrregular();
-									e.printStackTrace();
 								}
 							}
 						}
@@ -379,8 +378,7 @@ public class LoadExecution implements Runnable {
 									else if(timestamp.compareTo(inicialTime) < 0) {
 										variableList.get(i).getDataSerie().addOrUpdate(inicialTime, variableList.get(i).getCategoryPosition(value));
 									}
-									variableList.get(i).getDataSerie().setNotify(true);
-									variableList.get(i).getDataSerie().setNotify(false);
+									variableList.get(i).notifyListeners();
 								}
 								if(tolerable)
 									variableList.get(i).getDataSerie().addOrUpdate(timestamp, variableList.get(i).getCategoryPosition(value));
@@ -479,8 +477,7 @@ public class LoadExecution implements Runnable {
 						if(!variableList.get(i).getDataSerie().isEmpty())
 							variableList.get(i).getDataSerie().addOrUpdate(variableList.get(i).getDataSerie().getTimePeriod(variableList.get(i).getDataSerie().getItemCount() - 1).next(), null);
 					}
-					variableList.get(i).getDataSerie().setNotify(true);
-					variableList.get(i).getDataSerie().setNotify(false);
+					variableList.get(i).notifyListeners();
 				}
 			}
 			long loop = System.currentTimeMillis() - getCurrentTime();

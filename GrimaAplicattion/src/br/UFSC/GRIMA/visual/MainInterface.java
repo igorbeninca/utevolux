@@ -255,6 +255,12 @@ public class MainInterface extends MainWindow implements ActionListener, Printab
 			((GridBagLayout)devicePanel.getLayout()).rowHeights = new int[] {0, 0};
 			((GridBagLayout)devicePanel.getLayout()).columnWeights = new double[] {0.0, 1.0E-4};
 			((GridBagLayout)devicePanel.getLayout()).rowWeights = new double[] {0.0, 1.0E-4};
+			JPanel container = new JPanel();
+			container.setLayout(new GridBagLayout());
+			((GridBagLayout)container.getLayout()).columnWidths = new int[] {0, 0};
+			((GridBagLayout)container.getLayout()).rowHeights = new int[] {0, 0};
+			((GridBagLayout)container.getLayout()).columnWeights = new double[] {1.0, 1.0E-4};
+			((GridBagLayout)container.getLayout()).rowWeights = new double[] {0.0, 1.0};
 			JLabel uuid = new JLabel("UUID:");
 			JTextField uuidName = new JTextField(devices.get(i).getUuid());
 			uuidName.setEditable(false);
@@ -277,7 +283,10 @@ public class MainInterface extends MainWindow implements ActionListener, Printab
 			devicePanel.add(components, new GridBagConstraints(0, 1, 4, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 5, 5), 0, 0));
-			viewDevicesPanel.devicesPanel.add(devicePanel, new GridBagConstraints(i, 0, 1, 1, 0.0, 0.0,
+			container.add(devicePanel, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+					new Insets(0, 0, 0, 0), 0, 0));
+			viewDevicesPanel.devicesPanel.add(container, new GridBagConstraints(i, 0, 1, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 5, 5), 0, 0));
 			for(int j = 0; j < devices.get(i).getComponents().size(); j++) {
@@ -414,6 +423,7 @@ public class MainInterface extends MainWindow implements ActionListener, Printab
 						agents.get(i).getDevices().get(j).getComponents().get(k).getVariables().get(l).setStartMonitoringPanel(null);
 						agents.get(i).getDevices().get(j).getComponents().get(k).getVariables().get(l).setVarMonitored(null);
 						agents.get(i).getDevices().get(j).getComponents().get(k).getVariables().get(l).setVarSaving(null);
+						agents.get(i).getDevices().get(j).getComponents().get(k).getVariables().get(l).setTypeLabel(null);
 					}
 				}
 			}
@@ -460,28 +470,14 @@ public class MainInterface extends MainWindow implements ActionListener, Printab
 			JLabel units = new JLabel("Units:");
 			JTextField unitsName = new JTextField(variables.get(a).getUnit());
 			unitsName.setEditable(false);
-			JLabel varType;
-			if(variables.get(a).getType() == '1') {
-				varType = new JLabel(new ImageIcon(getClass().getResource("/br/UFSC/GRIMA/images/numberTypeIcon.png")));
-				varType.setToolTipText("Numeric Variable Type: this variable shows its information through number values.");
-			}
-			else if(variables.get(a).getType() == 'c') { 
-				varType = new JLabel((new ImageIcon(getClass().getResource("/br/UFSC/GRIMA/images/categoryTypeIcon.png"))));
-				varType.setToolTipText("Category Variable Type: this variable shows its information through categories that describe some kind of information.");
-			}
-			else if(variables.get(a).getType() == 'i') {
-				varType = new JLabel(new ImageIcon(getClass().getResource("/br/UFSC/GRIMA/images/irregularTypeIcon.gif")));
-				varType.setToolTipText("Irregular Variable Type: this variable show values that is neither numeric nor category variable Type.");
-			}
-			else {
-				varType = new JLabel(new ImageIcon(getClass().getResource("/br/UFSC/GRIMA/images/nullTypeIcon.png")));
-				varType.setToolTipText("Null Variable Type: this variable didn't show any register yet, so the application cannot identify its type.");
-			}
+			JLabel varType = new JLabel();
 			JToggleButton monitored = new JToggleButton(new ImageIcon(getClass().getResource("/br/UFSC/GRIMA/images/monitoringIcon.png")));
 			JToggleButton saving = new JToggleButton(new ImageIcon(getClass().getResource("/br/UFSC/GRIMA/images/downloadIcon.png")));
 			variables.get(a).setStartMonitoringPanel(monitorInit);
 			variables.get(a).setVarMonitored(monitored);
 			variables.get(a).setVarSaving(saving);
+			variables.get(a).setTypeLabel(varType);
+			variables.get(a).setType(variables.get(a).getType());
 			panel.add(monitorInit, new GridBagConstraints(0, a, 1, 1, 0.0, 0.0,
 					GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 					new Insets(0, 0, 5, 5), 0, 0));
