@@ -29,8 +29,8 @@ public class MainExecution extends JApplet{
 	private boolean monitorAllVariables = true; //com essa opcao ativada, ao adicionar um agente todas as variaveis das maquinas contidas nele entram na lista de monitoramento automaticamente
 	//login do usuario no php
 	private String userPHP = "Void";
-	private int userIdPHP = 1;
-	private String tabbleText = "To com fome.";
+	private int userIdPHP = 0;
+	private String tabbleText = "";
 	
 ///////////////////////////Constructor//////////////////////////////////////////////////////////	
 	public MainExecution() {
@@ -116,16 +116,16 @@ public class MainExecution extends JApplet{
 			units.get(i).setTimeRange(getTimeRange(units.get(i).getPanelType()));
 		}
 	}
-	public static void main(String[] args)
-	{
-		new MainExecution();
-	}
+//	public static void main(String[] args)
+//	{
+//		new MainExecution();
+//	}
 	public void init() {
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 	            public void run() {
-	                MainExecution main = new MainExecution();
-	                main.setVisible(true);
+//	                MainExecution main = new MainExecution();
+//	                main.setVisible(true);
 	            }
 	        });
 	    } catch (Exception e) {

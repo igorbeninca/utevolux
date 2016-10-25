@@ -29,7 +29,7 @@ public class SaveExecution implements Runnable {
 	private java.sql.Statement statement;
 	private String tableSerieNumber;
 	private String dataBaseIP = "150.162.105.1";
-	private String dataBase = "mtcTest";
+	private String dataBase = "MT-Connect";
 	private String user = "webcad";
 	private String senha = "julio123";
 	// Status de conexao
@@ -78,15 +78,12 @@ public class SaveExecution implements Runnable {
 	}
 	public boolean createMonitoringTable() {
 		try {
-			// encontrar ip de usuario
-			ResultSet rs = statement.executeQuery("select id from usuarios where usuario='Marcio' AND senha = '36250243';");
-			rs.next();
-			String id1 = rs.getString("id");
+			int id1 = ioControl.getController().getUserIdPHP();
 			//cria referencia da tabela de monitoramento no Header
 			String time = new Date().toString();
 			statement.executeUpdate("INSERT INTO MonitoringHeader (user, Timestamp, Observation) VALUES(" + id1 + ",'" + time + "', '" + ioControl.getController().getTabbleText() + "');");
 			//encontra numero de serie da tabela criada
-			rs = statement.executeQuery("select SerieNumber from MonitoringHeader where user= " + id1 + " AND Timestamp = '" + time + "';");
+			ResultSet rs = statement.executeQuery("select SerieNumber from MonitoringHeader where user= " + id1 + " AND Timestamp = '" + time + "';");
 			rs.next();
 			setTableSerieNumber("Z" + rs.getInt("SerieNumber"));
 			//cria tabela de monitoramento

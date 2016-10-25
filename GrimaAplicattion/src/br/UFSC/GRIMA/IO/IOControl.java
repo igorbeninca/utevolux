@@ -18,14 +18,16 @@ public class IOControl {
 		setController(mainExecution);
 		setAgents(new ArrayList<Agent>());
 		setClientCameras(new ArrayList<ClientCamera>());
+	}
+///////////////////////////Methods/////////////////////////////////////////////////////////////
+	public void start() {
 		setSaveExecution(new SaveExecution(this));
 		setLoadExecution(new LoadExecution(this));
 		loadExecution.getThread().setPriority(Thread.MAX_PRIORITY);
+		saveExecution.getBufControl().start();
 		loadExecution.start();
 		saveExecution.start();
-		saveExecution.getBufControl().start();
 	}
-///////////////////////////Methods/////////////////////////////////////////////////////////////
 	public Agent getAgentByName(String name) {
 		for (int i = 0; i < agents.size(); i++) {
 			if (agents.get(i).getAgentName().equals(name)) {
