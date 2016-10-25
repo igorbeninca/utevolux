@@ -116,10 +116,10 @@ public class MainExecution extends JApplet{
 			units.get(i).setTimeRange(getTimeRange(units.get(i).getPanelType()));
 		}
 	}
-//	public static void main(String[] args)
-//	{
-//		new MainExecution();
-//	}
+	public static void main(String[] args)
+	{
+		new MainExecution();
+	}
 	public void init() {
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {

@@ -20,4 +20,7 @@ public class ClientApplet extends JApplet
 		main.getIoControl().start();
 		main.getMainInterface().setEnabled(true);
 	}
+	public static void main(String[] args) {
+		(new ClientApplet()).init();
+	}
 }
