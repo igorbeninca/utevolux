@@ -81,7 +81,7 @@ public class AddAgentEvents extends AddAgentWindow implements ActionListener {
 				@Override
 				protected Object doInBackground()
 				{
-					String conf = mainInterface.getMainExecution().addAgent(textFieldIP.getText());
+					String conf = mainInterface.getMainExecution().addAgent(textFieldIP.getSelectedItem().toString());
 					if (conf == null)
 						dispose();
 					else {

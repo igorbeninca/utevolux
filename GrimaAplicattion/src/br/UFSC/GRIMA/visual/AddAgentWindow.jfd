@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "5.2.0.3.124" Java: "1.8.0_73" encoding: "UTF-8"
+JFDML JFormDesigner: "5.2.0.3.124" Java: "1.8.0_111" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
@@ -42,10 +42,15 @@ new FormModel {
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
 							"gridy": 1
 						} )
-						add( new FormComponent( "javax.swing.JTextField" ) {
+						add( new FormComponent( "javax.swing.JComboBox" ) {
 							name: "textFieldIP"
-							"text": "http://localhost:5000"
 							"font": #Font0
+							"editable": true
+							"model": new javax.swing.DefaultComboBoxModel {
+								selectedItem: "http://agent.mtconnect.org"
+								addElement( "http://agent.mtconnect.org" )
+								addElement( "http://150.162.27.144:5000" )
+							}
 							auxiliary() {
 								"JavaCodeGenerator.variableModifiers": 4
 							}

@@ -29,7 +29,7 @@ public class AddAgentWindow extends JFrame {
 		label4 = new JLabel();
 		panel1 = new JPanel();
 		label1 = new JLabel();
-		textFieldIP = new JTextField();
+		textFieldIP = new JComboBox<>();
 		label3 = new JLabel();
 		textFieldName2 = new JTextField();
 		buttonBar = new JPanel();
@@ -80,8 +80,12 @@ public class AddAgentWindow extends JFrame {
 						new Insets(0, 0, 5, 5), 0, 0));
 
 					//---- textFieldIP ----
-					textFieldIP.setText("http://localhost:5000");
 					textFieldIP.setFont(new Font("Verdana", Font.PLAIN, 12));
+					textFieldIP.setEditable(true);
+					textFieldIP.setModel(new DefaultComboBoxModel<>(new String[] {
+						"http://agent.mtconnect.org",
+						"http://150.162.27.144:5000"
+					}));
 					panel1.add(textFieldIP, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(0, 0, 5, 0), 0, 0));
@@ -140,7 +144,7 @@ public class AddAgentWindow extends JFrame {
 	private JLabel label4;
 	private JPanel panel1;
 	private JLabel label1;
-	protected JTextField textFieldIP;
+	protected JComboBox<String> textFieldIP;
 	private JLabel label3;
 	protected JTextField textFieldName2;
 	private JPanel buttonBar;
