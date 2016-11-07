@@ -46,17 +46,16 @@ public class SaveExecution implements Runnable {
 		setThread(new Thread(this, "Save Execution"));
 		setBuffer(new ArrayList<ArrayList<String>>());
 		setSaveList(new ArrayList<Variable>());
-		boolean connect = true;
-		connect = connect && connectToDB();
+	}
+///////////////////////////////Methods///////////////////////////////////////////////////////////////////////////////
+	public void start() {
+		boolean connect = connectToDB();
 		if(connect)
 			connect = connect && createMonitoringTable();
 		setConnected(connect);
 		if(connected){
 			setStatus(ONLINE);
 		}
-	}
-///////////////////////////////Methods///////////////////////////////////////////////////////////////////////////////
-	public void start() {
 		if(connected)
 			thread.start();
 		else

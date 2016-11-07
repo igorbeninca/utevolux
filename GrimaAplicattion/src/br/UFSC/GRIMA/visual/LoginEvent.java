@@ -2,13 +2,16 @@ package br.UFSC.GRIMA.visual;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.ResultSet;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import br.UFSC.GRIMA.IO.Conexao;
+import br.UFSC.GRIMA.IO.MainExecution;
 
 public class LoginEvent extends LoginWindow implements ActionListener {
 	private int[] timeRange;
@@ -19,9 +22,13 @@ public class LoginEvent extends LoginWindow implements ActionListener {
 	private String dataBase = "MT-Connect";
 	private String user = "webcad";
 	private String senha = "julio123";
-	public LoginEvent(JFrame ower, int[] timeRange) {
+	public LoginEvent() {
 		// TODO Auto-generated constructor stub
 		this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
+		okButton.addActionListener(this);
+		cancelButton.addActionListener(this);
+		this.setVisible(true);
+		
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -37,15 +44,34 @@ public class LoginEvent extends LoginWindow implements ActionListener {
 				setStatement(getConnection().getConn().createStatement());
 			} catch (Exception x) {
 				x.printStackTrace();
-				JOptionPane.showMessageDialog(this, "Cannot connect to hte database.", "Coneection Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, "Cannot connect to the database.", "Coneection Error", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			try {
 				MessageDigest md = MessageDigest.getInstance("MD5");
-				md.update(pass.getText().getBytes());
-				byte[] hashMd5 = md.digest();
-				String pass1 = hashMd5.toString();
-				statement.executeQuery("SELECT id,user FROM Users WHERE user='" + userField.getText() + "' AND password='" + pass1 + "';");
+				MessageDigest m=MessageDigest.getInstance("MD5");
+				m.update(pass.getText().getBytes(),0,pass.getText().length());
+				String str = (new BigInteger(1,m.digest())).toString(16);
+				ResultSet rs = statement.executeQuery("SELECT id,user FROM Users WHERE user='" + userField.getText() + "' AND password='" + str + "';");
+				if(rs.next()) {
+					MainExecution main = new MainExecution();
+					main.getMainInterface().setEnabled(false);
+					try {
+						main.setUserPHP(rs.getString("user"));
+						main.setUserIdPHP(rs.getInt("id"));
+					}
+					catch(Exception x) {
+						x.printStackTrace();
+					}
+					
+					main.getIoControl().start();
+					main.getMainInterface().setEnabled(true);
+					this.dispose();
+				}
+				else {
+					JOptionPane.showMessageDialog(this, "UserName or password invalid, please try again.", "Coneection Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 				
 			}catch (Exception x) {
 				x.printStackTrace();

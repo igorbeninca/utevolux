@@ -26,7 +26,7 @@ public class LoginWindow extends JFrame {
 		label1 = new JLabel();
 		userField = new JTextField();
 		label3 = new JLabel();
-		pass = new JTextField();
+		pass = new JPasswordField();
 		buttonBar = new JPanel();
 		okButton = new JButton();
 		cancelButton = new JButton();
@@ -89,9 +89,6 @@ public class LoginWindow extends JFrame {
 						panel1.add(label3, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0,
 							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 							new Insets(0, 0, 5, 5), 0, 0));
-
-						//---- pass ----
-						pass.setFont(new Font("Verdana", Font.PLAIN, 12));
 						panel1.add(pass, new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0,
 							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 							new Insets(0, 0, 5, 0), 0, 0));
@@ -128,7 +125,7 @@ public class LoginWindow extends JFrame {
 			dialogPane.add(dialogPane2, BorderLayout.CENTER);
 		}
 		contentPane.add(dialogPane, BorderLayout.CENTER);
-		pack();
+		setSize(425, 285);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
@@ -142,7 +139,7 @@ public class LoginWindow extends JFrame {
 	private JLabel label1;
 	protected JTextField userField;
 	private JLabel label3;
-	protected JTextField pass;
+	protected JPasswordField pass;
 	private JPanel buttonBar;
 	protected JButton okButton;
 	protected JButton cancelButton;

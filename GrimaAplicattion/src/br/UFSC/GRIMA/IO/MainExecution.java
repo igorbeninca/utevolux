@@ -13,7 +13,7 @@ import br.UFSC.GRIMA.visual.MainInterface;
 import javax.swing.JApplet;
 import javax.swing.SwingUtilities;
 
-public class MainExecution extends JApplet{
+public class MainExecution {
 	private MainInterface mainInterface;
 	private DeviceMonitoringSystem deviceMonitoringSystem;
 	private PanelMonitoringSystem panelMonitoringSystem;

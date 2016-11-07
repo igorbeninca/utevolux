@@ -2,23 +2,27 @@ package br.UFSC.GRIMA.IO;
 
 import javax.swing.JApplet;
 
-import br.UFSC.GRIMA.visual.MainInterface;
+import br.UFSC.GRIMA.visual.LoginEvent;
 
 public class ClientApplet extends JApplet
 {
 	public void init()
 	{
-		MainExecution main = new MainExecution();
+		String usuario = null;
+		int id = -1;
 		try {
-			main.setUserIdPHP(Integer.parseInt(getParameter("userID")));
-			main.setUserPHP(getParameter("userName"));
+			id = Integer.parseInt(getParameter("userID"));
+			usuario = getParameter("userName");
+			MainExecution main = new MainExecution();
+			main.setUserPHP(usuario);
+			main.setUserIdPHP(id);
+			main.getMainInterface().setEnabled(false);
+			main.getIoControl().start();
+			main.getMainInterface().setEnabled(true);
 		}
 		catch(Exception e) {
-			e.printStackTrace();
+			new LoginEvent();
 		}
-		main.getMainInterface().setEnabled(false);
-		main.getIoControl().start();
-		main.getMainInterface().setEnabled(true);
 	}
 	public static void main(String[] args) {
 		(new ClientApplet()).init();
