@@ -64,13 +64,6 @@ public class MainInterface extends MainWindow implements ActionListener, Printab
 		panelMonitoringButton.addActionListener(this);
 		currentTimeField.setEditable(false);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		String str = "=====================================================================" + "\n"
-				   + "History							       " + "\n"
-				   + "User: " + mainExecution.getUserPHP() + "; ID: " + mainExecution.getUserIdPHP() + "\n"
-				   + "Creation Time: " + (new Date()).toString() + "\n"
-				   + "=====================================================================";
-				
-		historyTextPane.setText(str);
 	}
 //////////////////////////Methods///////////////////////////////////////////////////////////////////////
 	public void updateHistory(String tittle, String msg) {

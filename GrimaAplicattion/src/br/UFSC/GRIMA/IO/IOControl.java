@@ -1,6 +1,7 @@
 package br.UFSC.GRIMA.IO;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.JOptionPane;
 
@@ -24,6 +25,13 @@ public class IOControl {
 		setSaveExecution(new SaveExecution(this));
 		setLoadExecution(new LoadExecution(this));
 		loadExecution.getThread().setPriority(Thread.MAX_PRIORITY);
+		String str = "=====================================================================" + "\n"
+				   + "History							       " + "\n"
+				   + "User: " + controller.getUserPHP() + "; ID: " + controller.getUserIdPHP() + "\n"
+				   + "Creation Time: " + (new Date()).toString() + "\n"
+				   + "=====================================================================";
+				
+		controller.getMainInterface().updateHistory("", str);
 		saveExecution.getBufControl().start();
 		loadExecution.start();
 		saveExecution.start();
