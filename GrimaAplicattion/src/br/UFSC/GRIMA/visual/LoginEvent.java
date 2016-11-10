@@ -63,9 +63,7 @@ public class LoginEvent extends LoginWindow implements ActionListener {
 					catch(Exception x) {
 						x.printStackTrace();
 					}
-					
-					main.getIoControl().start();
-					main.getMainInterface().setEnabled(true);
+					new SetNameEvents(main.getMainInterface());
 					this.dispose();
 				}
 				else {
@@ -78,8 +76,6 @@ public class LoginEvent extends LoginWindow implements ActionListener {
 				JOptionPane.showMessageDialog(this, "UserName or password invalid, please try again.", "Coneection Error", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			
-			
 		}
 	}
 	public Conexao getConnection() {

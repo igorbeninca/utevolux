@@ -6,6 +6,8 @@ new FormModel {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class java.awt.BorderLayout ) ) {
 			name: "this"
 			"$sizePolicy": 1
+			"title": "Login:"
+			"iconImage": new com.jformdesigner.model.SwingIcon( 0, "/br/UFSC/GRIMA/images/iconeLogo.png" )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
 				name: "dialogPane"
 				"border": new javax.swing.border.EmptyBorder( 12, 12, 12, 12 )
@@ -28,7 +30,7 @@ new FormModel {
 						}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
 						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
 							"$columnSpecs": "40, 0:1.0"
-							"$rowSpecs": "0:1.0, 0, 0:0.5, 0, 0:1.0"
+							"$rowSpecs": "0:1.0, 0, 0:1.0, 0, 0:1.0"
 							"$hGap": 5
 							"$vGap": 5
 							"$alignLeft": true
@@ -117,7 +119,7 @@ new FormModel {
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 425, 285 )
+			"size": new java.awt.Dimension( 525, 360 )
 		} )
 	}
 }

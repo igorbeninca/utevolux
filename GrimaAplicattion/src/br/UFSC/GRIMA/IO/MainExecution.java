@@ -30,7 +30,8 @@ public class MainExecution {
 	//login do usuario no php
 	private String userPHP = "Void";
 	private int userIdPHP = 0;
-	private String tabbleText = "";
+	private String tableName = "New_project";
+	private String Observation = "";
 	
 ///////////////////////////Constructor//////////////////////////////////////////////////////////	
 	public MainExecution() {
@@ -219,11 +220,16 @@ public class MainExecution {
 	public void setUserIdPHP(int userIdPHP) {
 		this.userIdPHP = userIdPHP;
 	}
-	public String getTabbleText() {
-		return tabbleText;
+	public String getObservation() {
+		return Observation;
 	}
-	public void setTabbleText(String tabbleText) {
-		this.tabbleText = tabbleText;
+	public void setObservation(String observation) {
+		Observation = observation;
 	}
-	
+	public String getTableName() {
+		return tableName;
+	}
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
+	}
 }

@@ -14,6 +14,7 @@ public class IOControl {
 	private ArrayList<ClientCamera> clientCameras;
 	private LoadExecution loadExecution;
 	private SaveExecution saveExecution;
+	private String tableName = "";
 	
 	public IOControl(MainExecution mainExecution) {
 		setController(mainExecution);
@@ -24,6 +25,7 @@ public class IOControl {
 	public void start() {
 		setSaveExecution(new SaveExecution(this));
 		setLoadExecution(new LoadExecution(this));
+		saveExecution.setTableSerieNumber(tableName);
 		loadExecution.getThread().setPriority(Thread.MAX_PRIORITY);
 		String str = "=====================================================================" + "\n"
 				   + "History							       " + "\n"
@@ -130,5 +132,11 @@ public class IOControl {
 	}
 	public void setSaveExecution(SaveExecution saveExecution) {
 		this.saveExecution = saveExecution;
+	}
+	public String getTableName() {
+		return tableName;
+	}
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
 	}
 }

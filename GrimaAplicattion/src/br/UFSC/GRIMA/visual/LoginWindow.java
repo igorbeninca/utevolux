@@ -32,6 +32,8 @@ public class LoginWindow extends JFrame {
 		cancelButton = new JButton();
 
 		//======== this ========
+		setTitle("Login:");
+		setIconImage(new ImageIcon(getClass().getResource("/br/UFSC/GRIMA/images/iconeLogo.png")).getImage());
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
 
@@ -66,7 +68,7 @@ public class LoginWindow extends JFrame {
 						((GridBagLayout)panel1.getLayout()).columnWidths = new int[] {45, 0, 0};
 						((GridBagLayout)panel1.getLayout()).rowHeights = new int[] {0, 0, 0, 0, 0, 0};
 						((GridBagLayout)panel1.getLayout()).columnWeights = new double[] {0.0, 1.0, 1.0E-4};
-						((GridBagLayout)panel1.getLayout()).rowWeights = new double[] {1.0, 0.0, 0.5, 0.0, 1.0, 1.0E-4};
+						((GridBagLayout)panel1.getLayout()).rowWeights = new double[] {1.0, 0.0, 1.0, 0.0, 1.0, 1.0E-4};
 
 						//---- label1 ----
 						label1.setText("Username");
@@ -125,7 +127,7 @@ public class LoginWindow extends JFrame {
 			dialogPane.add(dialogPane2, BorderLayout.CENTER);
 		}
 		contentPane.add(dialogPane, BorderLayout.CENTER);
-		setSize(425, 285);
+		setSize(525, 360);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}

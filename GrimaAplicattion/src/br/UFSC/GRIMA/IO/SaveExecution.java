@@ -50,8 +50,6 @@ public class SaveExecution implements Runnable {
 ///////////////////////////////Methods///////////////////////////////////////////////////////////////////////////////
 	public void start() {
 		boolean connect = connectToDB();
-		if(connect)
-			connect = connect && createMonitoringTable();
 		setConnected(connect);
 		if(connected){
 			setStatus(ONLINE);
@@ -73,29 +71,6 @@ public class SaveExecution implements Runnable {
 			ioControl.getController().getMainInterface().updateHistory("Database", msg);
 			return false;
 		}
-		return true;
-	}
-	public boolean createMonitoringTable() {
-		try {
-			int id1 = ioControl.getController().getUserIdPHP();
-			//cria referencia da tabela de monitoramento no Header
-			String time = new Date().toString();
-			statement.executeUpdate("INSERT INTO MonitoringHeader (user, Timestamp, Observation) VALUES(" + id1 + ",'" + time + "', '" + ioControl.getController().getTabbleText() + "');");
-			//encontra numero de serie da tabela criada
-			ResultSet rs = statement.executeQuery("select SerieNumber from MonitoringHeader where user= " + id1 + " AND Timestamp = '" + time + "';");
-			rs.next();
-			setTableSerieNumber("Z" + rs.getInt("SerieNumber"));
-			//cria tabela de monitoramento
-			statement.executeUpdate("CREATE TABLE " + tableSerieNumber +"(agent varchar(255), deviceStream varchar(255), componentStream varchar(255), variable varchar(255), value varchar(255), timestamp varchar(255));");
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null,"Cannot comunicate with the DataBase.","Erro", JOptionPane.ERROR_MESSAGE);
-			String msg = "Communication lost with the DataBase " + dataBaseIP;
-			ioControl.getController().getMainInterface().updateHistory("Database", msg);
-			e.printStackTrace();
-			return false;
-		}
-		String msg = "Successfully connected to the server " + dataBaseIP + "\n Table Created: " + tableSerieNumber;
-		ioControl.getController().getMainInterface().updateHistory("Database", msg);
 		return true;
 	}
 ////////////////////////Run Tasks/////////////////////////////////////////////////////////////////////////////////

@@ -3,6 +3,7 @@ package br.UFSC.GRIMA.IO;
 import javax.swing.JApplet;
 
 import br.UFSC.GRIMA.visual.LoginEvent;
+import br.UFSC.GRIMA.visual.SetNameEvents;
 
 public class ClientApplet extends JApplet
 {
@@ -17,8 +18,7 @@ public class ClientApplet extends JApplet
 			main.setUserPHP(usuario);
 			main.setUserIdPHP(id);
 			main.getMainInterface().setEnabled(false);
-			main.getIoControl().start();
-			main.getMainInterface().setEnabled(true);
+			new SetNameEvents(main.getMainInterface());
 		}
 		catch(Exception e) {
 			new LoginEvent();
