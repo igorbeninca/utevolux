@@ -81,7 +81,12 @@ public class AddAgentEvents extends AddAgentWindow implements ActionListener {
 				@Override
 				protected Object doInBackground()
 				{
-					String conf = mainInterface.getMainExecution().addAgent(textFieldIP.getSelectedItem().toString());
+					String conf1 = textFieldIP.getSelectedItem().toString();
+					if(conf1.equals("grima agent"))
+					{
+						conf1 = "http://150.162.27.144:5000";
+					}
+					String conf = mainInterface.getMainExecution().addAgent(conf1);
 					if (conf == null)
 						dispose();
 					else {

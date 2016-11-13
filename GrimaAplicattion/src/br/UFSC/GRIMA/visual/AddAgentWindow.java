@@ -84,7 +84,7 @@ public class AddAgentWindow extends JFrame {
 					textFieldIP.setEditable(true);
 					textFieldIP.setModel(new DefaultComboBoxModel<>(new String[] {
 						"http://agent.mtconnect.org",
-						"http://150.162.27.144:5000"
+						"grima agent"
 					}));
 					panel1.add(textFieldIP, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
