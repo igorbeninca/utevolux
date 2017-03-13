@@ -75,7 +75,7 @@ public class SetNameEvents extends SetNameWindow implements ActionListener {
 			rs.next();
 			ioControl.setTableName("Z" + rs.getInt("SerieNumber"));
 			//cria tabela de monitoramento
-			statement.executeUpdate("CREATE TABLE " + ioControl.getTableName() +"(agent varchar(255), deviceStream varchar(255), componentStream varchar(255), variable varchar(255), value varchar(255), timestamp varchar(255));");
+			statement.executeUpdate("CREATE TABLE " + ioControl.getTableName() +"(id int PRIMARY KEY AUTO_INCREMENT, agent varchar(255), deviceStream varchar(255), componentStream varchar(255), variable varchar(255), value varchar(255), timestamp varchar(255));");
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null,"Cannot comunicate with the DataBase.","Erro", JOptionPane.ERROR_MESSAGE);
 			String msg = "Communication lost with the DataBase " + dataBaseIP;

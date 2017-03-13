@@ -84,7 +84,7 @@ public class SaveExecution implements Runnable {
 					registersToSave.add(buffer.remove(0));
 				}
 				// constroi a msg
-				String query = "INSERT INTO " + tableSerieNumber + " VALUES ";
+				String query = "INSERT INTO " + tableSerieNumber + "(agent,deviceStream,componentStream,variable,value,timestamp) VALUES ";
 				for (int i = 0; i < registersToSave.size(); i++) {
 					ArrayList<String> arg = registersToSave.get(i);
 					query = query + "('" + arg.get(0) + "', '" + arg.get(1)
