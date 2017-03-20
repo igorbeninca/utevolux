@@ -77,6 +77,7 @@ public class SetNameWindow extends JFrame {
 					//---- tableName ----
 					tableName.setFont(new Font("Verdana", Font.PLAIN, 12));
 					tableName.setEditable(true);
+					tableName.setToolTipText("Name which the table will be recorded on Data Base");
 					panel1.add(tableName, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 						new Insets(0, 0, 5, 0), 0, 0));
@@ -90,6 +91,9 @@ public class SetNameWindow extends JFrame {
 
 					//======== scrollPane1 ========
 					{
+
+						//---- observation ----
+						observation.setToolTipText("Some description that help you to remember what this monitoring session is about");
 						scrollPane1.setViewportView(observation);
 					}
 					panel1.add(scrollPane1, new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0,

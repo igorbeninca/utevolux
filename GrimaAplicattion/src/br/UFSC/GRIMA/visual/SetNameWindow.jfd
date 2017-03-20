@@ -47,6 +47,7 @@ new FormModel {
 							name: "tableName"
 							"font": #Font0
 							"editable": true
+							"toolTipText": "Name which the table will be recorded on Data Base"
 							auxiliary() {
 								"JavaCodeGenerator.variableModifiers": 4
 							}
@@ -66,6 +67,7 @@ new FormModel {
 							name: "scrollPane1"
 							add( new FormComponent( "javax.swing.JTextArea" ) {
 								name: "observation"
+								"toolTipText": "Some description that help you to remember what this monitoring session is about"
 								auxiliary() {
 									"JavaCodeGenerator.variableModifiers": 4
 								}
