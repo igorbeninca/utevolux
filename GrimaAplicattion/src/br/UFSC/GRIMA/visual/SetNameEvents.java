@@ -1,14 +1,21 @@
 package br.UFSC.GRIMA.visual;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.sql.ResultSet;
 import java.util.Date;
 
+import javafx.scene.control.DialogPane;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JRootPane;
+import javax.swing.SwingUtilities;
 
 import br.UFSC.GRIMA.IO.Conexao;
 import br.UFSC.GRIMA.IO.IOControl;
@@ -22,6 +29,8 @@ public class SetNameEvents extends SetNameWindow implements ActionListener {
 	private String dataBase = "MT-Connect";
 	private String user = "webcad";
 	private String senha = "julio123";
+	int numClicked = 0;
+	int numClicked1 = 0;
 	public SetNameEvents(MainInterface mainInterface) {
 		super();
 		setConnection(new Conexao());
@@ -29,12 +38,46 @@ public class SetNameEvents extends SetNameWindow implements ActionListener {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		okButton.addActionListener(this);
 		cancelButton.addActionListener(this);
+
+		tableName.addMouseListener(new MouseAdapter() 
+		{
+			public void mouseClicked(MouseEvent e)
+			{
+				if(numClicked == 0)
+				{
+					tableName.setForeground(Color.BLUE);
+					tableName.setText("");
+					numClicked++;
+				}
+            }
+		});
+		observation.addMouseListener(new MouseAdapter()
+		{
+			public void mouseClicked(MouseEvent e)
+			{
+				if(numClicked1 == 0)
+				{
+					observation.setForeground(Color.BLUE);
+					observation.setText("");
+					numClicked1++;
+				}
+            }
+		});
+		tableName.setForeground(Color.GRAY);
+		observation.setForeground(Color.GRAY);
+		tableName.setText("Put the name which will be used to record on database");
+		observation.setText("Put some description in order to help you to remember what monitoring data is about ");
+		getRootPane().setDefaultButton(okButton);
 		this.setVisible(true);
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if(e.getSource().equals(okButton)) {
+			if(tableName.getText().equals("Put the name which will be used to record on database"))
+				tableName.setText("");
+			if(observation.getText().equals("Put some description in order to help you to remember what monitoring data is about "))
+					observation.setText("");
 			try {
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
 				connection.setConn(dataBaseIP, dataBase, user, senha);

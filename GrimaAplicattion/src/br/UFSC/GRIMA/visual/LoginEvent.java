@@ -27,12 +27,11 @@ public class LoginEvent extends LoginWindow implements ActionListener {
 		this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
 		okButton.addActionListener(this);
 		cancelButton.addActionListener(this);
+		this.getRootPane().setDefaultButton(okButton);
 		this.setVisible(true);
-		
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		if (e.getSource().equals(cancelButton) ) {
 			this.dispose();
 		}
