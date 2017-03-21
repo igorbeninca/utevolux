@@ -81,6 +81,8 @@ public class LoginWindow extends JFrame {
 						//---- userField ----
 						userField.setFont(new Font("Verdana", Font.PLAIN, 12));
 						userField.setEditable(true);
+						userField.setText("Enter your user name");
+						userField.setForeground(new Color(204, 204, 204));
 						panel1.add(userField, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
 							GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 							new Insets(0, 0, 5, 0), 0, 0));

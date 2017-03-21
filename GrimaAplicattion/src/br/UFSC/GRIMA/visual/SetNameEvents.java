@@ -3,6 +3,8 @@ package br.UFSC.GRIMA.visual;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.math.BigInteger;
@@ -43,7 +45,7 @@ public class SetNameEvents extends SetNameWindow implements ActionListener {
 			{
 				if(numClicked == 0)
 				{
-					tableName.setForeground(Color.BLUE);
+					tableName.setForeground(new Color(0, 0, 205));
 					tableName.setText("");
 					numClicked++;
 				}
@@ -55,22 +57,65 @@ public class SetNameEvents extends SetNameWindow implements ActionListener {
 			{
 				if(numClicked1 == 0)
 				{
-					observation.setForeground(Color.BLUE);
+					observation.setForeground(new Color(0, 0, 205));
 					observation.setText("");
 					numClicked1++;
 				}
             }
 		});
+		tableName.addKeyListener(new KeyListener() 
+		{
+			@Override
+			public void keyTyped(KeyEvent e) 
+			{
+				if(tableName.getText().contains("Put the name which will be used to record on database"))
+				{
+					tableName.setForeground(new Color(0, 0, 205));
+					tableName.setText("");
+				}
+			}
+			@Override
+			public void keyReleased(KeyEvent e) 
+			{
+				
+			}
+			@Override
+			public void keyPressed(KeyEvent e) 
+			{
+				
+			}
+		});
+		observation.addKeyListener(new KeyListener() 
+		{
+			@Override
+			public void keyTyped(KeyEvent e) 
+			{
+				if(observation.getText().contains("Put some description in order to help you \nto remember what monitoring data is about "))
+				{
+					observation.setForeground(new Color(0, 0, 205));
+					observation.setText("");
+				}
+			}
+			@Override
+			public void keyReleased(KeyEvent e) 
+			{
+				
+			}
+			@Override
+			public void keyPressed(KeyEvent e) 
+			{
+				
+			}
+		});
 		tableName.setForeground(Color.GRAY);
 		observation.setForeground(Color.GRAY);
 		tableName.setText("Put the name which will be used to record on database");
-		observation.setText("Put some description in order to help you to remember what monitoring data is about ");
+		observation.setText("Put some description in order to help you \nto remember what monitoring data is about ");
 		getRootPane().setDefaultButton(okButton);
 		this.setVisible(true);
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		if(e.getSource().equals(okButton)) {
 			if(tableName.getText().equals("Put the name which will be used to record on database"))
 				tableName.setText("");

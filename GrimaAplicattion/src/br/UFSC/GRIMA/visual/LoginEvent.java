@@ -1,7 +1,12 @@
 package br.UFSC.GRIMA.visual;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -22,12 +27,46 @@ public class LoginEvent extends LoginWindow implements ActionListener {
 	private String dataBase = "MT-Connect";
 	private String user = "webcad";
 	private String senha = "julio123";
+	int numClicked = 0;
 	public LoginEvent() {
-		// TODO Auto-generated constructor stub
 		this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
 		okButton.addActionListener(this);
 		cancelButton.addActionListener(this);
 		this.getRootPane().setDefaultButton(okButton);
+		userField.addKeyListener(new KeyListener() 
+		{
+			@Override
+			public void keyTyped(KeyEvent e) 
+			{
+				if(userField.getText().contains("Enter your user name"))
+				{
+					userField.setForeground(new Color(0, 100, 0));
+					userField.setText("");
+				}
+			}
+			@Override
+			public void keyReleased(KeyEvent e) 
+			{
+				
+			}
+			@Override
+			public void keyPressed(KeyEvent e) 
+			{
+				
+			}
+		});
+		this.userField.addMouseListener(new MouseAdapter() 
+		{
+			public void mouseClicked(MouseEvent e)
+			{
+				if(numClicked == 0)
+				{
+					userField.setForeground(new Color(0, 100, 0));
+					userField.setText("");
+					numClicked++;
+				}
+            }
+		});
 		this.setVisible(true);
 	}
 	@Override
