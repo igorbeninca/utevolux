@@ -40,7 +40,7 @@ public class LoginEvent extends LoginWindow implements ActionListener {
 			{
 				if(userField.getText().contains("Enter your user name"))
 				{
-					userField.setForeground(new Color(0, 100, 0));
+					userField.setForeground(new Color(0, 0, 205));
 					userField.setText("");
 				}
 			}
@@ -61,7 +61,7 @@ public class LoginEvent extends LoginWindow implements ActionListener {
 			{
 				if(numClicked == 0)
 				{
-					userField.setForeground(new Color(0, 100, 0));
+					userField.setForeground(new Color(0, 0, 205));
 					userField.setText("");
 					numClicked++;
 				}
