@@ -119,7 +119,7 @@ public class MainExecution {
 	}
 	public static void main(String[] args)
 	{
-		new MainExecution();
+		(new ClientApplet()).init();
 	}
 	public void init() {
 		try {
