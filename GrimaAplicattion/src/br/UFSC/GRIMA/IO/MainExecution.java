@@ -8,12 +8,13 @@ import br.UFSC.GRIMA.dataStructure.Variable;
 import br.UFSC.GRIMA.operational.DeviceMonitoringSystem;
 import br.UFSC.GRIMA.operational.MonitoringUnit;
 import br.UFSC.GRIMA.operational.PanelMonitoringSystem;
+import br.UFSC.GRIMA.visual.LoginEvent;
 import br.UFSC.GRIMA.visual.MainInterface;
+import br.UFSC.GRIMA.visual.SetNameEvents;
 
-import javax.swing.JApplet;
-import javax.swing.SwingUtilities;
 
 public class MainExecution {
+	
 	private MainInterface mainInterface;
 	private DeviceMonitoringSystem deviceMonitoringSystem;
 	private PanelMonitoringSystem panelMonitoringSystem;
@@ -119,19 +120,20 @@ public class MainExecution {
 	}
 	public static void main(String[] args)
 	{
-		(new ClientApplet()).init();
-	}
-	public void init() {
+		String usuario = null;
+		int id = -1;
 		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-	            public void run() {
-//	                MainExecution main = new MainExecution();
-//	                main.setVisible(true);
-	            }
-	        });
-	    } catch (Exception e) {
-	        System.err.println("createGUI didn't complete successfully");
-	    }
+			//basicService = (BasicService) ServiceManager.lookup("javax.jnlp.BasicService");
+			id = Integer.parseInt(args[0]);
+			usuario = args[1];
+			MainExecution main = new MainExecution();
+			main.setUserPHP(usuario);
+			main.setUserIdPHP(id);
+			main.getMainInterface().setEnabled(false);
+			new SetNameEvents(main.getMainInterface());
+		} catch (Exception e) {
+			new LoginEvent();
+		}
 	}
 ////////////////////Getters and Setters/////////////////////////////////////////////////////
 	public IOControl getIoControl() {
